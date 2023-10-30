@@ -12,6 +12,8 @@ import { AllTrainers } from "./Pages/Admin/AllTrainers";
 import { CreateEmployee } from "./Pages/Admin/CreateEmployee";
 import { CreateTrainer } from "./Pages/Admin/CreateTrainer";
 import { AdminInfo } from "./Pages/Admin/AdminInfo";
+import { CreatePackage } from "./Pages/Admin/CreatePackage";
+import { AllPackages } from "./Pages/Admin/AllPackages";
 
 function App() {
   return (
@@ -33,7 +35,12 @@ function App() {
         path="/administrator/:id/create-employee"
         element={<CreateEmployee />}
       />
+      <Route
+        path="/administrator/:id/create-package"
+        element={<CreatePackage />}
+      />
       <Route path="/administrator/:id/admin-info" element={<AdminInfo />} />
+      <Route path="/administrator/:id/all-packages" element={<AllPackages />} />
     </Routes>
   );
 }
