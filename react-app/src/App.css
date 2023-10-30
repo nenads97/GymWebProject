@@ -22,34 +22,32 @@
   color: white !important;
 }
 
-.client-register-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-image: url("/src/Images/login-page.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.employee-register-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-image: url("/src/Images/sport-equipment.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
+.client-register-page,
+.package-create-page,
+.employee-register-page,
 .trainer-register-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-image: url("/src/Images/sport-equipment-trainer.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.client-register-page {
+  background-image: url("/src/Images/login-page.jpg");
+}
+
+.employee-register-page {
+  background-image: url("/src/Images/sport-equipment.jpg");
+}
+
+.trainer-register-page {
+  background-image: url("/src/Images/sport-equipment-trainer.jpg");
+}
+
+.package-create-page {
+  background-image: url("/src/Images/person-wrapping-christmas-gift.jpg");
 }
 
 .auth-form-container-black {
