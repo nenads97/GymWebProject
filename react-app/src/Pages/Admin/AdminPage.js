@@ -51,7 +51,9 @@ export const AdminPage = () => {
             <Navbar.Collapse className="justify-content-end">
               <Nav className="me-auto">
                 <NavDropdown title="Packages" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="#">Packages</NavDropdown.Item>
+                  <NavDropdown.Item href={`/administrator/${id}/all-packages`}>
+                    Packages
+                  </NavDropdown.Item>
                   <NavDropdown.Divider></NavDropdown.Divider>
                   <NavDropdown.Item
                     href={`/administrator/${id}/create-package`}
