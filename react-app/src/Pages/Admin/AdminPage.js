@@ -46,7 +46,9 @@ export const AdminPage = () => {
       <div className="admin-page">
         <Navbar bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
           <Container>
-            <Navbar.Brand>Administrator</Navbar.Brand>
+            <a href={`/administrator/${id}`} className="admin-link">
+              <Navbar.Brand>Administrator</Navbar.Brand>
+            </a>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
               <Nav className="me-auto">
@@ -97,18 +99,30 @@ export const AdminPage = () => {
                 <Nav.Link href={`/administrator/${id}/clients`}>
                   Clients
                 </Nav.Link>
+                <NavDropdown title="History" id="basic-nav-dropdown">
+                  <NavDropdown.Item href={`/administrator/${id}/price-history`}>
+                    Prices
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/discount-history`}
+                  >
+                    Discounts
+                  </NavDropdown.Item>
+                </NavDropdown>
               </Nav>
               <Navbar.Text>
                 Signed in as:{" "}
                 <span className="admin_name headers">
                   {admin.firstname} {admin.surname}
                 </span>
-                <a href={`administrator/${id}/admin-info`}>
+              </Navbar.Text>
+              <NavDropdown
+                title={
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="white"
                     className="user-icon"
                     viewBox="0 0 16 16"
                   >
@@ -118,8 +132,14 @@ export const AdminPage = () => {
                       d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
                     />
                   </svg>
-                </a>
-              </Navbar.Text>
+                }
+              >
+                <NavDropdown.Item href={`/administrator/${id}/admin-info`}>
+                  My Info
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href={`/`}>Log Out</NavDropdown.Item>
+              </NavDropdown>
             </Navbar.Collapse>
           </Container>
         </Navbar>
@@ -140,9 +160,9 @@ export const AdminPage = () => {
             </tr>
           </thead>
           <tbody>
-            {clients.map((client) => (
-              <tr key={client.jmbg}>
-                <td>#</td>
+            {clients.map((client, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
                 <td>{client.jmbg}</td>
                 <td>{client.firstname}</td>
                 <td>{client.surname}</td>
@@ -172,9 +192,9 @@ export const AdminPage = () => {
             </tr>
           </thead>
           <tbody>
-            {trainers.map((trainer) => (
-              <tr key={trainer.jmbg}>
-                <td>#</td>
+            {trainers.map((trainer, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
                 <td>{trainer.jmbg}</td>
                 <td>{trainer.firstname}</td>
                 <td>{trainer.surname}</td>
@@ -204,9 +224,9 @@ export const AdminPage = () => {
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee) => (
-              <tr key={employee.jmbg}>
-                <td>#</td>
+            {employees.map((employee, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
                 <td>{employee.jmbg}</td>
                 <td>{employee.firstname}</td>
                 <td>{employee.surname}</td>

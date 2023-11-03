@@ -169,9 +169,9 @@ export const AllPackages = () => {
             </tr>
           </thead>
           <tbody>
-            {packages.map((pckg) => (
-              <tr key={pckg.packageId}>
-                <td>#</td>
+            {packages.map((pckg, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
                 <td>{pckg.packageName}</td>
                 <td>{pckg.packagePriceValue}</td>
                 <td>{pckg.packageDiscountValue}</td>

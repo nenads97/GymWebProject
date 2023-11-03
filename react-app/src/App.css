@@ -151,3 +151,10 @@
   background-size: cover;
   min-height: 931px;
 }
+
+.admin-link {
+  text-decoration: none;
+  &:hover {
+    opacity: 0.7;
+  }
+}
