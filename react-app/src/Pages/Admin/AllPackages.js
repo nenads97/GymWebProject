@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-//import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -7,13 +7,17 @@ import axios from "axios";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import DeleteConfirmation from "../../Components/DeleteConfirmation";
 
 export const AllPackages = () => {
   const [admin, setAdmin] = useState([]);
   const [packages, setPackages] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(0);
 
   const { id } = useParams();
-  //const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -29,8 +33,49 @@ export const AllPackages = () => {
       });
   }, [id]);
 
+  function showConfirmPopupHandler(packageId) {
+    setShowModal(true);
+    setItemToDelete(packageId);
+  }
+
+  function closeConfirmPopupHandler() {
+    setShowModal(false);
+    setItemToDelete(0);
+  }
+
+  function deleteConfirmHandler() {
+    axios
+      .delete(
+        `https://localhost:7095/api/Administrators/RemovePackage/${itemToDelete}`
+      )
+      .then((response) => {
+        // Filter out the deleted item from the existing data
+        const updatedPackage = packages.filter(
+          (item) => item.packageId !== itemToDelete
+        );
+
+        // Update the state with the updated data
+        setPackages(updatedPackage);
+
+        // Clear the itemToDelete and closeModal
+        setItemToDelete(0);
+        setShowModal(false);
+      })
+      .catch((error) => {
+        // Handle errors if necessary
+        console.error("Error deleting item:", error);
+      });
+  }
+
   return (
     <>
+      <DeleteConfirmation
+        showModal={showModal}
+        title="Delete Confirmation!"
+        body="Are you sure you want to delete this item?"
+        closeConfirmPopupHandler={closeConfirmPopupHandler}
+        deleteConfirmHandler={deleteConfirmHandler}
+      ></DeleteConfirmation>
       <div className="admin-page">
         <Navbar bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
           <Container>
@@ -39,17 +84,23 @@ export const AllPackages = () => {
             <Navbar.Collapse className="justify-content-end">
               <Nav className="me-auto">
                 <NavDropdown title="Packages" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="#">Packages</NavDropdown.Item>
+                  <NavDropdown.Item href={`/administrator/${id}/all-packages`}>
+                    Packages
+                  </NavDropdown.Item>
                   <NavDropdown.Divider></NavDropdown.Divider>
                   <NavDropdown.Item
                     href={`/administrator/${id}/create-package`}
                   >
                     Create Package
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/set-package-discount`}
+                  >
                     Set Package Discount
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.4">
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/set-package-price`}
+                  >
                     Set Package Price
                   </NavDropdown.Item>
                 </NavDropdown>
@@ -119,27 +170,18 @@ export const AllPackages = () => {
           </thead>
           <tbody>
             {packages.map((pckg) => (
-              <tr>
+              <tr key={pckg.packageId}>
                 <td>#</td>
                 <td>{pckg.packageName}</td>
                 <td>{pckg.packagePriceValue}</td>
                 <td>{pckg.packageDiscountValue}</td>
                 <td>
                   <Button
-                    variant="warning"
-                    type="button"
-                    onClick={() => {
-                      navigate(`/update-make/${make.makeId}`);
-                    }}
-                  >
-                    Update
-                  </Button>
-                  <Button
                     className="delete-button"
                     variant="danger"
                     type="button"
                     onClick={() => {
-                      showConfirmPopupHandler(make.makeId);
+                      showConfirmPopupHandler(pckg.packageId);
                     }}
                   >
                     Delete

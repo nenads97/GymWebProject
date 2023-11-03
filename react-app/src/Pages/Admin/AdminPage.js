@@ -60,10 +60,14 @@ export const AdminPage = () => {
                   >
                     Create Package
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/set-package-discount`}
+                  >
                     Set Package Discount
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.4">
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/set-package-price`}
+                  >
                     Set Package Price
                   </NavDropdown.Item>
                 </NavDropdown>
