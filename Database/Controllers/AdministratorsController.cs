@@ -296,7 +296,7 @@ namespace Database.Controllers
         public IActionResult GetPackageDiscounts()
         {
 
-            var packageDiscounts = _context.PackageDiscounts.ToList();
+            var packageDiscounts = _context.PackageDiscounts.Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.Package).ToList();
             var packageDiscountsDtos = _mapper.Map<IEnumerable<PackageDiscountGetDto>>(packageDiscounts);
 
             return Ok(packageDiscountsDtos);
@@ -364,6 +364,26 @@ namespace Database.Controllers
             _context.SaveChanges();
 
             return Ok("Trainer Deleted Successfully");
+        }
+
+        [HttpDelete]
+        [Route("RemovePackage/{id:int}")]
+        public IActionResult RemovePackage([FromRoute] int id)
+        {
+            var package = _context.Packages.FirstOrDefault(q => q.PackageId == id);
+            var adminPackage = _context.PackageAdministrators.FirstOrDefault(q => q.PackageId == id);
+
+            if (package is null)
+            {
+                return NotFound("Package Not Found");
+            }
+
+            _context.PackageAdministrators.Remove(adminPackage);
+            _context.Packages.Remove(package);
+            
+            _context.SaveChanges();
+
+            return Ok("Package Deleted Successfully");
         }
     }
 }
