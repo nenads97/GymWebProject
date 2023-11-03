@@ -172,9 +172,9 @@ export const AllTrainers = () => {
             </tr>
           </thead>
           <tbody>
-            {clients.map((client) => (
-              <tr key={client.jmbg}>
-                <td>#</td>
+            {clients.map((client, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
                 <td>{client.jmbg}</td>
                 <td>{client.firstname}</td>
                 <td>{client.surname}</td>
