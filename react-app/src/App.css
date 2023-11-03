@@ -78,7 +78,7 @@
 
 .form-label-white {
   text-align: left;
-  width: 111px;
+  width: 112px;
   padding: 0.5rem 0;
   color: white !important;
 }
@@ -149,4 +149,5 @@
   background-image: url("/src/Images/teahub.io-wallpaper-black-metal-1726360.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  min-height: 931px;
 }
