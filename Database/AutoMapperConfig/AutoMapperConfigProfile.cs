@@ -33,7 +33,6 @@ namespace Database.AutoMapperConfig
                 .ForMember(dest => dest.PackageName, opt => opt.MapFrom(src => src.PackageName))
                 .ForMember(dest => dest.PackagePriceValue, opt => opt.MapFrom(src =>
                 src.PackagePrices
-                    .Where(pp => pp.Date <= dateTime)
                     .OrderByDescending(pp => pp.Date)
                     .Select(pp => pp.Value)
                     .FirstOrDefault()))
@@ -47,7 +46,18 @@ namespace Database.AutoMapperConfig
             CreateMap<Client, PersonGetDto>();
             CreateMap<Administrator, PersonGetDto>();
             CreateMap<PackagePrice, PackagePriceGetDto>();
-            CreateMap<PackageDiscount, PackageDiscountGetDto>();
+            CreateMap<PackageDiscount, PackageDiscountGetDto>()
+                .ForMember(p => p.PackageId, opt => opt.MapFrom(src => src.PackagePackageDiscounts
+                    .Select(pd => pd.PackageId)
+                    .FirstOrDefault()))
+                .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.PackagePackageDiscounts
+                    .Select(pd => pd.Package.PackageName)
+                    .FirstOrDefault()))
+                .ForMember(p => p.PackageDiscountId, opt => opt.MapFrom(src => src.PackagePackageDiscounts
+                    .Select(pd => pd.PackageDiscountId)
+                    .FirstOrDefault()));
+
+
         }
 
     }

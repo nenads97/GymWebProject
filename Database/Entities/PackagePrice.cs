@@ -9,7 +9,7 @@ namespace Database.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PackagePriceId { get; set; }
         public double Value { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
 
 
         [ForeignKey("Administrator")]
