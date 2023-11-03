@@ -45,7 +45,8 @@ namespace Database.AutoMapperConfig
             CreateMap<Trainer, PersonGetDto>();
             CreateMap<Client, PersonGetDto>();
             CreateMap<Administrator, PersonGetDto>();
-            CreateMap<PackagePrice, PackagePriceGetDto>();
+            CreateMap<PackagePrice, PackagePriceGetDto>()
+                .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName));
             CreateMap<PackageDiscount, PackageDiscountGetDto>()
                 .ForMember(p => p.PackageId, opt => opt.MapFrom(src => src.PackagePackageDiscounts
                     .Select(pd => pd.PackageId)

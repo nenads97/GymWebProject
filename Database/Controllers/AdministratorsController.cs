@@ -307,7 +307,7 @@ namespace Database.Controllers
         public IActionResult GetPackagePrices()
         {
 
-            var packagePrices = _context.PackagePrices.ToList();
+            var packagePrices = _context.PackagePrices.Include(p => p.Package).ToList();
             var packagePricesDtos = _mapper.Map<IEnumerable<PackagePriceGetDto>>(packagePrices);
 
             return Ok(packagePricesDtos);
