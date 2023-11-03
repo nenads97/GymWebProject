@@ -14,6 +14,9 @@ import { CreateTrainer } from "./Pages/Admin/CreateTrainer";
 import { AdminInfo } from "./Pages/Admin/AdminInfo";
 import { CreatePackage } from "./Pages/Admin/CreatePackage";
 import { AllPackages } from "./Pages/Admin/AllPackages";
+import { SetPackageDiscount } from "./Pages/Admin/SetPackageDiscount";
+import { SetPackagePrice } from "./Pages/Admin/SetPackagePrice";
+// import Layout from "./Components/Layout";
 
 function App() {
   return (
@@ -41,6 +44,14 @@ function App() {
       />
       <Route path="/administrator/:id/admin-info" element={<AdminInfo />} />
       <Route path="/administrator/:id/all-packages" element={<AllPackages />} />
+      <Route
+        path="/administrator/:id/set-package-discount"
+        element={<SetPackageDiscount />}
+      />
+      <Route
+        path="/administrator/:id/set-package-price"
+        element={<SetPackagePrice />}
+      />
     </Routes>
   );
 }
