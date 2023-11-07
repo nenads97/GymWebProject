@@ -33,10 +33,6 @@ namespace Database.Data
         public virtual DbSet<PackagePackageDiscount> PackagePackageDiscounts { get; set; }
 
 
-        //public virtual DbSet<Trainer> Trainers { get; set; }
-        //public virtual DbSet<Employee> Employeees { get; set; }
-        //public virtual DbSet<Client> Clients { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,6 +76,17 @@ namespace Database.Data
             modelBuilder.Entity<PackagePackageDiscount>()
                 .HasOne(m => m.PackageDiscount)
                 .WithMany(p => p.PackagePackageDiscounts)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //EMPLOYEE
+            modelBuilder.Entity<Payment>()
+                .HasOne(m => m.Client)
+                .WithMany(p => p.Payments)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(m => m.Client)
+                .WithMany(p => p.Payments)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

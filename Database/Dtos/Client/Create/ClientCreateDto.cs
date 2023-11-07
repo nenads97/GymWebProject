@@ -1,6 +1,6 @@
 ﻿using Database.Enums;
 
-namespace Database.Dtos.Client
+namespace Database.Dtos.Client.Create
 {
     public class ClientCreateDto
     {

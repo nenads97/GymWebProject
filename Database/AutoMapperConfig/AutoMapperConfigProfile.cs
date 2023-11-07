@@ -4,7 +4,8 @@ using Database.Dtos;
 using Database.Dtos.Admin;
 using Database.Dtos.Admin.Create;
 using Database.Dtos.Admin.Get;
-using Database.Dtos.Client;
+using Database.Dtos.Client.Create;
+using Database.Dtos.Client.Get;
 using Database.Entities;
 using Database.JoinTables;
 
@@ -58,7 +59,8 @@ namespace Database.AutoMapperConfig
                     .Select(pd => pd.PackageDiscountId)
                     .FirstOrDefault()));
 
-
+            //Employee Get Dtos
+            CreateMap<Client, ClientGetDto>();
         }
 
     }
