@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -17,7 +17,7 @@ export const AllTrainers = () => {
   const [itemToDelete, setItemToDelete] = useState(0);
 
   const { id } = useParams();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -155,7 +155,9 @@ export const AllTrainers = () => {
           </Container>
         </Navbar>
 
-        <h2 className="clients-header headers">Trainers</h2>
+        <div className="header-container">
+          <h2 className="clients-header headers">Trainers</h2>
+        </div>
         <Table striped bordered hover variant="dark" className="table">
           <thead>
             <tr>
@@ -184,6 +186,19 @@ export const AllTrainers = () => {
                 <td>{client.email}</td>
                 <td>0{client.phoneNumber}</td>
                 <td>
+                  <Button
+                    className="card-button"
+                    variant="warning"
+                    type="button"
+                    onClick={() => {
+                      navigate(
+                        `/administrator/${id}/update-trainer/${client.id}`
+                      );
+                    }}
+                  >
+                    Update
+                  </Button>
+                  &nbsp;
                   <Button
                     className="delete-button"
                     variant="danger"

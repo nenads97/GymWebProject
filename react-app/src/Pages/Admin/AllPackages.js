@@ -157,7 +157,9 @@ export const AllPackages = () => {
           </Container>
         </Navbar>
 
-        <h2 className="clients-header headers">Packages</h2>
+        <div className="header-container">
+          <h2 className="clients-header headers">Packages</h2>
+        </div>
         <Table striped bordered hover variant="dark" className="table">
           <thead>
             <tr>

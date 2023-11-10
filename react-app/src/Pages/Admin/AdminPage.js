@@ -143,8 +143,9 @@ export const AdminPage = () => {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-
-        <h2 className="clients-header headers">Clients</h2>
+        <div className="header-container">
+          <h2 className="clients-header headers">Clients</h2>
+        </div>
         <Table striped bordered hover variant="dark" className="table">
           <thead>
             <tr>
@@ -176,7 +177,9 @@ export const AdminPage = () => {
           </tbody>
         </Table>
 
-        <h2 className="clients-header headers">Trainers</h2>
+        <div className="header-container">
+          <h2 className="clients-header headers">Trainers</h2>
+        </div>
         <Table striped bordered hover variant="dark" className="table">
           <thead>
             <tr>
@@ -208,7 +211,9 @@ export const AdminPage = () => {
           </tbody>
         </Table>
 
-        <h2 className="clients-header headers">Employees</h2>
+        <div className="header-container">
+          <h2 className="clients-header headers">Employees</h2>
+        </div>
         <Table striped bordered hover variant="dark" className="table">
           <thead>
             <tr>
