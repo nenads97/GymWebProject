@@ -16,6 +16,11 @@ import { CreatePackage } from "./Pages/Admin/CreatePackage";
 import { AllPackages } from "./Pages/Admin/AllPackages";
 import { SetPackageDiscount } from "./Pages/Admin/SetPackageDiscount";
 import { SetPackagePrice } from "./Pages/Admin/SetPackagePrice";
+import { DiscountHistory } from "./Pages/Admin/DiscountHistory";
+import { PriceHistory } from "./Pages/Admin/PriceHisory";
+import { UpdateTrainer } from "./Pages/Admin/UpdateTrainer";
+import { UpdateClient } from "./Pages/Admin/UpdateClient";
+import { UpdateEmployee } from "./Pages/Admin/UpdateEmployee";
 // import Layout from "./Components/Layout";
 
 function App() {
@@ -51,6 +56,26 @@ function App() {
       <Route
         path="/administrator/:id/set-package-price"
         element={<SetPackagePrice />}
+      />
+      <Route
+        path="/administrator/:id/discount-history"
+        element={<DiscountHistory />}
+      />
+      <Route
+        path="/administrator/:id/price-history"
+        element={<PriceHistory />}
+      />
+      <Route
+        path="/administrator/:id/update-trainer/:trainerId"
+        element={<UpdateTrainer />}
+      />
+      <Route
+        path="/administrator/:id/update-client/:clientId"
+        element={<UpdateClient />}
+      />
+      <Route
+        path="/administrator/:id/update-employee/:employeeId"
+        element={<UpdateEmployee />}
       />
     </Routes>
   );

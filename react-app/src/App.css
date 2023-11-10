@@ -131,6 +131,8 @@
 
 .admin_name {
   color: white;
+  margin: 0 !important;
+  padding: 10px 30px !important;
 }
 
 .user-icon {
@@ -140,9 +142,18 @@
 
 .headers {
   color: white;
+  display: inline-block;
   text-align: center;
-  margin: 0 auto;
-  padding: 25px 0;
+  background-color: #2b3035;
+  margin: 10px;
+  padding: 15px 30px;
+  border: 2px solid #4d5154;
+  border-radius: 40px;
+}
+
+.header-container {
+  display: block;
+  text-align: center;
 }
 
 .admin-page {
@@ -150,4 +161,17 @@
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 931px;
+}
+
+.admin-link {
+  text-decoration: none;
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.table {
+  width: 90% !important;
+  text-align: center;
+  margin: 0 auto;
 }

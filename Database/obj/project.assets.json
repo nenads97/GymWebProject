@@ -4073,11 +4073,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nsuknovic\\Desktop\\BP2_Nenad_Suknovic\\GymWebApp\\Database\\Database.csproj",
+      "projectUniqueName": "C:\\Users\\nsuknovic\\Source\\Repos\\nenads97\\GymWebProject\\Database\\Database.csproj",
       "projectName": "Database",
-      "projectPath": "C:\\Users\\nsuknovic\\Desktop\\BP2_Nenad_Suknovic\\GymWebApp\\Database\\Database.csproj",
+      "projectPath": "C:\\Users\\nsuknovic\\Source\\Repos\\nenads97\\GymWebProject\\Database\\Database.csproj",
       "packagesPath": "C:\\Users\\nsuknovic\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nsuknovic\\Desktop\\BP2_Nenad_Suknovic\\GymWebApp\\Database\\obj\\",
+      "outputPath": "C:\\Users\\nsuknovic\\Source\\Repos\\nenads97\\GymWebProject\\Database\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

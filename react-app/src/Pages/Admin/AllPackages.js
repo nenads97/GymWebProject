@@ -157,7 +157,9 @@ export const AllPackages = () => {
           </Container>
         </Navbar>
 
-        <h2 className="clients-header headers">Packages</h2>
+        <div className="header-container">
+          <h2 className="clients-header headers">Packages</h2>
+        </div>
         <Table striped bordered hover variant="dark" className="table">
           <thead>
             <tr>
@@ -169,9 +171,9 @@ export const AllPackages = () => {
             </tr>
           </thead>
           <tbody>
-            {packages.map((pckg) => (
-              <tr key={pckg.packageId}>
-                <td>#</td>
+            {packages.map((pckg, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
                 <td>{pckg.packageName}</td>
                 <td>{pckg.packagePriceValue}</td>
                 <td>{pckg.packageDiscountValue}</td>

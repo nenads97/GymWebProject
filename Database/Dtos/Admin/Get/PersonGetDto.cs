@@ -4,6 +4,7 @@ namespace Database.Dtos.Admin.Get
 {
     public class PersonGetDto
     {
+        public int Id { get; set; }
         public long JMBG { get; set; }
         public double PhoneNumber { get; set; }
         public string Password { get; set; }

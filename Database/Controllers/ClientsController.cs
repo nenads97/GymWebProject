@@ -2,7 +2,7 @@
 using Database.Authentication;
 using Database.Data;
 using Database.Dtos;
-using Database.Dtos.Client;
+using Database.Dtos.Client.Create;
 using Database.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

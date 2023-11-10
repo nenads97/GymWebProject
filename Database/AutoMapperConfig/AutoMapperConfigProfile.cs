@@ -4,7 +4,8 @@ using Database.Dtos;
 using Database.Dtos.Admin;
 using Database.Dtos.Admin.Create;
 using Database.Dtos.Admin.Get;
-using Database.Dtos.Client;
+using Database.Dtos.Client.Create;
+using Database.Dtos.Client.Get;
 using Database.Entities;
 using Database.JoinTables;
 
@@ -33,7 +34,6 @@ namespace Database.AutoMapperConfig
                 .ForMember(dest => dest.PackageName, opt => opt.MapFrom(src => src.PackageName))
                 .ForMember(dest => dest.PackagePriceValue, opt => opt.MapFrom(src =>
                 src.PackagePrices
-                    .Where(pp => pp.Date <= dateTime)
                     .OrderByDescending(pp => pp.Date)
                     .Select(pp => pp.Value)
                     .FirstOrDefault()))
@@ -46,8 +46,21 @@ namespace Database.AutoMapperConfig
             CreateMap<Trainer, PersonGetDto>();
             CreateMap<Client, PersonGetDto>();
             CreateMap<Administrator, PersonGetDto>();
-            CreateMap<PackagePrice, PackagePriceGetDto>();
-            CreateMap<PackageDiscount, PackageDiscountGetDto>();
+            CreateMap<PackagePrice, PackagePriceGetDto>()
+                .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName));
+            CreateMap<PackageDiscount, PackageDiscountGetDto>()
+                .ForMember(p => p.PackageId, opt => opt.MapFrom(src => src.PackagePackageDiscounts
+                    .Select(pd => pd.PackageId)
+                    .FirstOrDefault()))
+                .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.PackagePackageDiscounts
+                    .Select(pd => pd.Package.PackageName)
+                    .FirstOrDefault()))
+                .ForMember(p => p.PackageDiscountId, opt => opt.MapFrom(src => src.PackagePackageDiscounts
+                    .Select(pd => pd.PackageDiscountId)
+                    .FirstOrDefault()));
+
+            //Employee Get Dtos
+            CreateMap<Client, ClientGetDto>();
         }
 
     }

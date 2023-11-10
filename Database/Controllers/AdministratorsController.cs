@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Database.Dtos.Client;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using Database.Dtos.Client.Create;
 
 namespace Database.Controllers
 {
@@ -292,11 +292,60 @@ namespace Database.Controllers
         }
 
         [HttpGet]
+        [Route("TrainerGetCurrent/{id:int}")]
+        public IActionResult GetCurrentTrainer([FromRoute] int id)
+        {
+
+            var trainer = _context.Trainers.FirstOrDefault(d => d.Id == id);
+            var trainerDto = _mapper.Map<PersonGetDto>(trainer);
+
+            if (trainer is null)
+            {
+                return NotFound("Trainer not found.");
+            }
+
+            return Ok(trainerDto);
+        }
+
+        [HttpGet]
+        [Route("EmployeeGetCurrent/{id:int}")]
+        public IActionResult GetCurrentEmployee([FromRoute] int id)
+        {
+
+            var employee = _context.Employees.FirstOrDefault(d => d.Id == id);
+            var employeeDto = _mapper.Map<PersonGetDto>(employee);
+
+            if (employee is null)
+            {
+                return NotFound("Employee not found.");
+            }
+
+            return Ok(employeeDto);
+        }
+
+        [HttpGet]
+        [Route("ClientGetCurrent/{id:int}")]
+        public IActionResult GetCurrentClient([FromRoute] int id)
+        {
+
+            var client = _context.Clients.FirstOrDefault(d => d.Id == id);
+            var clientDto = _mapper.Map<PersonGetDto>(client);
+
+            if (client is null)
+            {
+                return NotFound("Client not found.");
+            }
+
+            return Ok(clientDto);
+        }
+
+
+        [HttpGet]
         [Route("PackageDiscountGet")]
         public IActionResult GetPackageDiscounts()
         {
 
-            var packageDiscounts = _context.PackageDiscounts.ToList();
+            var packageDiscounts = _context.PackageDiscounts.Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.Package).ToList();
             var packageDiscountsDtos = _mapper.Map<IEnumerable<PackageDiscountGetDto>>(packageDiscounts);
 
             return Ok(packageDiscountsDtos);
@@ -307,7 +356,7 @@ namespace Database.Controllers
         public IActionResult GetPackagePrices()
         {
 
-            var packagePrices = _context.PackagePrices.ToList();
+            var packagePrices = _context.PackagePrices.Include(p => p.Package).ToList();
             var packagePricesDtos = _mapper.Map<IEnumerable<PackagePriceGetDto>>(packagePrices);
 
             return Ok(packagePricesDtos);
@@ -364,6 +413,26 @@ namespace Database.Controllers
             _context.SaveChanges();
 
             return Ok("Trainer Deleted Successfully");
+        }
+
+        [HttpDelete]
+        [Route("RemovePackage/{id:int}")]
+        public IActionResult RemovePackage([FromRoute] int id)
+        {
+            var package = _context.Packages.FirstOrDefault(q => q.PackageId == id);
+            var adminPackage = _context.PackageAdministrators.FirstOrDefault(q => q.PackageId == id);
+
+            if (package is null)
+            {
+                return NotFound("Package Not Found");
+            }
+
+            _context.PackageAdministrators.Remove(adminPackage);
+            _context.Packages.Remove(package);
+            
+            _context.SaveChanges();
+
+            return Ok("Package Deleted Successfully");
         }
     }
 }

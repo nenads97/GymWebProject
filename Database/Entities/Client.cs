@@ -17,14 +17,15 @@ namespace Database.Entities
         private double balance;
 
         public double Balance { get => balance; set => balance = value; }
-        
+
+
+        public virtual ICollection<Payment> Payments { get; set; }
 
         /*
         public virtual ICollection<ClientRequest> ClientRequests { get; set; }
         public virtual ICollection<SignUpForTraining> SignUpsForTraining { get; set; }
         public virtual ICollection<SignOutFromTraining> SignOutsFromTraining { get; set; }
         public virtual ICollection<Purchase> Purchases { get; set; }
-        public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<ClientPersonalToken> ClientPersonalTokens { get; set; }
         public virtual ICollection<ClientGroupToken> ClientGroupTokens { get; set; }
         public virtual ICollection<Membership> Memberships { get; set; } */

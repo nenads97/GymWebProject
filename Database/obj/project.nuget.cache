@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "v5Qu75Wz3YD/I0yN9/HMmO3GW0NGJZy2uzLjWeTeQo1F+eTL8aJMAZF68zCTNJ1Rn4TvlS6PzAZkRNKCoKoNwg==",
+  "dgSpecHash": "kpWSBnOIf1mIU6Bw714Hl2INClgyXx7Xp3Bsvxegb1x9kqsQyeunkiqaDllVK6fEGn6CeyCrxljaWAVuPitoxQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\nsuknovic\\Desktop\\BP2_Nenad_Suknovic\\GymWebApp\\Database\\Database.csproj",
+  "projectFilePath": "C:\\Users\\nsuknovic\\Source\\Repos\\nenads97\\GymWebProject\\Database\\Database.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nsuknovic\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\nsuknovic\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
