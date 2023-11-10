@@ -12,6 +12,6 @@ namespace Database.Entities
         {
             Role = Role.Employee;
         }
-        //public virtual ICollection<Payment> Payments { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
     }
 }

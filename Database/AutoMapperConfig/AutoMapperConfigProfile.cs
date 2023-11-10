@@ -4,7 +4,8 @@ using Database.Dtos;
 using Database.Dtos.Admin;
 using Database.Dtos.Admin.Create;
 using Database.Dtos.Admin.Get;
-using Database.Dtos.Client;
+using Database.Dtos.Client.Create;
+using Database.Dtos.Client.Get;
 using Database.Entities;
 using Database.JoinTables;
 
@@ -45,7 +46,8 @@ namespace Database.AutoMapperConfig
             CreateMap<Trainer, PersonGetDto>();
             CreateMap<Client, PersonGetDto>();
             CreateMap<Administrator, PersonGetDto>();
-            CreateMap<PackagePrice, PackagePriceGetDto>();
+            CreateMap<PackagePrice, PackagePriceGetDto>()
+                .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName));
             CreateMap<PackageDiscount, PackageDiscountGetDto>()
                 .ForMember(p => p.PackageId, opt => opt.MapFrom(src => src.PackagePackageDiscounts
                     .Select(pd => pd.PackageId)
@@ -57,7 +59,8 @@ namespace Database.AutoMapperConfig
                     .Select(pd => pd.PackageDiscountId)
                     .FirstOrDefault()));
 
-
+            //Employee Get Dtos
+            CreateMap<Client, ClientGetDto>();
         }
 
     }

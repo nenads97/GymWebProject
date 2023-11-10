@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Database.Dtos.Client;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using Database.Dtos.Client.Create;
 
 namespace Database.Controllers
 {
@@ -292,6 +292,55 @@ namespace Database.Controllers
         }
 
         [HttpGet]
+        [Route("TrainerGetCurrent/{id:int}")]
+        public IActionResult GetCurrentTrainer([FromRoute] int id)
+        {
+
+            var trainer = _context.Trainers.FirstOrDefault(d => d.Id == id);
+            var trainerDto = _mapper.Map<PersonGetDto>(trainer);
+
+            if (trainer is null)
+            {
+                return NotFound("Trainer not found.");
+            }
+
+            return Ok(trainerDto);
+        }
+
+        [HttpGet]
+        [Route("EmployeeGetCurrent/{id:int}")]
+        public IActionResult GetCurrentEmployee([FromRoute] int id)
+        {
+
+            var employee = _context.Employees.FirstOrDefault(d => d.Id == id);
+            var employeeDto = _mapper.Map<PersonGetDto>(employee);
+
+            if (employee is null)
+            {
+                return NotFound("Employee not found.");
+            }
+
+            return Ok(employeeDto);
+        }
+
+        [HttpGet]
+        [Route("ClientGetCurrent/{id:int}")]
+        public IActionResult GetCurrentClient([FromRoute] int id)
+        {
+
+            var client = _context.Clients.FirstOrDefault(d => d.Id == id);
+            var clientDto = _mapper.Map<PersonGetDto>(client);
+
+            if (client is null)
+            {
+                return NotFound("Client not found.");
+            }
+
+            return Ok(clientDto);
+        }
+
+
+        [HttpGet]
         [Route("PackageDiscountGet")]
         public IActionResult GetPackageDiscounts()
         {
@@ -307,7 +356,7 @@ namespace Database.Controllers
         public IActionResult GetPackagePrices()
         {
 
-            var packagePrices = _context.PackagePrices.ToList();
+            var packagePrices = _context.PackagePrices.Include(p => p.Package).ToList();
             var packagePricesDtos = _mapper.Map<IEnumerable<PackagePriceGetDto>>(packagePrices);
 
             return Ok(packagePricesDtos);
