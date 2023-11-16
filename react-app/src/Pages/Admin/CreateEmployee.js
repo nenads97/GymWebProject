@@ -13,20 +13,98 @@ export const CreateEmployee = () => {
   const [surname, setSurname] = useState("");
 
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = {};
+
+    // Validate Firstname
+    if (!/^[A-Z][a-z]*$/.test(firstname)) {
+      newErrors.firstname = "Only letters allowed, starting with uppercase.";
+      valid = false;
+    } else if (firstname.includes(" ")) {
+      newErrors.firstname = "Field cannot contain spaces.";
+      valid = false;
+    }
+
+    // Validate Surname
+    if (!/^[A-Z][a-z]*$/.test(surname)) {
+      newErrors.surname = "Only letters allowed, starting with uppercase.";
+      valid = false;
+    } else if (surname.includes(" ")) {
+      newErrors.surname = "Field cannot contain spaces.";
+      valid = false;
+    }
+
+    // Validate Username
+    if (username.length < 5) {
+      newErrors.username = "Input at least 5 characters.";
+      valid = false;
+    } else if (username.includes(" ")) {
+      newErrors.username = "Field cannot contain spaces.";
+      valid = false;
+    }
+
+    // Validate Password
+    if (password.length < 5) {
+      newErrors.password = "Input at least 5 characters.";
+      valid = false;
+    } else if (password.includes(" ")) {
+      newErrors.password = "Field cannot contain spaces.";
+      valid = false;
+    }
+
+    // Validate Email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Invalid email format.";
+      valid = false;
+    } else if (email.includes(" ")) {
+      newErrors.email = "Field cannot contain spaces.";
+      valid = false;
+    }
+
+    // Validate Jmbg
+    if (!/^\d{13}$/.test(jmbg)) {
+      newErrors.jmbg = "Jmbg must have exactly 13 digits.";
+      valid = false;
+    } else if (String(jmbg).includes(" ")) {
+      newErrors.jmbg = "Field cannot contain spaces.";
+      valid = false;
+    }
+
+    // Validate Phone Number
+    if (!/^\d{8,10}$/.test(phoneNumber)) {
+      newErrors.phoneNumber = "Phone number must have 8 to 10 digits.";
+      valid = false;
+    } else if (String(phoneNumber).includes(" ")) {
+      newErrors.phoneNumber = "Field cannot contain spaces.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault(); //ovo radimo kako stranica ne bi bila relodovana cime bi izgubili useState
 
-    var payload = {
-      jmbg: jmbg,
-      phoneNumber: phoneNumber,
-      password: password,
-      username: username,
-      gender: gender,
-      email: email,
-      surname: surname,
-      firstname: firstname,
-    };
+    setErrors((errors) => ({
+      ...errors,
+    }));
+
+    if (validateForm()) {
+      var payload = {
+        jmbg: jmbg,
+        phoneNumber: phoneNumber,
+        password: password,
+        username: username,
+        gender: gender,
+        email: email,
+        surname: surname,
+        firstname: firstname,
+      };
+    }
 
     axios
       .post("https://localhost:7095/api/Administrators/EmployeeCreate", payload)
@@ -52,7 +130,9 @@ export const CreateEmployee = () => {
                     Firstname:{" "}
                   </label>
                   <input
-                    className="register-input register-input-left"
+                    className={`register-input register-input-left ${
+                      errors.firstname ? "input-error" : ""
+                    }`}
                     type="text"
                     placeholder="Firstname"
                     id="firstname"
@@ -60,13 +140,18 @@ export const CreateEmployee = () => {
                     value={firstname}
                     onChange={(e) => setFirstname(e.target.value)}
                   />
+                  {errors.firstname && (
+                    <p className="error-message">{errors.firstname}</p>
+                  )}
                 </div>
                 <div>
                   <label className="form-label-white" htmlFor="surname">
                     Surname:{" "}
                   </label>
                   <input
-                    className="register-input"
+                    className={`register-input ${
+                      errors.surname ? "input-error" : ""
+                    }`}
                     type="text"
                     placeholder="Surname"
                     id="surname"
@@ -74,6 +159,9 @@ export const CreateEmployee = () => {
                     value={surname}
                     onChange={(e) => setSurname(e.target.value)}
                   />
+                  {errors.surname && (
+                    <p className="error-message">{errors.surname}</p>
+                  )}
                 </div>
               </div>
 
@@ -83,7 +171,9 @@ export const CreateEmployee = () => {
                     Username:{" "}
                   </label>
                   <input
-                    className="register-input register-input-left"
+                    className={`register-input register-input-left ${
+                      errors.username ? "input-error" : ""
+                    }`}
                     type="text"
                     placeholder="Username"
                     id="username"
@@ -91,13 +181,18 @@ export const CreateEmployee = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
+                  {errors.username && (
+                    <p className="error-message">{errors.username}</p>
+                  )}
                 </div>
                 <div>
                   <label className="form-label-white" htmlFor="password">
                     Password:{" "}
                   </label>
                   <input
-                    className="register-input"
+                    className={`register-input ${
+                      errors.password ? "input-error" : ""
+                    }`}
                     type="password"
                     placeholder="Password"
                     id="password"
@@ -105,6 +200,9 @@ export const CreateEmployee = () => {
                     value={password}
                     onChange={(e) => setPass(e.target.value)}
                   />
+                  {errors.password && (
+                    <p className="error-message">{errors.password}</p>
+                  )}
                 </div>
               </div>
 
@@ -114,7 +212,9 @@ export const CreateEmployee = () => {
                     Email:{" "}
                   </label>
                   <input
-                    className="register-input register-input-left"
+                    className={`register-input register-input-left ${
+                      errors.email ? "input-error" : ""
+                    }`}
                     type="email"
                     placeholder="youremail@gmail.com"
                     id="email"
@@ -122,19 +222,27 @@ export const CreateEmployee = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
+                  {errors.email && (
+                    <p className="error-message">{errors.email}</p>
+                  )}
                 </div>
                 <div>
                   <label className="form-label-white" htmlFor="jmbg">
                     Jmbg:{" "}
                   </label>
                   <input
-                    className="register-input"
+                    className={`register-input ${
+                      errors.jmbg ? "input-error" : ""
+                    }`}
                     type="number"
                     placeholder="Jmbg"
                     id="jmbg"
                     name="jmbg"
                     onChange={(e) => setJmbg(parseInt(e.target.value))}
                   />
+                  {errors.jmbg && (
+                    <p className="error-message">{errors.jmbg}</p>
+                  )}
                 </div>
               </div>
 
@@ -144,7 +252,9 @@ export const CreateEmployee = () => {
                     Phone Number:{" "}
                   </label>
                   <input
-                    className="register-input"
+                    className={`register-input ${
+                      errors.phoneNumber ? "input-error" : ""
+                    }`}
                     type="number"
                     placeholder="Phone Number"
                     id="phoneNumber"
@@ -152,6 +262,9 @@ export const CreateEmployee = () => {
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(parseInt(e.target.value))}
                   />
+                  {errors.phoneNumber && (
+                    <p className="error-message">{errors.phoneNumber}</p>
+                  )}
                 </div>
                 <div>
                   <label className="form-label-white" htmlFor="gender">

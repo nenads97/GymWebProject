@@ -167,6 +167,7 @@ export const AllPackages = () => {
               <th>Name</th>
               <th>Price (RSD)</th>
               <th>Discount (%)</th>
+              <th>Discounted Price (RSD)</th>
               <th>Commands</th>
             </tr>
           </thead>
@@ -177,6 +178,10 @@ export const AllPackages = () => {
                 <td>{pckg.packageName}</td>
                 <td>{pckg.packagePriceValue}</td>
                 <td>{pckg.packageDiscountValue}</td>
+                <td>
+                  {pckg.packagePriceValue -
+                    (pckg.packagePriceValue * pckg.packageDiscountValue) / 100}
+                </td>
                 <td>
                   <Button
                     className="delete-button"

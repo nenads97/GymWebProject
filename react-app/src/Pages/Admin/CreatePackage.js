@@ -5,32 +5,45 @@ import axios from "axios";
 
 export const CreatePackage = () => {
   const [packageName, setPackageName] = useState("");
+  const [packageNameError, setPackageNameError] = useState(""); // Dodato
 
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); //ovo radimo kako stranica ne bi bila relodovana cime bi izgubili useState
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    var payload = {
-      packageName: packageName,
-      administratorId: id,
-    };
+    // Validacija imena paketa
+    const packageNameRegex = /^[A-Z][a-zA-Z0-9]*([ ]?[a-z][a-zA-Z0-9]*)*$/;
+    if (!packageNameRegex.test(packageName)) {
+      setPackageNameError("Invalid package name format"); // Postavi poruku sa greškom
+      return;
+    } else {
+      setPackageNameError(""); // Očisti poruku sa greškom ako je validno
+    }
 
-    axios
-      .get(`https://localhost:7095/api/Administrators/AdminGetCurrent/${id}`)
-      .then((response) => {
-        navigate(`/administrator/${id}`);
-      });
+    try {
+      // Provera trenutnog administratora
+      await axios.get(
+        `https://localhost:7095/api/Administrators/AdminGetCurrent/${id}`
+      );
 
-    axios
-      .post("https://localhost:7095/api/Administrators/PackageCreate", payload)
-      .then((response) => {
-        navigate(`/administrator/${id}`);
-      })
-      .catch((error) => {
-        console.error("Error adding package:", error);
-      });
+      // Slanje podataka za kreiranje paketa
+      const payload = {
+        packageName: packageName,
+        administratorId: id,
+      };
+
+      await axios.post(
+        "https://localhost:7095/api/Administrators/PackageCreate",
+        payload
+      );
+
+      // Ako je sve uspešno, preusmeri na odgovarajuću stranicu
+      navigate(`/administrator/${id}`);
+    } catch (error) {
+      console.error("Error adding package:", error);
+    }
   };
 
   return (
@@ -55,6 +68,9 @@ export const CreatePackage = () => {
                     value={packageName}
                     onChange={(e) => setPackageName(e.target.value)}
                   />
+                  {packageNameError && (
+                    <p className="error-message">{packageNameError}</p>
+                  )}
                 </div>
               </div>
             </div>

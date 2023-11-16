@@ -118,7 +118,8 @@
   border-radius: 10px;
   padding: 1rem 2rem;
   cursor: pointer;
-  margin-top: 1rem;
+  display: block;
+  margin: 30px auto 10px;
 }
 
 .register-button:hover {
@@ -126,7 +127,7 @@
 }
 
 .error-message {
-  color: rgb(192, 0, 0);
+  color: rgb(255, 0, 0);
 }
 
 .admin_name {
@@ -138,6 +139,11 @@
 .user-icon {
   scale: 1.5;
   margin-left: 10px;
+}
+
+.user-icon:hover {
+  fill: #00d5ff;
+  color: #00d5ff;
 }
 
 .headers {
@@ -174,4 +180,47 @@
   width: 90% !important;
   text-align: center;
   margin: 0 auto;
+  margin-bottom: 3rem !important;
+}
+
+.body-container {
+  display: inline-block;
+  margin-top: 50px;
+  color: white;
+  text-align: left;
+  font-size: 24px;
+  line-height: 56px;
+  background-color: #2b3035;
+  padding: 40px;
+  border: 2px solid #4d5154;
+}
+
+.body-row {
+  display: block;
+}
+
+.body-info {
+  display: block;
+  text-align: center;
+}
+
+.body-row-item {
+  color: #00cccc;
+}
+
+.admin-role {
+  color: #00d5ff;
+}
+
+.navbar-brand {
+  color: #00d5ff !important;
+}
+
+.dropdown-item:hover {
+  color: #00d5ff !important;
+}
+
+h2 {
+  font-size: 26px !important;
+  color: #fbd300 !important;
 }

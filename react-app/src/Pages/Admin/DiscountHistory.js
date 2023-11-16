@@ -10,7 +10,9 @@ export const DiscountHistory = () => {
 
   useEffect(() => {
     axios
-      .get(`https://localhost:7095/api/Administrators/PackageDiscountGet`)
+      .get(
+        `https://localhost:7095/api/Administrators/PackagePackageDiscountGet`
+      )
       .then((response) => {
         // Format dates here
         const formattedDiscounts = response.data.map((discount) => ({

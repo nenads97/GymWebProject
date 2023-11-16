@@ -10,30 +10,47 @@ export const SetPackageDiscount = () => {
 
   const [packageDiscounts, SetPackageDiscounts] = useState([]);
   const [packages, setPackages] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = {};
+
+    // Validate Discount
+    if (selectedDiscountId === 0) {
+      newErrors.selectedDiscountId = "Please select a discount.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
   const handleSubmit = (e) => {
-    e.preventDefault(); //ovo radimo kako stranica ne bi bila relodovana cime bi izgubili useState
+    e.preventDefault();
 
-    var payload = {
-      packageId: selectedPackageId,
-      packageDiscountId: selectedDiscountId,
-      administratorId: parseInt(id),
-    };
+    if (validateForm()) {
+      var payload = {
+        packageId: selectedPackageId,
+        packageDiscountId: selectedDiscountId,
+        administratorId: parseInt(id),
+      };
 
-    axios
-      .post(
-        "https://localhost:7095/api/Administrators/PackageDiscountSet",
-        payload
-      )
-      .then((response) => {
-        navigate(`/administrator/${id}`);
-      })
-      .catch((error) => {
-        console.error("Error adding package:", error);
-      });
+      axios
+        .post(
+          "https://localhost:7095/api/Administrators/PackageDiscountSet",
+          payload
+        )
+        .then((response) => {
+          navigate(`/administrator/${id}`);
+        })
+        .catch((error) => {
+          console.error("Error setting package discount:", error);
+        });
+    }
   };
 
   useEffect(() => {
@@ -63,7 +80,7 @@ export const SetPackageDiscount = () => {
           <h2 className="register-header-white">Set Package Discount</h2>
 
           <Form onSubmit={handleSubmit}>
-            {/* ovde dobavljam broj opcije */}
+            {/* Select Discount */}
             <Form.Group className="mb-3" controlId="formSelectDiscountId">
               <label className="form-label-white" htmlFor="discountSelect">
                 Select Discount:{" "}
@@ -75,6 +92,7 @@ export const SetPackageDiscount = () => {
                 onChange={(event) => {
                   setDiscountId(parseInt(event.target.value, 10));
                 }}
+                isInvalid={!!errors.selectedDiscountId}
               >
                 <option key="default" value="none">
                   -Select Discount-
@@ -88,8 +106,12 @@ export const SetPackageDiscount = () => {
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.selectedDiscountId}
+              </Form.Control.Feedback>
             </Form.Group>
 
+            {/* Select Package */}
             <Form.Group className="mb-3" controlId="formSelectPackageId">
               <label className="form-label-white" htmlFor="packageSelect">
                 Select Package:{" "}
@@ -101,16 +123,23 @@ export const SetPackageDiscount = () => {
                 onChange={(event) => {
                   setPackageId(parseInt(event.target.value, 10));
                 }}
+                isInvalid={!!errors.selectedPackageId}
               >
                 <option key="default" value="none">
-                  -Select package-
+                  -Select Package-
                 </option>
                 {packages.map((pckg) => (
-                  <option key={pckg.packageId} value={pckg.packageId}>
+                  <option
+                    key={`package_${pckg.packageId}`}
+                    value={pckg.packageId}
+                  >
                     {pckg.packageName}
                   </option>
                 ))}
               </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.selectedPackageId}
+              </Form.Control.Feedback>
             </Form.Group>
 
             <button className="register-button">Submit</button>
