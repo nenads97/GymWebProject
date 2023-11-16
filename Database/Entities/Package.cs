@@ -19,6 +19,6 @@ namespace Database.Entities
         public virtual ICollection<PackagePackageDiscount> PackagePackageDiscounts { get; set; }
         public virtual ICollection<PackagePrice> PackagePrices { get; set; }
         //public virtual ICollection<TokenPackage> TokenPackages { get; set; }
-        //public virtual ICollection<Membership> Memberships { get; set; }
+        public virtual ICollection<Membership> Memberships { get; set; }
     }
 }

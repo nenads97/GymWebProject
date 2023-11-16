@@ -39,7 +39,7 @@ namespace Database.AutoMapperConfig
                     .FirstOrDefault()))
                 .ForMember(dest => dest.PackageDiscountValue, opt => opt.MapFrom(src =>
                 src.PackagePackageDiscounts
-                    .Where(pd => pd.PackageDiscount.BeginDate <= dateTime && pd.PackageDiscount.EndDate >= dateTime)
+                    .OrderByDescending(pd => pd.PackagePackageDiscountId)
                     .Select(pd => pd.PackageDiscount.Value)
                     .FirstOrDefault()));
             CreateMap<Employee, PersonGetDto>();
@@ -54,13 +54,25 @@ namespace Database.AutoMapperConfig
                     .FirstOrDefault()))
                 .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.PackagePackageDiscounts
                     .Select(pd => pd.Package.PackageName)
-                    .FirstOrDefault()))
-                .ForMember(p => p.PackageDiscountId, opt => opt.MapFrom(src => src.PackagePackageDiscounts
-                    .Select(pd => pd.PackageDiscountId)
                     .FirstOrDefault()));
+
+            CreateMap<PackagePackageDiscount, PackagePackageDiscountGetDto>()
+                .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName))
+                .ForMember(p => p.BeginDate, opt => opt.MapFrom(src => src.PackageDiscount.BeginDate))
+                .ForMember(p => p.EndDate, opt => opt.MapFrom(src => src.PackageDiscount.EndDate))
+                .ForMember(p => p.Value, opt => opt.MapFrom(src => src.PackageDiscount.Value));
 
             //Employee Get Dtos
             CreateMap<Client, ClientGetDto>();
+
+            //Client Create Dtos
+            CreateMap<MembershipCreateDto, Membership>();
+
+            //Client Get Dtos
+            CreateMap<Membership, MembershipGetDto>()
+                .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName))
+                .ForMember(p => p.ClientName, opt => opt.MapFrom(src => src.Client.Firstname))
+                .ForMember(p => p.ClientSurname, opt => opt.MapFrom(src => src.Client.Surname));
         }
 
     }
