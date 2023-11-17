@@ -4,6 +4,6 @@
     "\\Database",
     "\\Database\\Controllers"
   ],
-  "SelectedNode": "\\GymWebApp.sln",
+  "SelectedNode": "\\Database\\Controllers\\LoginController.cs",
   "PreviewInSolutionExplorer": false
 }

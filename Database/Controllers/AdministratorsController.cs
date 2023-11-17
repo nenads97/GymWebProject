@@ -53,25 +53,9 @@ namespace Database.Controllers
         public IActionResult PackageDiscountCreate([FromBody] PackageDiscountCreateDto dto)
         {
             var newDiscount = _mapper.Map<PackageDiscount>(dto);
-            foreach (var c in _context.PackageDiscounts)
-            {
-                if (c.Value == newDiscount.Value)
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden, new Database.Authentication.Response { Status = "Error", Message = "Already exist that package discount" });
-                }
-            }
-            try
-            {
                 _context.PackageDiscounts.Add(newDiscount);
                 _context.SaveChanges();
                 return Ok(newDiscount);
-            }
-            catch (DbUpdateException ex)
-            {
-                // Obrada greške
-                return StatusCode(StatusCodes.Status500InternalServerError, new Database.Authentication.Response { Status = "Error", Message = "An error occurred while saving the package discount." });
-            }
-
         }
 
         [HttpPost]
