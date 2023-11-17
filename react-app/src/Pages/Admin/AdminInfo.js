@@ -3,15 +3,14 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import axios from "axios";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import axios from "axios";
 
 export const AdminInfo = () => {
   const [admin, setAdmin] = useState([]);
 
   const { id } = useParams();
-  //const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -100,7 +99,10 @@ export const AdminInfo = () => {
                 <span className="admin_name headers">
                   {admin.firstname} {admin.surname}
                 </span>{" "}
-                Role: <span className="admin_name headers">Administrator</span>
+                Role:{" "}
+                <span className="admin_name headers admin-role">
+                  Administrator
+                </span>
               </Navbar.Text>
               <NavDropdown
                 title={
