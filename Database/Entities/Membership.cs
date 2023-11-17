@@ -8,8 +8,8 @@ namespace Database.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MembershipId { get; set; }
-        public DateTime JoiningDate { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTime JoiningDate { get; set; } = DateTime.Now;
+        public DateTime ExpiryDate { get; set; } = DateTime.Now.AddMonths(1);
 
         [ForeignKey("PackageFK")]
         public int PackageId { get; set; }

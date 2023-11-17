@@ -347,6 +347,19 @@ namespace Database.Controllers
 
             var packageDiscounts = _context.PackageDiscounts.Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.Package).ToList();
             var packageDiscountsDtos = _mapper.Map<IEnumerable<PackageDiscountGetDto>>(packageDiscounts);
+            Console.WriteLine();
+
+            return Ok(packageDiscountsDtos);
+        }
+
+        [HttpGet]
+        [Route("PackagePackageDiscountGet")]
+        public IActionResult GetPackagePackageDiscounts()
+        {
+
+            var packageDiscounts = _context.PackagePackageDiscounts.Include(p => p.PackageDiscount).Include(p => p.Package).ToList();
+            var packageDiscountsDtos = _mapper.Map<IEnumerable<PackagePackageDiscountGetDto>>(packageDiscounts);
+            Console.WriteLine();
 
             return Ok(packageDiscountsDtos);
         }
@@ -421,12 +434,29 @@ namespace Database.Controllers
         {
             var package = _context.Packages.FirstOrDefault(q => q.PackageId == id);
             var adminPackage = _context.PackageAdministrators.FirstOrDefault(q => q.PackageId == id);
+            var packageDiscounts = _context.PackagePackageDiscounts.ToList();
+            var packagePrices = _context.PackagePrices.ToList();
+
 
             if (package is null)
             {
                 return NotFound("Package Not Found");
             }
 
+            foreach (var disc in packageDiscounts)
+            {
+                if (disc.PackageId == id)
+                {
+                    _context.PackagePackageDiscounts.Remove(disc);
+                }
+            }
+            foreach (var price in packagePrices)
+            {
+                if (price.PackageId == id)
+                {
+                    _context.PackagePrices.Remove(price);
+                }
+            }
             _context.PackageAdministrators.Remove(adminPackage);
             _context.Packages.Remove(package);
             

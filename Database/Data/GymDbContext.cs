@@ -31,7 +31,7 @@ namespace Database.Data
         public virtual DbSet<PackageAdministrator> PackageAdministrators { get; set; }
         public virtual DbSet<TokenPrice> TokenPrices { get; set; }
         public virtual DbSet<PackagePackageDiscount> PackagePackageDiscounts { get; set; }
-
+        public virtual DbSet<Membership> Memberships { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -87,6 +87,17 @@ namespace Database.Data
             modelBuilder.Entity<Payment>()
                 .HasOne(m => m.Client)
                 .WithMany(p => p.Payments)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //CLIENT
+            modelBuilder.Entity<Membership>()
+                .HasOne(m => m.Package)
+                .WithMany(p => p.Memberships)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Membership>()
+                .HasOne(m => m.Client)
+                .WithMany(p => p.Memberships)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
