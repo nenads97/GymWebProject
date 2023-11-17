@@ -29,7 +29,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 851px;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -111,7 +111,8 @@
   border: 1px solid #0041cc;
 }
 
-.register-button {
+.register-button,
+.login-button {
   background-color: #3776ff;
   color: white;
   border: none;
@@ -120,6 +121,10 @@
   cursor: pointer;
   display: block;
   margin: 30px auto 10px;
+}
+
+.login-button {
+  background-color: #3776ff;
 }
 
 .register-button:hover {
@@ -223,4 +228,49 @@
 h2 {
   font-size: 26px !important;
   color: #fbd300 !important;
+}
+
+.login-package-create-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.login-register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
+
+.login-form-label-white {
+  text-align: center;
+  width: 341px;
+  padding: 1.5rem 0 0.5rem 0;
+  color: white !important;
+}
+
+.login-register-input {
+  display: block;
+  margin: 1.5rem 0px;
+  padding: 1rem;
+  border: 1px solid #0041cc;
+  width: 250px;
+}
+
+.login-page {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("/src/Images/login.jpg");
 }

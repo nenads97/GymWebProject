@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
@@ -21,7 +20,7 @@ export const Login = () => {
       .then((response) => {
         setError("");
         setPerson(response.data);
-        switch (response.data.role) {
+        switch (person.role) {
           case 0:
             navigate(`/administrator/${response.data.id}`);
             break;
@@ -45,32 +44,43 @@ export const Login = () => {
 
   return (
     <>
-      <div className="login">
-        <div className="auth-form-container">
-          <h2>Login</h2>
-          <form className="login-form" onSubmit={handleSubmit}>
-            <label htmlFor="username">Username: </label>
-            <input
-              type="text"
-              placeholder="Username"
-              id="username"
-              name="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <label htmlFor="password">Password: </label>
-            <input
-              type="password"
-              placeholder="Password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button>Log In</button>
-            {error && <p className="error-message">{error}</p>}{" "}
-            {/* Prikazivanje poruke o grešci ako postoji */}
-          </form>
+      <div className="login-page">
+        <div className="login">
+          <div className="auth-form-container auth-form-container-black">
+            <h2 className="register-header-white">Login</h2>
+
+            <form className="login-register-form" onSubmit={handleSubmit}>
+              <div className="login-form-group">
+                <div className="login-input-group">
+                  <label className="login-form-label-white" htmlFor="username">
+                    Username:{" "}
+                  </label>
+                  <input
+                    className="login-register-input login-register-input-left"
+                    type="text"
+                    placeholder="Username"
+                    id="username"
+                    name="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                  <label htmlFor="password">Password: </label>
+                  <input
+                    className="login-register-input login-register-input-left"
+                    type="password"
+                    placeholder="Password"
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button className="login-button ">Log In</button>
+              {error && <p className="error-message">{error}</p>}{" "}
+              {/* Prikazivanje poruke o grešci ako postoji */}
+            </form>
+          </div>
         </div>
       </div>
     </>

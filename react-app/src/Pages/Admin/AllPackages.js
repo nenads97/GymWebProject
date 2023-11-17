@@ -79,7 +79,9 @@ export const AllPackages = () => {
       <div className="admin-page">
         <Navbar bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
           <Container>
-            <Navbar.Brand>Administrator</Navbar.Brand>
+            <a href={`/administrator/${id}`} className="admin-link">
+              <Navbar.Brand>MainPage</Navbar.Brand>
+            </a>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
               <Nav className="me-auto">
@@ -92,6 +94,11 @@ export const AllPackages = () => {
                     href={`/administrator/${id}/create-package`}
                   >
                     Create Package
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/create-package-discount`}
+                  >
+                    Create Package Discount
                   </NavDropdown.Item>
                   <NavDropdown.Item
                     href={`/administrator/${id}/set-package-discount`}
@@ -130,18 +137,34 @@ export const AllPackages = () => {
                 <Nav.Link href={`/administrator/${id}/clients`}>
                   Clients
                 </Nav.Link>
+                <NavDropdown title="History" id="basic-nav-dropdown">
+                  <NavDropdown.Item href={`/administrator/${id}/price-history`}>
+                    Prices
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/discount-history`}
+                  >
+                    Discounts
+                  </NavDropdown.Item>
+                </NavDropdown>
               </Nav>
               <Navbar.Text>
                 Signed in as:{" "}
                 <span className="admin_name headers">
                   {admin.firstname} {admin.surname}
+                </span>{" "}
+                Role:{" "}
+                <span className="admin_name headers admin-role">
+                  Administrator
                 </span>
-                <a href={`administrator/${id}/admin-info`}>
+              </Navbar.Text>
+              <NavDropdown
+                title={
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
-                    fill="currentColor"
+                    fill="white"
                     className="user-icon"
                     viewBox="0 0 16 16"
                   >
@@ -151,8 +174,14 @@ export const AllPackages = () => {
                       d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
                     />
                   </svg>
-                </a>
-              </Navbar.Text>
+                }
+              >
+                <NavDropdown.Item href={`/administrator/${id}/admin-info`}>
+                  My Info
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href={`/`}>Log Out</NavDropdown.Item>
+              </NavDropdown>
             </Navbar.Collapse>
           </Container>
         </Navbar>
@@ -179,8 +208,11 @@ export const AllPackages = () => {
                 <td>{pckg.packagePriceValue}</td>
                 <td>{pckg.packageDiscountValue}</td>
                 <td>
-                  {pckg.packagePriceValue -
-                    (pckg.packagePriceValue * pckg.packageDiscountValue) / 100}
+                  {pckg.packageDiscountValue === 0
+                    ? pckg.packagePriceValue
+                    : pckg.packagePriceValue -
+                      (pckg.packagePriceValue * pckg.packageDiscountValue) /
+                        100}
                 </td>
                 <td>
                   <Button
