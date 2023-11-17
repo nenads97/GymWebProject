@@ -47,7 +47,7 @@ export const AdminPage = () => {
         <Navbar bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
           <Container>
             <a href={`/administrator/${id}`} className="admin-link">
-              <Navbar.Brand>Administrator</Navbar.Brand>
+              <Navbar.Brand>MainPage</Navbar.Brand>
             </a>
             <Navbar.Toggle />
             <Navbar.Collapse className="justify-content-end">
@@ -61,6 +61,11 @@ export const AdminPage = () => {
                     href={`/administrator/${id}/create-package`}
                   >
                     Create Package
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/create-package-discount`}
+                  >
+                    Create Package Discount
                   </NavDropdown.Item>
                   <NavDropdown.Item
                     href={`/administrator/${id}/set-package-discount`}
@@ -114,6 +119,10 @@ export const AdminPage = () => {
                 Signed in as:{" "}
                 <span className="admin_name headers">
                   {admin.firstname} {admin.surname}
+                </span>{" "}
+                Role:{" "}
+                <span className="admin_name headers admin-role">
+                  Administrator
                 </span>
               </Navbar.Text>
               <NavDropdown

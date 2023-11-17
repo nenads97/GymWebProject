@@ -21,6 +21,7 @@ import { PriceHistory } from "./Pages/Admin/PriceHisory";
 import { UpdateTrainer } from "./Pages/Admin/UpdateTrainer";
 import { UpdateClient } from "./Pages/Admin/UpdateClient";
 import { UpdateEmployee } from "./Pages/Admin/UpdateEmployee";
+import { CreatePackageDiscount } from "./Pages/Admin/CreatePriceDiscount";
 // import Layout from "./Components/Layout";
 
 function App() {
@@ -52,6 +53,10 @@ function App() {
       <Route
         path="/administrator/:id/set-package-discount"
         element={<SetPackageDiscount />}
+      />
+      <Route
+        path="/administrator/:id/create-package-discount"
+        element={<CreatePackageDiscount />}
       />
       <Route
         path="/administrator/:id/set-package-price"

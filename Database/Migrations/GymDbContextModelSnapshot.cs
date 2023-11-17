@@ -45,7 +45,36 @@ namespace Database.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackageAdministrators", (string)null);
+                    b.ToTable("PackageAdministrators");
+                });
+
+            modelBuilder.Entity("Database.Entities.Membership", b =>
+                {
+                    b.Property<int>("MembershipId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MembershipId"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("JoiningDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PackageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MembershipId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("PackageId");
+
+                    b.ToTable("Memberships");
                 });
 
             modelBuilder.Entity("Database.Entities.Package", b =>
@@ -66,7 +95,7 @@ namespace Database.Migrations
 
                     b.HasIndex("AdministratorId");
 
-                    b.ToTable("Packages", (string)null);
+                    b.ToTable("Packages");
                 });
 
             modelBuilder.Entity("Database.Entities.PackageDiscount", b =>
@@ -93,7 +122,7 @@ namespace Database.Migrations
 
                     b.HasIndex("AdministratorId");
 
-                    b.ToTable("PackageDiscounts", (string)null);
+                    b.ToTable("PackageDiscounts");
                 });
 
             modelBuilder.Entity("Database.Entities.PackagePrice", b =>
@@ -122,7 +151,36 @@ namespace Database.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackagePrices", (string)null);
+                    b.ToTable("PackagePrices");
+                });
+
+            modelBuilder.Entity("Database.Entities.Payment", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PaymentAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Payment");
                 });
 
             modelBuilder.Entity("Database.Entities.Person", b =>
@@ -171,7 +229,7 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Persons", (string)null);
+                    b.ToTable("Persons");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
 
@@ -199,7 +257,7 @@ namespace Database.Migrations
 
                     b.HasIndex("AdministratorId");
 
-                    b.ToTable("TokenPrices", (string)null);
+                    b.ToTable("TokenPrices");
                 });
 
             modelBuilder.Entity("Database.JoinTables.PackagePackageDiscount", b =>
@@ -222,7 +280,7 @@ namespace Database.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackagePackageDiscounts", (string)null);
+                    b.ToTable("PackagePackageDiscounts");
                 });
 
             modelBuilder.Entity("Database.Entities.Administrator", b =>
@@ -254,6 +312,9 @@ namespace Database.Migrations
                     b.Property<double>("Balance")
                         .HasColumnType("float");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasDiscriminator().HasValue("Client");
                 });
 
@@ -262,6 +323,13 @@ namespace Database.Migrations
                     b.HasBaseType("Database.Entities.Person");
 
                     b.HasDiscriminator().HasValue("Employee");
+                });
+
+            modelBuilder.Entity("Database.Entities.Trainer", b =>
+                {
+                    b.HasBaseType("Database.Entities.Person");
+
+                    b.HasDiscriminator().HasValue("Trainer");
                 });
 
             modelBuilder.Entity("Database.AdditionalRelations.PackageAdministrator", b =>
@@ -279,6 +347,25 @@ namespace Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Administrator");
+
+                    b.Navigation("Package");
+                });
+
+            modelBuilder.Entity("Database.Entities.Membership", b =>
+                {
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany("Memberships")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Package", "Package")
+                        .WithMany("Memberships")
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
 
                     b.Navigation("Package");
                 });
@@ -324,6 +411,25 @@ namespace Database.Migrations
                     b.Navigation("Package");
                 });
 
+            modelBuilder.Entity("Database.Entities.Payment", b =>
+                {
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany("Payments")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Employee", "Employee")
+                        .WithMany("Payments")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Database.Entities.TokenPrice", b =>
                 {
                     b.HasOne("Database.Entities.Administrator", "Administrator")
@@ -356,6 +462,8 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.Entities.Package", b =>
                 {
+                    b.Navigation("Memberships");
+
                     b.Navigation("PackageAdministrators");
 
                     b.Navigation("PackagePackageDiscounts");
@@ -377,6 +485,18 @@ namespace Database.Migrations
                     b.Navigation("PackagePrices");
 
                     b.Navigation("TokenPrices");
+                });
+
+            modelBuilder.Entity("Database.Entities.Client", b =>
+                {
+                    b.Navigation("Memberships");
+
+                    b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("Database.Entities.Employee", b =>
+                {
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }
