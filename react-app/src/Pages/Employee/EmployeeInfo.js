@@ -1,31 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import axios from "axios";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Table from "react-bootstrap/Table";
-import { Button } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import axios from "axios";
 
-export const EmployeePage = () => {
-  const [admin, setAdmin] = useState([]);
-  const [clients, setClients] = useState([]);
+export const EmployeeInfo = () => {
+  const [employee, setEmployee] = useState([]);
 
   const { id } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     axios
       .get(`https://localhost:7095/api/Administrators/EmployeeGetCurrent/${id}`)
       .then((response) => {
-        setAdmin(response.data);
-      });
-    axios
-      .get(`https://localhost:7095/api/Employees/ClientGet`)
-      .then((response) => {
-        setClients(response.data);
+        setEmployee(response.data);
       });
   }, [id]);
 
@@ -51,7 +42,7 @@ export const EmployeePage = () => {
               <Navbar.Text>
                 Signed in as:{" "}
                 <span className="admin_name headers">
-                  {admin.firstname} {admin.surname}
+                  {employee.firstname} {employee.surname}
                 </span>{" "}
                 Role:{" "}
                 <span className="admin_name headers employee-role">
@@ -85,64 +76,56 @@ export const EmployeePage = () => {
             </Navbar.Collapse>
           </Container>
         </Navbar>
+
         <div className="header-container">
-          <h2 className="clients-header headers">Clients</h2>
+          <h2 className="clients-header headers">Your Informations</h2>
         </div>
-        <Table striped bordered hover variant="dark" className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jmbg</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Gender</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-              <th>Balance</th>
-              <th>Status</th>
-              <th>Commands</th>
-            </tr>
-          </thead>
-          <tbody>
-            {clients.map((client, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{client.jmbg}</td>
-                <td>{client.firstname}</td>
-                <td>{client.surname}</td>
-                <td>{client.username}</td>
-                <td>{client.password}</td>
-                <td>{client.gender === 0 ? `Male` : `Female`}</td>
-                <td>{client.email}</td>
-                <td>{client.phoneNumber}</td>
-                <td>{client.balance}</td>
-                <td>
-                  {client.status === 0 ? (
-                    <span className="client-status-inactive">Inactive</span>
-                  ) : (
-                    <span className="client-status-active">Active</span>
-                  )}
-                </td>
-                <td>
-                  <Button
-                    className="card-button"
-                    variant="warning"
-                    type="button"
-                    onClick={() => {
-                      navigate(
-                        `/employee/${id}/update-client-balance/${client.id}`
-                      );
-                    }}
-                  >
-                    Update Balance
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <div className="body-info">
+          <div className="body-container">
+            <span className="body-row">
+              Jmbg:{" "}
+              <span className="body-row-item-employee">{employee.jmbg}</span>
+            </span>
+            <span className="body-row">
+              First Name:{" "}
+              <span className="body-row-item-employee">
+                {employee.firstname}
+              </span>
+            </span>
+            <span className="body-row">
+              Last Name:{" "}
+              <span className="body-row-item-employee">{employee.surname}</span>
+            </span>
+            <span className="body-row">
+              Username:{" "}
+              <span className="body-row-item-employee">
+                {employee.username}
+              </span>
+            </span>
+            <span className="body-row">
+              Password:{" "}
+              <span className="body-row-item-employee">
+                {employee.password}
+              </span>
+            </span>
+            <span className="body-row">
+              Gender:{" "}
+              <span className="body-row-item-employee">
+                {employee.gender ? "female" : "male"}
+              </span>
+            </span>
+            <span className="body-row">
+              Email:{" "}
+              <span className="body-row-item-employee">{employee.email}</span>
+            </span>
+            <span className="body-row">
+              Phone Number:{" "}
+              <span className="body-row-item-employee">
+                {employee.phoneNumber}
+              </span>
+            </span>
+          </div>
+        </div>
       </div>
     </>
   );

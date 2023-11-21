@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import axios from "axios";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Table from "react-bootstrap/Table";
-import DeleteConfirmation from "../../Components/DeleteConfirmation";
-import { Button } from "react-bootstrap";
+import axios from "axios";
 
-export const AllTrainers = () => {
+export const AdminInfo = () => {
   const [admin, setAdmin] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(0);
 
   const { id } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -25,55 +18,10 @@ export const AllTrainers = () => {
       .then((response) => {
         setAdmin(response.data);
       });
-
-    axios
-      .get(`https://localhost:7095/api/Administrators/TrainerGet`)
-      .then((response) => {
-        setClients(response.data);
-      });
   }, [id]);
-
-  function showConfirmPopupHandler(clientId) {
-    setShowModal(true);
-    setItemToDelete(clientId);
-  }
-
-  function closeConfirmPopupHandler() {
-    setShowModal(false);
-    setItemToDelete(0);
-  }
-
-  function deleteConfirmHandler() {
-    axios
-      .delete(
-        `https://localhost:7095/api/Administrators/RemoveTrainer/${itemToDelete}`
-      )
-      .then((response) => {
-        // Filter out the deleted item from the existing data
-        const updateClient = clients.filter((item) => item.id !== itemToDelete);
-
-        // Update the state with the updated data
-        setClients(updateClient);
-
-        // Clear the itemToDelete and closeModal
-        setItemToDelete(0);
-        setShowModal(false);
-      })
-      .catch((error) => {
-        // Handle errors if necessary
-        console.error("Error deleting item:", error);
-      });
-  }
 
   return (
     <>
-      <DeleteConfirmation
-        showModal={showModal}
-        title="Delete Confirmation!"
-        body="Are you sure you want to delete this item?"
-        closeConfirmPopupHandler={closeConfirmPopupHandler}
-        deleteConfirmHandler={deleteConfirmHandler}
-      ></DeleteConfirmation>
       <div className="admin-page">
         <Navbar bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
           <Container>
@@ -144,11 +92,6 @@ export const AllTrainers = () => {
                   >
                     Discounts
                   </NavDropdown.Item>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/payment-history`}
-                  >
-                    Client Payments
-                  </NavDropdown.Item>
                 </NavDropdown>
               </Nav>
               <Navbar.Text>
@@ -188,66 +131,42 @@ export const AllTrainers = () => {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-
         <div className="header-container">
-          <h2 className="clients-header headers">Trainers</h2>
+          <h2 className="clients-header headers">Your Informations</h2>
         </div>
-        <Table striped bordered hover variant="dark" className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jmbg</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Gender</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-              <th>Command</th>
-            </tr>
-          </thead>
-          <tbody>
-            {clients.map((client, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{client.jmbg}</td>
-                <td>{client.firstname}</td>
-                <td>{client.surname}</td>
-                <td>{client.username}</td>
-                <td>{client.password}</td>
-                <td>{client.gender === 0 ? `Male` : `Female`}</td>
-                <td>{client.email}</td>
-                <td>0{client.phoneNumber}</td>
-                <td>
-                  <Button
-                    className="card-button"
-                    variant="warning"
-                    type="button"
-                    onClick={() => {
-                      navigate(
-                        `/administrator/${id}/update-trainer/${client.id}`
-                      );
-                    }}
-                  >
-                    Update
-                  </Button>
-                  &nbsp;
-                  <Button
-                    className="delete-button"
-                    variant="danger"
-                    type="button"
-                    onClick={() => {
-                      showConfirmPopupHandler(client.id);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        <div className="body-info">
+          <div className="body-container">
+            <span className="body-row">
+              Jmbg: <span className="body-row-item">{admin.jmbg}</span>
+            </span>
+            <span className="body-row">
+              First Name:{" "}
+              <span className="body-row-item">{admin.firstname}</span>
+            </span>
+            <span className="body-row">
+              Last Name: <span className="body-row-item">{admin.surname}</span>
+            </span>
+            <span className="body-row">
+              Username: <span className="body-row-item">{admin.username}</span>
+            </span>
+            <span className="body-row">
+              Password: <span className="body-row-item">{admin.password}</span>
+            </span>
+            <span className="body-row">
+              Gender:{" "}
+              <span className="body-row-item">
+                {admin.gender ? "female" : "male"}
+              </span>
+            </span>
+            <span className="body-row">
+              Email: <span className="body-row-item">{admin.email}</span>
+            </span>
+            <span className="body-row">
+              Phone Number:{" "}
+              <span className="body-row-item">{admin.phoneNumber}</span>
+            </span>
+          </div>
+        </div>
       </div>
     </>
   );

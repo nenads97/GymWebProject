@@ -1,63 +1,78 @@
 import React, { useState, useEffect } from "react";
-//import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import axios from "axios";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Table from "react-bootstrap/Table";
 
-export const ClientPage = () => {
-  const [admin, setAdmin] = useState([]);
-  const [employees, setEmployees] = useState([]);
-  const [trainers, setTrainers] = useState([]);
-  const [clients, setClients] = useState([]);
+export const PaymentHistory = () => {
+  const [payment, setPayments] = useState([]);
 
   const { id } = useParams();
-  //const navigate = useNavigate();
+
+  const [employee, setEmployee] = useState([]);
 
   useEffect(() => {
     axios
-      .get(`https://localhost:7095/api/Administrators/AdminGetCurrent/${id}`)
+      .get(`https://localhost:7095/api/Administrators/EmployeeGetCurrent/${id}`)
       .then((response) => {
-        setAdmin(response.data);
-      });
-    axios
-      .get(`https://localhost:7095/api/Administrators/ClientGet`)
-      .then((response) => {
-        setClients(response.data);
-      });
-    axios
-      .get(`https://localhost:7095/api/Administrators/TrainerGet`)
-      .then((response) => {
-        setTrainers(response.data);
-      });
-
-    axios
-      .get(`https://localhost:7095/api/Administrators/EmployeeGet`)
-      .then((response) => {
-        setEmployees(response.data);
+        setEmployee(response.data);
       });
   }, [id]);
 
+  useEffect(() => {
+    axios
+      .get(`https://localhost:7095/api/Employees/GetPayments`)
+      .then((response) => {
+        const formattedPayments = response.data.map((payment) => ({
+          ...payment,
+          paymentDate: formatDate(payment.paymentDate),
+        }));
+        setPayments(formattedPayments);
+      });
+  }, [id]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  };
+
   return (
     <>
-      <div className="admin-page">
+      <div className="employee-page">
         <Navbar bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
           <Container>
             <a href={`/employee/${id}`} className="admin-link">
               <Navbar.Brand>MainPage</Navbar.Brand>
             </a>
             <Navbar.Toggle />
+            <Nav className="me-auto">
+              <Nav.Link href={`/employee/${id}/trainings`}>Trainings</Nav.Link>
+              <Nav.Link href={`/employee/${id}/memberships`}>
+                Membership History
+              </Nav.Link>
+              <Nav.Link href={`/employee/${id}/payment-history`}>
+                Payment History
+              </Nav.Link>
+            </Nav>
             <Navbar.Collapse className="justify-content-end">
               <Navbar.Text>
                 Signed in as:{" "}
                 <span className="admin_name headers">
-                  {admin.firstname} {admin.surname}
+                  {employee.firstname} {employee.surname}
                 </span>{" "}
                 Role:{" "}
-                <span className="admin_name headers admin-role">Employee</span>
+                <span className="admin_name headers employee-role">
+                  Employee
+                </span>
               </Navbar.Text>
               <NavDropdown
                 title={
@@ -66,7 +81,7 @@ export const ClientPage = () => {
                     width="16"
                     height="16"
                     fill="white"
-                    className="user-icon"
+                    className="user-icon employee-icon"
                     viewBox="0 0 16 16"
                   >
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
@@ -77,7 +92,7 @@ export const ClientPage = () => {
                   </svg>
                 }
               >
-                <NavDropdown.Item href={`/administrator/${id}/admin-info`}>
+                <NavDropdown.Item href={`/employee/${id}/employee-info`}>
                   My Info
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
@@ -87,34 +102,28 @@ export const ClientPage = () => {
           </Container>
         </Navbar>
         <div className="header-container">
-          <h2 className="clients-header headers">Clients</h2>
+          <h2 className="clients-header headers">Payment History</h2>
         </div>
         <Table striped bordered hover variant="dark" className="table">
           <thead>
             <tr>
               <th>#</th>
-              <th>Jmbg</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Gender</th>
-              <th>Email</th>
-              <th>Phone Number</th>
+              <th>JMBG</th>
+              <th>Client Name</th>
+              <th>Client Surname</th>
+              <th>Amount</th>
+              <th>Payment Date</th>
             </tr>
           </thead>
           <tbody>
-            {clients.map((client, index) => (
+            {payment.map((payment, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{client.jmbg}</td>
-                <td>{client.firstname}</td>
-                <td>{client.surname}</td>
-                <td>{client.username}</td>
-                <td>{client.password}</td>
-                <td>{client.gender === 0 ? `Male` : `Female`}</td>
-                <td>{client.email}</td>
-                <td>0{client.phoneNumber}</td>
+                <td>{payment.clientJmbg}</td>
+                <td>{payment.clientName}</td>
+                <td>{payment.clientSurname}</td>
+                <td>{payment.paymentAmount}</td>
+                <td>{payment.paymentDate}</td>
               </tr>
             ))}
           </tbody>
