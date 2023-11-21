@@ -123,6 +123,9 @@ export const CreatePackage = () => {
                 >
                   Discounts
                 </NavDropdown.Item>
+                <NavDropdown.Item href={`/administrator/${id}/payment-history`}>
+                  Client Payments
+                </NavDropdown.Item>
               </NavDropdown>
             </Nav>
             <Navbar.Text>
