@@ -4,8 +4,13 @@ using Database.Dtos.Admin.Get;
 using Database.Dtos.Client;
 using Database.Dtos.Client.Get;
 using Database.Dtos.Employee;
+using Database.Dtos.Employee.Create;
+using Database.Dtos.Employee.Get;
+using Database.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Database.Controllers
 {
@@ -28,7 +33,7 @@ namespace Database.Controllers
         {
 
             var clients = _context.Clients.ToList();
-            var clientDtos = _mapper.Map<IEnumerable<PersonGetDto>>(clients);
+            var clientDtos = _mapper.Map<IEnumerable<ClientsGetDto>>(clients);
 
             return Ok(clientDtos);
         }
@@ -44,6 +49,29 @@ namespace Database.Controllers
             _context.SaveChanges();
 
             return Ok(client);
+        }
+
+        [HttpPost]
+        [Route("CreatePayment")]
+        public IActionResult AddPayment(PaymentCreateDto dto)
+        {
+            var newPayment = _mapper.Map<Payment>(dto);
+
+            _context.Add(newPayment);
+
+            _context.SaveChanges();
+
+            return Ok(newPayment);
+        }
+
+        [HttpGet]
+        [Route("GetPayments")]
+        public IActionResult GetPayments()
+        {
+            var payments = _context.Payments.Include(m => m.Client).ToList();
+            var paymentsDtos = _mapper.Map<IEnumerable<PaymentGetDto>>(payments);
+
+            return Ok(paymentsDtos);
         }
     }
 }

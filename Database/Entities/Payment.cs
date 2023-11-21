@@ -8,7 +8,7 @@ namespace Database.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PaymentId { get; set; }
-        public DateTime PaymentDate { get; set; }
+        public DateTime PaymentDate { get; set; } = DateTime.Now;
         public decimal PaymentAmount { get; set; }
 
         [ForeignKey("Client")]
