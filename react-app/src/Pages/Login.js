@@ -76,6 +76,7 @@ export const Login = () => {
                   />
                 </div>
               </div>
+              <a href={`/registration`}>Don't have an account yet? Sign Up</a>
               <button className="login-button ">Log In</button>
               {error && <p className="error-message">{error}</p>}{" "}
               {/* Prikazivanje poruke o grešci ako postoji */}
