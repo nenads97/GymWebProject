@@ -32,6 +32,7 @@ namespace Database.Data
         public virtual DbSet<TokenPrice> TokenPrices { get; set; }
         public virtual DbSet<PackagePackageDiscount> PackagePackageDiscounts { get; set; }
         public virtual DbSet<Membership> Memberships { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

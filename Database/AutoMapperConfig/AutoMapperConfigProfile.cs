@@ -6,6 +6,8 @@ using Database.Dtos.Admin.Create;
 using Database.Dtos.Admin.Get;
 using Database.Dtos.Client.Create;
 using Database.Dtos.Client.Get;
+using Database.Dtos.Employee.Create;
+using Database.Dtos.Employee.Get;
 using Database.Entities;
 using Database.JoinTables;
 
@@ -63,7 +65,14 @@ namespace Database.AutoMapperConfig
                 .ForMember(p => p.Value, opt => opt.MapFrom(src => src.PackageDiscount.Value));
 
             //Employee Get Dtos
-            CreateMap<Client, ClientGetDto>();
+            CreateMap<Client, ClientsGetDto>();
+            CreateMap<Payment, PaymentGetDto>()
+                .ForMember(p => p.ClientName, opt => opt.MapFrom(src => src.Client.Firstname))
+                .ForMember(p => p.ClientSurname, opt => opt.MapFrom(src => src.Client.Surname))
+                .ForMember(p => p.ClientJmbg, opt => opt.MapFrom(src => src.Client.JMBG));
+
+            //Employee Create Dtos
+            CreateMap<PaymentCreateDto, Payment>();
 
             //Client Create Dtos
             CreateMap<MembershipCreateDto, Membership>();
