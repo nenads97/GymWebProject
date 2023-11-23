@@ -22,6 +22,58 @@ namespace Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Database.AdditionalRelations.ClientGroupToken", b =>
+                {
+                    b.Property<int>("ClientGroupTokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientGroupTokenId"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupTokenId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberOfGroupTokens")
+                        .HasColumnType("int");
+
+                    b.HasKey("ClientGroupTokenId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("GroupTokenId");
+
+                    b.ToTable("ClientGroupTokens");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.ClientPersonalToken", b =>
+                {
+                    b.Property<int>("ClientPersonalTokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientPersonalTokenId"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("NumberOfPersonalTokens")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonalTokenId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ClientPersonalTokenId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("PersonalTokenId");
+
+                    b.ToTable("ClientPersonalTokens");
+                });
+
             modelBuilder.Entity("Database.AdditionalRelations.PackageAdministrator", b =>
                 {
                     b.Property<int>("PackageAdministratorId")
@@ -46,6 +98,58 @@ namespace Database.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("PackageAdministrators");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TokenPackage", b =>
+                {
+                    b.Property<int>("TokenPackageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TokenPackageId"));
+
+                    b.Property<int>("PackageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TokenId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TokenPackageId");
+
+                    b.HasIndex("PackageId");
+
+                    b.HasIndex("TokenId");
+
+                    b.ToTable("TokenPackages");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TokenPurchase", b =>
+                {
+                    b.Property<int>("TokenPurchaseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TokenPurchaseId"));
+
+                    b.Property<int>("PurchaseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TokenId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TokenPurchaseId");
+
+                    b.HasIndex("PurchaseId");
+
+                    b.HasIndex("TokenId");
+
+                    b.ToTable("TokenPurchases");
                 });
 
             modelBuilder.Entity("Database.Entities.Membership", b =>
@@ -180,7 +284,7 @@ namespace Database.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Payment");
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Database.Entities.Person", b =>
@@ -236,6 +340,54 @@ namespace Database.Migrations
                     b.UseTphMappingStrategy();
                 });
 
+            modelBuilder.Entity("Database.Entities.Purchase", b =>
+                {
+                    b.Property<int>("PurchaseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PurchaseId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("PurchaseId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Purchases");
+                });
+
+            modelBuilder.Entity("Database.Entities.Token", b =>
+                {
+                    b.Property<int>("TokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TokenId"));
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TokenType")
+                        .HasColumnType("int");
+
+                    b.HasKey("TokenId");
+
+                    b.ToTable("Tokens");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Token");
+
+                    b.UseTphMappingStrategy();
+                });
+
             modelBuilder.Entity("Database.Entities.TokenPrice", b =>
                 {
                     b.Property<int>("TokenPriceId")
@@ -250,12 +402,17 @@ namespace Database.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("TokenId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Value")
                         .HasColumnType("float");
 
                     b.HasKey("TokenPriceId");
 
                     b.HasIndex("AdministratorId");
+
+                    b.HasIndex("TokenId");
 
                     b.ToTable("TokenPrices");
                 });
@@ -332,6 +489,74 @@ namespace Database.Migrations
                     b.HasDiscriminator().HasValue("Trainer");
                 });
 
+            modelBuilder.Entity("Database.Entities.GroupToken", b =>
+                {
+                    b.HasBaseType("Database.Entities.Token");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("Tokens", t =>
+                        {
+                            t.Property("ClientId")
+                                .HasColumnName("GroupToken_ClientId");
+                        });
+
+                    b.HasDiscriminator().HasValue("GroupToken");
+                });
+
+            modelBuilder.Entity("Database.Entities.PersonalToken", b =>
+                {
+                    b.HasBaseType("Database.Entities.Token");
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasDiscriminator().HasValue("PersonalToken");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.ClientGroupToken", b =>
+                {
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany("ClientGroupTokens")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.GroupToken", "GroupToken")
+                        .WithMany("ClientGroupTokens")
+                        .HasForeignKey("GroupTokenId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("GroupToken");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.ClientPersonalToken", b =>
+                {
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany("ClientPersonalTokens")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.PersonalToken", "PersonalToken")
+                        .WithMany("ClientPersonalTokens")
+                        .HasForeignKey("PersonalTokenId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("PersonalToken");
+                });
+
             modelBuilder.Entity("Database.AdditionalRelations.PackageAdministrator", b =>
                 {
                     b.HasOne("Database.Entities.Administrator", "Administrator")
@@ -349,6 +574,44 @@ namespace Database.Migrations
                     b.Navigation("Administrator");
 
                     b.Navigation("Package");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TokenPackage", b =>
+                {
+                    b.HasOne("Database.Entities.Package", "Package")
+                        .WithMany("TokenPackages")
+                        .HasForeignKey("PackageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Token", "Token")
+                        .WithMany("TokenPackages")
+                        .HasForeignKey("TokenId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Package");
+
+                    b.Navigation("Token");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TokenPurchase", b =>
+                {
+                    b.HasOne("Database.Entities.Purchase", "Purchase")
+                        .WithMany("TokenPurchases")
+                        .HasForeignKey("PurchaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Token", "Token")
+                        .WithMany("TokenPurchases")
+                        .HasForeignKey("TokenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Purchase");
+
+                    b.Navigation("Token");
                 });
 
             modelBuilder.Entity("Database.Entities.Membership", b =>
@@ -430,15 +693,34 @@ namespace Database.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("Database.Entities.Purchase", b =>
+                {
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany("Purchases")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("Database.Entities.TokenPrice", b =>
                 {
                     b.HasOne("Database.Entities.Administrator", "Administrator")
                         .WithMany("TokenPrices")
                         .HasForeignKey("AdministratorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Token", "Token")
+                        .WithMany("TokenPrices")
+                        .HasForeignKey("TokenId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Administrator");
+
+                    b.Navigation("Token");
                 });
 
             modelBuilder.Entity("Database.JoinTables.PackagePackageDiscount", b =>
@@ -460,6 +742,24 @@ namespace Database.Migrations
                     b.Navigation("PackageDiscount");
                 });
 
+            modelBuilder.Entity("Database.Entities.GroupToken", b =>
+                {
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("Database.Entities.PersonalToken", b =>
+                {
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId");
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("Database.Entities.Package", b =>
                 {
                     b.Navigation("Memberships");
@@ -469,11 +769,27 @@ namespace Database.Migrations
                     b.Navigation("PackagePackageDiscounts");
 
                     b.Navigation("PackagePrices");
+
+                    b.Navigation("TokenPackages");
                 });
 
             modelBuilder.Entity("Database.Entities.PackageDiscount", b =>
                 {
                     b.Navigation("PackagePackageDiscounts");
+                });
+
+            modelBuilder.Entity("Database.Entities.Purchase", b =>
+                {
+                    b.Navigation("TokenPurchases");
+                });
+
+            modelBuilder.Entity("Database.Entities.Token", b =>
+                {
+                    b.Navigation("TokenPackages");
+
+                    b.Navigation("TokenPrices");
+
+                    b.Navigation("TokenPurchases");
                 });
 
             modelBuilder.Entity("Database.Entities.Administrator", b =>
@@ -489,14 +805,30 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.Entities.Client", b =>
                 {
+                    b.Navigation("ClientGroupTokens");
+
+                    b.Navigation("ClientPersonalTokens");
+
                     b.Navigation("Memberships");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("Purchases");
                 });
 
             modelBuilder.Entity("Database.Entities.Employee", b =>
                 {
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("Database.Entities.GroupToken", b =>
+                {
+                    b.Navigation("ClientGroupTokens");
+                });
+
+            modelBuilder.Entity("Database.Entities.PersonalToken", b =>
+                {
+                    b.Navigation("ClientPersonalTokens");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\Database",
+    "\\Database\\AutoMapperConfig",
     "\\Database\\Controllers"
   ],
-  "SelectedNode": "\\Database\\Controllers\\LoginController.cs",
+  "SelectedNode": "\\Database\\Controllers\\AdministratorsController.cs",
   "PreviewInSolutionExplorer": false
 }

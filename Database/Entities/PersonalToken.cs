@@ -8,12 +8,17 @@ namespace Database.Entities
     {
         public PersonalToken(int tokenId, Category tokenType) : base(tokenId, tokenType) { }
 
-        [ForeignKey("ClientPersonalToken")]
-        public int? ClientPersonalTokenId { get; set; }
-        public virtual ClientPersonalToken ClientPersonalToken { get; set; }
+        
+        [ForeignKey("Client")]
+        public int? ClientId { get; set; }
+        public virtual Client Client { get; set; }
 
+        public ICollection<ClientPersonalToken> ClientPersonalTokens { get; set; }
+
+        /*
         [ForeignKey("PTokenPTraining")]
         public int? PTokenPTrainingId { get; set; }
         public PTokenPTraining PTokenPTraining { get; set; }
+        */
     }
 }

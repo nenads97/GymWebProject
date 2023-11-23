@@ -32,6 +32,20 @@ namespace Database.Data
         public virtual DbSet<TokenPrice> TokenPrices { get; set; }
         public virtual DbSet<PackagePackageDiscount> PackagePackageDiscounts { get; set; }
         public virtual DbSet<Membership> Memberships { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<PersonalToken> PersonalTokens { get; set; }
+        public virtual DbSet<ClientPersonalToken> ClientPersonalTokens { get; set; }
+        public virtual DbSet<GroupToken> GroupTokens { get; set; }
+        public virtual DbSet<ClientGroupToken> ClientGroupTokens { get; set; }
+        public virtual DbSet<Purchase> Purchases { get; set; }
+        public virtual DbSet<TokenPurchase> TokenPurchases { get; set; }
+        public virtual DbSet<Token> Tokens { get; set; }
+        public virtual DbSet<TokenPackage> TokenPackages { get; set; }
+
+
+
+
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -98,6 +112,46 @@ namespace Database.Data
             modelBuilder.Entity<Membership>()
                 .HasOne(m => m.Client)
                 .WithMany(p => p.Memberships)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TokenPrice>()
+                .HasOne(m => m.Token)
+                .WithMany(p => p.TokenPrices)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TokenPrice>()
+                .HasOne(m => m.Administrator)
+                .WithMany(p => p.TokenPrices)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TokenPackage>()
+                .HasOne(m => m.Package)
+                .WithMany(p => p.TokenPackages)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TokenPackage>()
+                .HasOne(m => m.Token)
+                .WithMany(p => p.TokenPackages)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ClientPersonalToken>()
+                .HasOne(m => m.Client)
+                .WithMany(p => p.ClientPersonalTokens)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ClientPersonalToken>()
+                .HasOne(m => m.PersonalToken)
+                .WithMany(p => p.ClientPersonalTokens)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ClientGroupToken>()
+                .HasOne(m => m.GroupToken)
+                .WithMany(p => p.ClientGroupTokens)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ClientGroupToken>()
+                .HasOne(m => m.Client)
+                .WithMany(p => p.ClientGroupTokens)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

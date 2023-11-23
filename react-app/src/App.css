@@ -25,7 +25,8 @@
 .client-register-page,
 .package-create-page,
 .employee-register-page,
-.trainer-register-page {
+.trainer-register-page,
+.employee-balance-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,6 +49,10 @@
 
 .package-create-page {
   background-image: url("/src/Images/person-wrapping-christmas-gift.jpg");
+}
+
+.employee-balance-page {
+  background-image: url("/src/Images/employee-background.jpg");
 }
 
 .auth-form-container-black {
@@ -273,4 +278,66 @@ h2 {
   background-repeat: no-repeat;
   background-size: cover;
   background-image: url("/src/Images/login.jpg");
+}
+
+/* EMPLOYEE */
+.client-status-inactive {
+  color: red;
+}
+
+.client-status-active {
+  color: green;
+}
+
+.employee-role {
+  color: #fbd300;
+}
+
+.employee-page {
+  background-image: url("/src/Images/employee-background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 931px;
+}
+
+.employee-icon,
+.client-icon {
+  scale: 1.5;
+  margin-left: 10px;
+}
+
+.employee-icon:hover {
+  fill: #fbd300;
+  color: #fbd300;
+}
+
+.client-icon:hover {
+  fill: #61fb00;
+  color: #61fb00;
+}
+
+.body-row-item-employee {
+  color: #fbd300;
+}
+
+.without-navbar {
+  min-height: 931px;
+  position: relative;
+}
+
+.bi-arrow-left-circle {
+  position: absolute;
+  top: 50px;
+  left: 100px;
+  scale: 3;
+  fill: black;
+}
+
+.bi-arrow-left-circle:hover {
+  fill: yellow;
+}
+
+.client-role,
+.body-row-item-client {
+  color: #61fb00;
 }

@@ -6,6 +6,8 @@ using Database.Dtos.Admin.Create;
 using Database.Dtos.Admin.Get;
 using Database.Dtos.Client.Create;
 using Database.Dtos.Client.Get;
+using Database.Dtos.Employee.Create;
+using Database.Dtos.Employee.Get;
 using Database.Entities;
 using Database.JoinTables;
 
@@ -63,12 +65,24 @@ namespace Database.AutoMapperConfig
                 .ForMember(p => p.Value, opt => opt.MapFrom(src => src.PackageDiscount.Value));
 
             //Employee Get Dtos
-            CreateMap<Client, ClientGetDto>();
+            CreateMap<Client, ClientsGetDto>();
+            CreateMap<Payment, PaymentGetDto>()
+                .ForMember(p => p.ClientName, opt => opt.MapFrom(src => src.Client.Firstname))
+                .ForMember(p => p.ClientSurname, opt => opt.MapFrom(src => src.Client.Surname))
+                .ForMember(p => p.ClientJmbg, opt => opt.MapFrom(src => src.Client.JMBG));
+
+            //Employee Create Dtos
+            CreateMap<PaymentCreateDto, Payment>();
 
             //Client Create Dtos
             CreateMap<MembershipCreateDto, Membership>();
+            CreateMap<PurchaseCreateDto, Purchase>();
+            CreateMap<TokenPurchaseCreateDto, TokenPurchase>();
+            CreateMap<TokenCreateDto, Token>();
+            CreateMap<TokenPackageCreateDto, TokenPackage>();
 
             //Client Get Dtos
+            CreateMap<Client, ClientGetDto>();
             CreateMap<Membership, MembershipGetDto>()
                 .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName))
                 .ForMember(p => p.ClientName, opt => opt.MapFrom(src => src.Client.Firstname))

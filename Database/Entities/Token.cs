@@ -7,6 +7,9 @@ namespace Database.Entities
 {
     public class Token
     {
+        public Token()
+        {
+        }
         public Token(int tokenId, Category tokenType)
         {
             TokenId = tokenId;
@@ -19,11 +22,7 @@ namespace Database.Entities
         public Category TokenType { get; set; }
 
         public virtual ICollection<TokenPrice> TokenPrices { get; set; }
-
-        [ForeignKey("TokenPackage")]
-        public int? TokenPackageId { get; set; }
-        public virtual TokenPackage TokenPackage { get; set; }
-
+        public virtual ICollection<TokenPackage> TokenPackages { get; set; }
         public virtual ICollection<TokenPurchase> TokenPurchases { get; set; }
     }
 }

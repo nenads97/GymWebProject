@@ -29,14 +29,10 @@ namespace Database.Entities
         public virtual ICollection<ClientRequest> ClientRequests { get; set; }
         public virtual ICollection<SignUpForTraining> SignUpsForTraining { get; set; }
         public virtual ICollection<SignOutFromTraining> SignOutsFromTraining { get; set; }
-        public virtual ICollection<Purchase> Purchases { get; set; }
-        public virtual ICollection<ClientPersonalToken> ClientPersonalTokens { get; set; }
-        public virtual ICollection<ClientGroupToken> ClientGroupTokens { get; set; }
         */
+        public virtual ICollection<ClientGroupToken> ClientGroupTokens { get; set; }
+        public virtual ICollection<ClientPersonalToken> ClientPersonalTokens { get; set; }
+        public virtual ICollection<Purchase> Purchases { get; set; }
         public virtual ICollection<Membership> Memberships { get; set; } 
-
-        // Za svaku osobu može postojati jedan ili nijedan personalni ili grupni token
-        //public virtual Personalni PersonalniToken { get; set; }
-        //public virtual Grupni GrupniToken { get; set; }
     }
 }

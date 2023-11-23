@@ -1,6 +1,6 @@
 import "./App.css";
 import { Login } from "./Pages/Login";
-import { ClientRegistration } from "./Pages/Admin/ClientRegistration";
+import { ClientRegistration } from "./Pages/ClientRegistration";
 import { Routes, Route } from "react-router-dom";
 import { AdminPage } from "./Pages/Admin/AdminPage";
 import { EmployeePage } from "./Pages/Employee/EmployeePage";
@@ -22,13 +22,18 @@ import { UpdateTrainer } from "./Pages/Admin/UpdateTrainer";
 import { UpdateClient } from "./Pages/Admin/UpdateClient";
 import { UpdateEmployee } from "./Pages/Admin/UpdateEmployee";
 import { CreatePackageDiscount } from "./Pages/Admin/CreatePriceDiscount";
+import { EmployeeInfo } from "./Pages/Employee/EmployeeInfo";
+import { UpdateClientBalance } from "./Pages/Employee/UpdateBalance";
+import { PaymentHistory } from "./Pages/Employee/PaymentHistory";
+import { ClientPayments } from "./Pages/Admin/ClientPayments";
+import { ClientInfo } from "./Pages/Client/ClientInfo";
 // import Layout from "./Components/Layout";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/register" element={<ClientRegistration />} />
+      <Route path="/registration" element={<ClientRegistration />} />
       <Route path="/administrator/:id" element={<AdminPage />} />
       <Route path="/employee/:id" element={<EmployeePage />} />
       <Route path="/trainer/:id" element={<TrainerPage />} />
@@ -71,6 +76,10 @@ function App() {
         element={<PriceHistory />}
       />
       <Route
+        path="/administrator/:id/payment-history"
+        element={<ClientPayments />}
+      />
+      <Route
         path="/administrator/:id/update-trainer/:trainerId"
         element={<UpdateTrainer />}
       />
@@ -82,6 +91,20 @@ function App() {
         path="/administrator/:id/update-employee/:employeeId"
         element={<UpdateEmployee />}
       />
+      <Route
+        path="/employee/:id/employee-info"
+        element={<EmployeeInfo />}
+      ></Route>
+      <Route
+        path="/employee/:id/update-client-balance/:clientId"
+        element={<UpdateClientBalance />}
+      ></Route>
+      <Route
+        path="/employee/:id/payment-history"
+        element={<PaymentHistory />}
+      ></Route>
+
+      <Route path="/client/:id/client-info" element={<ClientInfo />}></Route>
     </Routes>
   );
 }
