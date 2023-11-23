@@ -300,7 +300,8 @@ h2 {
   min-height: 931px;
 }
 
-.employee-icon {
+.employee-icon,
+.client-icon {
   scale: 1.5;
   margin-left: 10px;
 }
@@ -310,6 +311,33 @@ h2 {
   color: #fbd300;
 }
 
+.client-icon:hover {
+  fill: #61fb00;
+  color: #61fb00;
+}
+
 .body-row-item-employee {
   color: #fbd300;
+}
+
+.without-navbar {
+  min-height: 931px;
+  position: relative;
+}
+
+.bi-arrow-left-circle {
+  position: absolute;
+  top: 50px;
+  left: 100px;
+  scale: 3;
+  fill: black;
+}
+
+.bi-arrow-left-circle:hover {
+  fill: yellow;
+}
+
+.client-role,
+.body-row-item-client {
+  color: #61fb00;
 }

@@ -26,13 +26,13 @@ export const UpdateClientBalance = () => {
       });
   }, [id]);
 
-  const validateForm = () => {
-    let valid = true;
-    const newErrors = {};
+  // const validateForm = () => {
+  //   let valid = true;
+  //   const newErrors = {};
 
-    setErrors(newErrors);
-    return valid;
-  };
+  //   setErrors(newErrors);
+  //   return valid;
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
