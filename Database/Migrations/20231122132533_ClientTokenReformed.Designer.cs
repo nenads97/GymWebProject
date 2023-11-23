@@ -4,6 +4,7 @@ using Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    partial class GymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231122132533_ClientTokenReformed")]
+    partial class ClientTokenReformed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -376,10 +379,15 @@ namespace Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PackageId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TokenType")
                         .HasColumnType("int");
 
                     b.HasKey("TokenId");
+
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Tokens");
 
@@ -702,6 +710,15 @@ namespace Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("Database.Entities.Token", b =>
+                {
+                    b.HasOne("Database.Entities.Package", "Package")
+                        .WithMany()
+                        .HasForeignKey("PackageId");
+
+                    b.Navigation("Package");
                 });
 
             modelBuilder.Entity("Database.Entities.TokenPrice", b =>

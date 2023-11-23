@@ -8,9 +8,9 @@ namespace Database.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdKupovine { get; set; }
-        public decimal Iznos { get; set; }
-        public DateTime Datum { get; set; }
+        public int PurchaseId { get; set; }
+        public decimal Amount { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
 
         public virtual ICollection<TokenPurchase> TokenPurchases { get; set; }
 

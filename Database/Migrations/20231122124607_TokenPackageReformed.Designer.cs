@@ -4,6 +4,7 @@ using Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    partial class GymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231122124607_TokenPackageReformed")]
+    partial class TokenPackageReformed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,7 +46,8 @@ namespace Database.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("GroupTokenId");
+                    b.HasIndex("GroupTokenId")
+                        .IsUnique();
 
                     b.ToTable("ClientGroupTokens");
                 });
@@ -376,10 +380,15 @@ namespace Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PackageId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TokenType")
                         .HasColumnType("int");
 
                     b.HasKey("TokenId");
+
+                    b.HasIndex("PackageId");
 
                     b.ToTable("Tokens");
 
@@ -493,16 +502,8 @@ namespace Database.Migrations
                 {
                     b.HasBaseType("Database.Entities.Token");
 
-                    b.Property<int?>("ClientId")
+                    b.Property<int?>("ClientGroupTokenId")
                         .HasColumnType("int");
-
-                    b.HasIndex("ClientId");
-
-                    b.ToTable("Tokens", t =>
-                        {
-                            t.Property("ClientId")
-                                .HasColumnName("GroupToken_ClientId");
-                        });
 
                     b.HasDiscriminator().HasValue("GroupToken");
                 });
@@ -511,10 +512,10 @@ namespace Database.Migrations
                 {
                     b.HasBaseType("Database.Entities.Token");
 
-                    b.Property<int?>("ClientId")
+                    b.Property<int?>("ClientPersonalTokenId")
                         .HasColumnType("int");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClientPersonalTokenId");
 
                     b.HasDiscriminator().HasValue("PersonalToken");
                 });
@@ -524,13 +525,13 @@ namespace Database.Migrations
                     b.HasOne("Database.Entities.Client", "Client")
                         .WithMany("ClientGroupTokens")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Database.Entities.GroupToken", "GroupToken")
-                        .WithMany("ClientGroupTokens")
-                        .HasForeignKey("GroupTokenId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithOne("ClientGroupToken")
+                        .HasForeignKey("Database.AdditionalRelations.ClientGroupToken", "GroupTokenId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -543,13 +544,13 @@ namespace Database.Migrations
                     b.HasOne("Database.Entities.Client", "Client")
                         .WithMany("ClientPersonalTokens")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Database.Entities.PersonalToken", "PersonalToken")
-                        .WithMany("ClientPersonalTokens")
+                        .WithMany()
                         .HasForeignKey("PersonalTokenId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -704,6 +705,15 @@ namespace Database.Migrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("Database.Entities.Token", b =>
+                {
+                    b.HasOne("Database.Entities.Package", "Package")
+                        .WithMany()
+                        .HasForeignKey("PackageId");
+
+                    b.Navigation("Package");
+                });
+
             modelBuilder.Entity("Database.Entities.TokenPrice", b =>
                 {
                     b.HasOne("Database.Entities.Administrator", "Administrator")
@@ -742,22 +752,13 @@ namespace Database.Migrations
                     b.Navigation("PackageDiscount");
                 });
 
-            modelBuilder.Entity("Database.Entities.GroupToken", b =>
-                {
-                    b.HasOne("Database.Entities.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId");
-
-                    b.Navigation("Client");
-                });
-
             modelBuilder.Entity("Database.Entities.PersonalToken", b =>
                 {
-                    b.HasOne("Database.Entities.Client", "Client")
+                    b.HasOne("Database.AdditionalRelations.ClientPersonalToken", "ClientPersonalToken")
                         .WithMany()
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientPersonalTokenId");
 
-                    b.Navigation("Client");
+                    b.Navigation("ClientPersonalToken");
                 });
 
             modelBuilder.Entity("Database.Entities.Package", b =>
@@ -823,12 +824,7 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.Entities.GroupToken", b =>
                 {
-                    b.Navigation("ClientGroupTokens");
-                });
-
-            modelBuilder.Entity("Database.Entities.PersonalToken", b =>
-                {
-                    b.Navigation("ClientPersonalTokens");
+                    b.Navigation("ClientGroupToken");
                 });
 #pragma warning restore 612, 618
         }

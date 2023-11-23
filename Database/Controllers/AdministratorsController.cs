@@ -12,6 +12,8 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Database.Dtos.Client.Create;
+using Database.Dtos.Client.Get;
+using Database.Dtos.Employee.Get;
 
 namespace Database.Controllers
 {
@@ -313,7 +315,7 @@ namespace Database.Controllers
         {
 
             var client = _context.Clients.FirstOrDefault(d => d.Id == id);
-            var clientDto = _mapper.Map<PersonGetDto>(client);
+            var clientDto = _mapper.Map<ClientsGetDto>(client);
 
             if (client is null)
             {

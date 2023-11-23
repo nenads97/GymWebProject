@@ -76,8 +76,13 @@ namespace Database.AutoMapperConfig
 
             //Client Create Dtos
             CreateMap<MembershipCreateDto, Membership>();
+            CreateMap<PurchaseCreateDto, Purchase>();
+            CreateMap<TokenPurchaseCreateDto, TokenPurchase>();
+            CreateMap<TokenCreateDto, Token>();
+            CreateMap<TokenPackageCreateDto, TokenPackage>();
 
             //Client Get Dtos
+            CreateMap<Client, ClientGetDto>();
             CreateMap<Membership, MembershipGetDto>()
                 .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName))
                 .ForMember(p => p.ClientName, opt => opt.MapFrom(src => src.Client.Firstname))

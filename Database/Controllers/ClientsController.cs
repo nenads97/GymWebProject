@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using NPOI.XWPF.UserModel;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Database.AdditionalRelations;
+using Database.Dtos.Admin;
 
 namespace Database.Controllers
 {
@@ -57,6 +59,74 @@ namespace Database.Controllers
             return Ok(newMembership);
         }
 
+        [HttpPost]
+        [Route("CreatePurchase")]
+        public IActionResult PurchaseCreate([FromBody] PurchaseCreateDto dto)
+        {
+            var newPurchase = _mapper.Map<Purchase>(dto);
+
+            _context.Purchases.Add(newPurchase);
+
+            _context.SaveChanges();
+
+            return Ok(newPurchase);
+        }
+
+        [HttpPost]
+        [Route("CreateTokenPurchase")]
+        public IActionResult TokenPurchaseCreate([FromBody] TokenPurchaseCreateDto dto)
+        {
+            var newTokenPurchase = _mapper.Map<TokenPurchase>(dto);
+
+            _context.TokenPurchases.Add(newTokenPurchase);
+
+            _context.SaveChanges();
+
+            return Ok(newTokenPurchase);
+        }
+
+        [HttpPost]
+        [Route("CreateToken")]
+        public IActionResult TokenCreate([FromBody] TokenCreateDto dto)
+        {
+            var newToken = _mapper.Map<Token>(dto);
+
+            _context.Tokens.Add(newToken);
+
+            _context.SaveChanges();
+
+            return Ok(newToken);
+        }
+
+        [HttpPost]
+        [Route("CreateTokenPackage")]
+        public IActionResult TokenPackageCreate([FromBody] TokenPackageCreateDto dto)
+        {
+            var newTokenPackage = _mapper.Map<TokenPackage>(dto);
+
+            _context.TokenPackages.Add(newTokenPackage);
+
+            _context.SaveChanges();
+
+            return Ok(newTokenPackage);
+        }
+
+        [HttpPost]
+        [Route("CreateTokenPrice")]
+        public IActionResult TokenPriceCreate([FromBody] TokenPriceCreateDto dto)
+        {
+            var newTokenPrice = _mapper.Map<TokenPrice>(dto);
+
+            _context.TokenPrices.Add(newTokenPrice);
+
+            _context.SaveChanges();
+
+            return Ok(newTokenPrice);
+        }
+
+
+
+        // ***********************************
         [HttpGet]
         [Route("PrintMembershipConfirmation/{id:int}")]
         public IActionResult MembershipConfirmation([FromRoute] int id)
