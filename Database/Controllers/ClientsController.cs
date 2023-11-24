@@ -86,19 +86,6 @@ namespace Database.Controllers
         }
 
         [HttpPost]
-        [Route("CreateToken")]
-        public IActionResult TokenCreate([FromBody] TokenCreateDto dto)
-        {
-            var newToken = _mapper.Map<Token>(dto);
-
-            _context.Tokens.Add(newToken);
-
-            _context.SaveChanges();
-
-            return Ok(newToken);
-        }
-
-        [HttpPost]
         [Route("CreateTokenPackage")]
         public IActionResult TokenPackageCreate([FromBody] TokenPackageCreateDto dto)
         {
@@ -109,19 +96,6 @@ namespace Database.Controllers
             _context.SaveChanges();
 
             return Ok(newTokenPackage);
-        }
-
-        [HttpPost]
-        [Route("CreateTokenPrice")]
-        public IActionResult TokenPriceCreate([FromBody] TokenPriceCreateDto dto)
-        {
-            var newTokenPrice = _mapper.Map<TokenPrice>(dto);
-
-            _context.TokenPrices.Add(newTokenPrice);
-
-            _context.SaveChanges();
-
-            return Ok(newTokenPrice);
         }
 
 
