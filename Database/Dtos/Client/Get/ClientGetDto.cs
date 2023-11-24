@@ -13,5 +13,6 @@ namespace Database.Dtos.Client.Get
         public string Surname { get; set; }
         public string Firstname { get; set; }
         public double Balance { get; set; }
+        public Status Status { get; set; }
     }
 }

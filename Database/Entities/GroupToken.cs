@@ -10,12 +10,16 @@ namespace Database.Entities
         {
         }
 
-        [ForeignKey("ClientFK")]
-        public int? ClientGroupTokenId { get; set; }
-        public virtual ClientGroupToken ClientGroupToken { get; set; }
+        [ForeignKey("Client")]
+        public int? ClientId { get; set; }
+        public virtual Client Client { get; set; }
 
+        public ICollection<ClientGroupToken> ClientGroupTokens { get; set; }
+
+        /*
         [ForeignKey("GroupTrainingFK")]
         public int? GTrainingGTokenId { get; set; }
         public GTokenGTraining GTokenGTraining { get; set; }
+        */
     }
 }

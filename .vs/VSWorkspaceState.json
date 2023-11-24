@@ -3,7 +3,8 @@
     "",
     "\\Database",
     "\\Database\\AutoMapperConfig",
-    "\\Database\\Controllers"
+    "\\Database\\Controllers",
+    "\\Database\\Enums"
   ],
   "SelectedNode": "\\Database\\Controllers\\AdministratorsController.cs",
   "PreviewInSolutionExplorer": false

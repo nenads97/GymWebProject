@@ -12,6 +12,8 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Database.Dtos.Client.Create;
+using Database.Dtos.Client.Get;
+using Database.Dtos.Employee.Get;
 
 namespace Database.Controllers
 {
@@ -99,18 +101,6 @@ namespace Database.Controllers
         }
 
         [HttpPost]
-        [Route("TokenPriceCreate")]
-        public IActionResult TokenPriceCreate([FromBody] TokenPriceCreateDto dto)
-        {
-            var newTokenPrice = _mapper.Map<TokenPrice>(dto);
-
-            _context.TokenPrices.Add(newTokenPrice);
-            _context.SaveChanges();
-
-            return Ok(newTokenPrice);
-        }
-
-        [HttpPost]
         [Route("TrainerCreate")]
         public IActionResult TrainerCreate([FromBody] TrainerCreateDto dto)
         {
@@ -132,6 +122,32 @@ namespace Database.Controllers
             _context.SaveChanges();
 
             return Ok(newEmployee);
+        }
+
+        [HttpPost]
+        [Route("CreateTokenPrice")]
+        public IActionResult TokenPriceCreate([FromBody] TokenPriceCreateDto dto)
+        {
+            var newTokenPrice = _mapper.Map<TokenPrice>(dto);
+
+            _context.TokenPrices.Add(newTokenPrice);
+
+            _context.SaveChanges();
+
+            return Ok(newTokenPrice);
+        }
+
+        [HttpPost]
+        [Route("CreateToken")]
+        public IActionResult TokenCreate([FromBody] TokenCreateDto dto)
+        {
+            var newToken = _mapper.Map<Token>(dto);
+
+            _context.Tokens.Add(newToken);
+
+            _context.SaveChanges();
+
+            return Ok(newToken);
         }
 
         //UPDATE
@@ -212,6 +228,8 @@ namespace Database.Controllers
 
             return Ok(clientDto);
         }
+
+        
 
         // GET
 
@@ -313,7 +331,7 @@ namespace Database.Controllers
         {
 
             var client = _context.Clients.FirstOrDefault(d => d.Id == id);
-            var clientDto = _mapper.Map<PersonGetDto>(client);
+            var clientDto = _mapper.Map<ClientsGetDto>(client);
 
             if (client is null)
             {
@@ -321,6 +339,34 @@ namespace Database.Controllers
             }
 
             return Ok(clientDto);
+        }
+
+        [HttpGet]
+        [Route("TokenGetCurrent/{id:int}")]
+        public IActionResult GetCurrentToken([FromRoute] int id)
+        {
+
+            var token = _context.Tokens.Include(p => p.TokenPrices).FirstOrDefault(d => d.TokenId == id);
+            var tokenDto = _mapper.Map<TokensGetDto>(token);
+
+            if (token is null)
+            {
+                return NotFound("Token not found.");
+            }
+
+            return Ok(tokenDto);
+        }
+
+        [HttpGet]
+        [Route("TokenPricesGet")]
+        public IActionResult GetTokenPrices()
+        {
+
+            var tokenPrices = _context.TokenPrices.Include(p => p.Token).ToList();
+            var tokenPricesDto = _mapper.Map<IEnumerable<TokenPricesGetDto>>(tokenPrices);
+            Console.WriteLine();
+
+            return Ok(tokenPricesDto);
         }
 
 
@@ -357,6 +403,16 @@ namespace Database.Controllers
             var packagePricesDtos = _mapper.Map<IEnumerable<PackagePriceGetDto>>(packagePrices);
 
             return Ok(packagePricesDtos);
+        }
+
+        [HttpGet]
+        [Route("TokensGet")]
+        public IActionResult TokensGet()
+        {
+            var tokens = _context.Tokens.Include(p => p.TokenPrices).ToList();
+            var tokenPricesDtos = _mapper.Map<IEnumerable<TokensGetDto>>(tokens);
+
+            return Ok(tokenPricesDtos);
         }
 
         // DELETE

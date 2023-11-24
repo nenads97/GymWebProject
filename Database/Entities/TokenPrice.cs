@@ -15,10 +15,9 @@ namespace Database.Entities
         public int AdministratorId { get; set; }
         public virtual Administrator Administrator { get; set; }
 
-        /*
         [ForeignKey("Token")]
         public int TokenId { get; set; }
         public virtual Token Token { get; set; }
-        */
+        
     }
 }
