@@ -8,16 +8,11 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
-export const CreatePackageDiscount = () => {
-  const [discountValue, setDiscountValue] = useState(0);
-  const [beginDate, setBeginDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
-  const [endDate, setEndDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+export const SetTokenPrice = () => {
+  const [value, setValue] = useState(0);
+  const [tokenId, setTokenId] = useState(0);
+  const [tokens, setTokens] = useState([]);
   const [errors, setErrors] = useState({});
-
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -35,29 +30,19 @@ export const CreatePackageDiscount = () => {
     let valid = true;
     const newErrors = {};
 
-    // Validate Discount Value
-    if (isNaN(discountValue) || discountValue < 0 || discountValue > 100) {
-      newErrors.discountValue = "Discount Value must be between 0 and 100.";
+    // Validate Price Value
+    if (value < 0) {
+      newErrors.value = "Price value cannot be less than 0.";
       valid = false;
     }
 
-    // Validate Begin Date
-    const currentDate = new Date().toISOString().split("T")[0];
-    if (beginDate < currentDate) {
-      newErrors.beginDate =
-        "Begin Date must be equal to or greater than today.";
+    // Validate Token
+    if (tokenId === 0) {
+      newErrors.tokenId = "Please select a token.";
       valid = false;
     }
 
-    // Validate End Date
-    if (endDate <= beginDate) {
-      newErrors.endDate = "End Date must be greater than Begin Date.";
-      valid = false;
-    }
-
-    // Set errors state
     setErrors(newErrors);
-
     return valid;
   };
 
@@ -66,25 +51,33 @@ export const CreatePackageDiscount = () => {
 
     if (validateForm()) {
       var payload = {
-        value: discountValue,
-        beginDate: beginDate,
-        endDate: endDate,
+        value: value,
         administratorId: parseInt(id),
+        tokenId: tokenId,
+        date: new Date(),
       };
 
       axios
         .post(
-          "https://localhost:7095/api/Administrators/PackageDiscountCreate",
+          "https://localhost:7095/api/Administrators/CreateTokenPrice",
           payload
         )
         .then((response) => {
-          navigate(`/administrator/${id}/all-packages`);
+          navigate(`/administrator/${id}/tokens`);
         })
         .catch((error) => {
-          console.error("Error adding package:", error);
+          console.error("Error setting token price:", error);
         });
     }
   };
+
+  useEffect(() => {
+    axios
+      .get(`https://localhost:7095/api/Administrators/TokensGet`)
+      .then((response) => {
+        setTokens(response.data);
+      });
+  }, []);
 
   useEffect(() => {
     axios.get(
@@ -211,72 +204,57 @@ export const CreatePackageDiscount = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <div className="package-create-page">
+      <div className="token-price-create-page">
         <div className="auth-form-container auth-form-container-black">
-          <h2 className="register-header-white">Create Package Discount</h2>
+          <h2 className="register-header-white">Set Token Price</h2>
+
           <Form onSubmit={handleSubmit}>
-            {/* Input Value */}
-            <label className="form-label-white" htmlFor="discountValue">
-              Input Value (%):{" "}
-            </label>
-            <input
-              className={`register-input register-input-left ${
-                errors.discountValue ? "input-error" : ""
-              }`}
-              type="number"
-              placeholder="Discount Value"
-              id="discountValue"
-              name="discountValue"
-              value={discountValue}
-              onChange={(e) => setDiscountValue(parseFloat(e.target.value))}
-            />
-            {errors.discountValue && (
-              <p className="error-message">{errors.discountValue}</p>
-            )}
-
-            {/* Begin Date */}
-            <Form.Group className="mb-3" controlId="selectBeginDate">
-              <label className="form-label-white" htmlFor="beginDate">
-                Begin Date:{" "}
-              </label>
-              <Form.Control
+            {/* Price Value */}
+            <Form.Group className="mb-3" controlId="formValue">
+              <Form.Label className="form-label-white">Price Value:</Form.Label>
+              <input
                 className={`register-input register-input-left ${
-                  errors.beginDate ? "input-error" : ""
+                  errors.value ? "input-error" : ""
                 }`}
-                type="date"
-                placeholder="Begin Date"
-                id="beginDate"
-                name="beginDate"
-                value={beginDate}
-                onChange={(e) => setBeginDate(e.target.value)}
+                type="text"
+                placeholder="Price Value"
+                id="tokenValue"
+                name="tokenValue"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
               />
-              {errors.beginDate && (
-                <p className="error-message">{errors.beginDate}</p>
-              )}
+              {errors.value && <p className="error-message">{errors.value}</p>}
             </Form.Group>
 
-            {/* End Date */}
-            <Form.Group className="mb-3" controlId="selectEndDate">
-              <label className="form-label-white" htmlFor="endDate">
-                End Date:{" "}
+            {/* Select Token */}
+            <Form.Group className="mb-3" controlId="formSelectTokenId">
+              <label className="form-label-white" htmlFor="tokenSelect">
+                Select Token:{" "}
               </label>
-              <Form.Control
-                className={`register-input register-input-left ${
-                  errors.endDate ? "input-error" : ""
-                }`}
-                type="date"
-                placeholder="End Date"
-                id="endDate"
-                name="endDate"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-              {errors.endDate && (
-                <p className="error-message">{errors.endDate}</p>
-              )}
+              <Form.Select
+                name="tokenSelect"
+                id="tokenSelect"
+                aria-label="Default select example"
+                onChange={(event) => {
+                  setTokenId(parseInt(event.target.value, 10));
+                }}
+                isInvalid={!!errors.tokenId}
+              >
+                <option key="default" value="none">
+                  -Select Token Type-
+                </option>
+                {tokens.map((token) => (
+                  <option key={token.tokenId} value={token.tokenId}>
+                    {token.tokenType === 0 ? "Personal" : "Group"}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">
+                {errors.tokenId}
+              </Form.Control.Feedback>
             </Form.Group>
 
-            <button className="register-button">Create</button>
+            <button className="register-button">Submit</button>
           </Form>
         </div>
       </div>
