@@ -98,6 +98,32 @@ namespace Database.Controllers
             return Ok(newTokenPackage);
         }
 
+        [HttpPost]
+        [Route("CreateClientPersonalToken")]
+        public IActionResult ClientPersonalTokenCreate([FromBody] ClientPersonalTokenCreateDto dto)
+        {
+            var newClientPersonalToken = _mapper.Map<ClientPersonalToken>(dto);
+
+            _context.ClientPersonalTokens.Add(newClientPersonalToken);
+
+            _context.SaveChanges();
+
+            return Ok(newClientPersonalToken);
+        }
+
+        [HttpPost]
+        [Route("CreateClientGroupToken")]
+        public IActionResult ClientGroupTokenCreate([FromBody] ClientGroupTokenCreateDto dto)
+        {
+            var newClientPersonalToken = _mapper.Map<ClientGroupToken>(dto);
+
+            _context.ClientGroupTokens.Add(newClientPersonalToken);
+
+            _context.SaveChanges();
+
+            return Ok(newClientPersonalToken);
+        }
+
 
 
         // ***********************************
