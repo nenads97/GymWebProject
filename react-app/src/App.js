@@ -30,6 +30,7 @@ import { ClientInfo } from "./Pages/Client/ClientInfo";
 import { AllTokens } from "./Pages/Admin/AllTokens";
 import { SetTokenPrice } from "./Pages/Admin/SetTokenPrice";
 import { TokenPriceHistory } from "./Pages/Admin/TokenPriceHistory";
+import { PurchasePackage } from "./Pages/Client/PurchasePackage";
 // import Layout from "./Components/Layout";
 
 function App() {
@@ -117,6 +118,11 @@ function App() {
       ></Route>
 
       <Route path="/client/:id/client-info" element={<ClientInfo />}></Route>
+
+      <Route
+        path="/client/:id/purchase-package"
+        element={<PurchasePackage />}
+      ></Route>
     </Routes>
   );
 }
