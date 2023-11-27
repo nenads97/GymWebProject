@@ -168,6 +168,15 @@ export const CreateEmployee = () => {
                 </NavDropdown.Item>
               </NavDropdown>
 
+              <NavDropdown title="Tokens" id="basic-nav-dropdown">
+                <NavDropdown.Item href={`/administrator/${id}/tokens`}>
+                  Tokens
+                </NavDropdown.Item>
+                <NavDropdown.Item href={`/administrator/${id}/set-token-price`}>
+                  Set Token Price
+                </NavDropdown.Item>
+              </NavDropdown>
+
               <NavDropdown title="Employees" id="basic-nav-dropdown">
                 <NavDropdown.Item href={`/administrator/${id}/employees`}>
                   Employees
@@ -189,7 +198,12 @@ export const CreateEmployee = () => {
               <Nav.Link href={`/administrator/${id}/clients`}>Clients</Nav.Link>
               <NavDropdown title="History" id="basic-nav-dropdown">
                 <NavDropdown.Item href={`/administrator/${id}/price-history`}>
-                  Prices
+                  Package Prices
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  href={`/administrator/${id}/token-price-history`}
+                >
+                  Token Prices
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   href={`/administrator/${id}/discount-history`}

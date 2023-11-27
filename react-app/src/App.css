@@ -26,7 +26,8 @@
 .package-create-page,
 .employee-register-page,
 .trainer-register-page,
-.employee-balance-page {
+.employee-balance-page,
+.token-price-create-page {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,6 +58,10 @@
 
 .auth-form-container-black {
   background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.token-price-create-page {
+  background-image: url("/src/Images/tokens.jpg");
 }
 
 .auth-form-container {
