@@ -235,13 +235,31 @@ namespace Database.Controllers
 
         [HttpGet]
         [Route("PackageGet")]
-        public IActionResult GetCurrentPackages()
+        public IActionResult GetPackages()
         {
             
-            var packages = _context.Packages.Include(p => p.PackagePrices).Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.PackageDiscount).ToList();
+            var packages = _context.Packages.Include(p => p.PackagePrices).Include(p => p.TokenPackages).ThenInclude(p => p.Token).Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.PackageDiscount).ToList();
             var packageDtos = _mapper.Map<IEnumerable<PackageGetDto>>(packages);
 
             return Ok(packageDtos);
+        }
+
+        [HttpGet]
+        [Route("PackageGetCurrent/{id:int}")]
+        public IActionResult GetCurrentPackage([FromRoute] int id)
+        {
+
+            //var packages = _context.Packages.Include(p => p.PackagePrices).Include(p => p.TokenPackages).ThenInclude(p => p.Token).Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.PackageDiscount).ToList();
+
+            var package = _context.Packages.Include(p => p.PackagePrices).Include(p => p.TokenPackages).ThenInclude(p => p.Token).Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.PackageDiscount).FirstOrDefault(d => d.PackageId == id);
+            var packageDto = _mapper.Map<PackageGetDto>(package);
+
+            if (package is null)
+            {
+                return NotFound("Admin not found.");
+            }
+
+            return Ok(packageDto);
         }
 
         [HttpGet]

@@ -34,6 +34,19 @@ namespace Database.AutoMapperConfig
             //Admin get dtos
             CreateMap<Package, PackageGetDto>()
                 .ForMember(dest => dest.PackageName, opt => opt.MapFrom(src => src.PackageName))
+                .ForMember(dest => dest.PersonalTokens, opt => opt.MapFrom(src =>
+                src.TokenPackages
+                    .Where(tp => tp.Token.TokenType == Enums.Category.Personal)
+                    .OrderByDescending(pp => pp.TokenPackageId)
+                    .Select(pp => pp.Quantity)
+                    .FirstOrDefault()))
+                .ForMember(dest => dest.GroupTokens, opt => opt.MapFrom(src =>
+                src.TokenPackages
+                    .Where(tp => tp.Token.TokenType == Enums.Category.Group)
+                    .OrderByDescending(pp => pp.TokenPackageId)
+                    .Select(pp => pp.Quantity)
+                    .FirstOrDefault()))
+
                 .ForMember(dest => dest.PackagePriceValue, opt => opt.MapFrom(src =>
                 src.PackagePrices
                     .OrderByDescending(pp => pp.Date)
@@ -95,6 +108,8 @@ namespace Database.AutoMapperConfig
             CreateMap<TokenPurchaseCreateDto, TokenPurchase>();
             CreateMap<TokenCreateDto, Token>();
             CreateMap<TokenPackageCreateDto, TokenPackage>();
+            CreateMap<ClientPersonalTokenCreateDto, ClientPersonalToken>();
+            CreateMap<ClientGroupTokenCreateDto, ClientGroupToken>();
 
             //Client Get Dtos
             CreateMap<Client, ClientGetDto>();
