@@ -46,6 +46,18 @@ namespace Database.AutoMapperConfig
                     .OrderByDescending(pp => pp.TokenPackageId)
                     .Select(pp => pp.Quantity)
                     .FirstOrDefault()))
+                .ForMember(dest => dest.PersonalTokenId, opt => opt.MapFrom(src =>
+                src.TokenPackages
+                    .Where(tp => tp.Token.TokenType == Enums.Category.Personal)
+                    .OrderByDescending(pp => pp.TokenPackageId)
+                    .Select(pp => pp.TokenId)
+                    .FirstOrDefault()))
+                .ForMember(dest => dest.GroupTokenId, opt => opt.MapFrom(src =>
+                src.TokenPackages
+                    .Where(tp => tp.Token.TokenType == Enums.Category.Group)
+                    .OrderByDescending(pp => pp.TokenPackageId)
+                    .Select(pp => pp.TokenId)
+                    .FirstOrDefault()))
 
                 .ForMember(dest => dest.PackagePriceValue, opt => opt.MapFrom(src =>
                 src.PackagePrices
@@ -117,6 +129,21 @@ namespace Database.AutoMapperConfig
                 .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName))
                 .ForMember(p => p.ClientName, opt => opt.MapFrom(src => src.Client.Firstname))
                 .ForMember(p => p.ClientSurname, opt => opt.MapFrom(src => src.Client.Surname));
+
+            CreateMap<ClientPersonalToken, ClientPersonalTokenGetDto>();
+            CreateMap<ClientGroupToken, ClientGroupTokenGetDto>();
+            CreateMap<TokenPackage, TokenPackageGetDto>();
+            CreateMap<Token, TokensGetDto>()
+                .ForMember(p => p.Date, opt => opt.MapFrom(src =>
+                src.TokenPrices
+                    .OrderByDescending(pp => pp.Date)
+                    .Select(pp => pp.Date)
+                    .FirstOrDefault()))
+                .ForMember(p => p.TokenPriceValue, opt => opt.MapFrom(src =>
+                src.TokenPrices
+                    .OrderByDescending(pp => pp.Date)
+                    .Select(pp => pp.Value)
+                    .FirstOrDefault()));
         }
 
     }
