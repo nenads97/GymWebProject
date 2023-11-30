@@ -8,22 +8,32 @@ import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import DeleteConfirmation from "../../Components/DeleteConfirmation";
 
 export const PurchasePackage = () => {
-  const [admin, setAdmin] = useState([]);
   const [packages, setPackages] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState(0);
+  const [client, setClient] = useState([]);
+  const [clientPersonalTokens, setClientPersonalTokens] = useState(0);
+  const [clientGroupTokens, setClientGroupTokens] = useState(0);
+  const [membership, setMembership] = useState([]);
 
   const { id } = useParams();
-  // const navigate = useNavigate();
 
+  const statusPayload = {
+    status: 0,
+  };
+  //const navigate = useNavigate();
+  //Clients/GetClientMembership/
   useEffect(() => {
     axios
       .get(`https://localhost:7095/api/Administrators/ClientGetCurrent/${id}`)
       .then((response) => {
-        setAdmin(response.data);
+        setClient(response.data);
+      });
+
+    axios
+      .get(`https://localhost:7095/api/Clients/GetClientMembership/${id}`)
+      .then((response) => {
+        setMembership(response.data);
       });
 
     axios
@@ -31,17 +41,71 @@ export const PurchasePackage = () => {
       .then((response) => {
         setPackages(response.data);
       });
+
+    axios
+      .get(`https://localhost:7095/api/Clients/GetClientPersonalTokens/${id}`)
+      .then((response) => {
+        setClientPersonalTokens(response.data);
+      });
+
+    axios
+      .get(`https://localhost:7095/api/Clients/GetClientGroupTokens/${id}`)
+      .then((response) => {
+        setClientGroupTokens(response.data);
+      });
+
+    if (membership.expiryDate < new Date()) {
+      axios.put(
+        `https://localhost:7095/api/Clients/UpdateClientStatus/${id}`,
+        statusPayload
+      );
+    }
   }, [id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = (pckg) => {
     const payload = {
-      packageId: e.package.Id,
-      clientId: id,
+      packageId: pckg.packageId,
+      clientId: parseInt(id),
+    };
+
+    const payloadPersonal = {
+      numberOfPersonalTokens: pckg.personalTokens,
+      clientId: parseInt(id),
+      personalTokenId: pckg.personalTokenId,
+    };
+
+    const payloadGroup = {
+      numberOfGroupTokens: pckg.groupTokens,
+      clientId: parseInt(id),
+      groupTokenId: pckg.groupTokenId,
+    };
+
+    const payloadBalance = {
+      balance: -pckg.packagePriceValue,
     };
 
     axios.post(`https://localhost:7095/api/Clients/CreateMembership`, payload);
+
+    if (payloadPersonal.numberOfPersonalTokens !== 0) {
+      axios.post(
+        `https://localhost:7095/api/Clients/CreateClientPersonalToken`,
+        payloadPersonal
+      );
+    }
+    if (payloadGroup.numberOfGroupTokens !== 0) {
+      axios.post(
+        `https://localhost:7095/api/Clients/CreateClientGroupToken`,
+        payloadGroup
+      );
+    }
+    axios
+      .put(
+        `https://localhost:7095/api/Employees/UpdateClientBalance/${id}`,
+        payloadBalance
+      )
+      .then(() => {
+        window.location.reload();
+      });
   };
 
   return (
@@ -49,105 +113,38 @@ export const PurchasePackage = () => {
       <div className="admin-page">
         <Navbar bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
           <Container>
-            <a href={`/administrator/${id}`} className="admin-link">
+            <a href={`/client/${id}`} className="admin-link">
               <Navbar.Brand>MainPage</Navbar.Brand>
             </a>
             <Navbar.Toggle />
+            <Nav className="me-auto">
+              <Nav.Link href={`/employee/${id}/trainings`}>Trainings</Nav.Link>
+              <Nav.Link href={`/employee/${id}/memberships`}>
+                Membership History
+              </Nav.Link>
+              <Nav.Link href={`/employee/${id}/payment-history`}>
+                Payment History
+              </Nav.Link>
+            </Nav>
             <Navbar.Collapse className="justify-content-end">
-              <Nav className="me-auto">
-                <NavDropdown title="Packages" id="basic-nav-dropdown">
-                  <NavDropdown.Item href={`/administrator/${id}/all-packages`}>
-                    Packages
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider></NavDropdown.Divider>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/create-package`}
-                  >
-                    Create Package
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/create-package-discount`}
-                  >
-                    Create Package Discount
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/set-package-discount`}
-                  >
-                    Set Package Discount
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/set-package-price`}
-                  >
-                    Set Package Price
-                  </NavDropdown.Item>
-                </NavDropdown>
-
-                <NavDropdown title="Tokens" id="basic-nav-dropdown">
-                  <NavDropdown.Item href={`/administrator/${id}/tokens`}>
-                    Tokens
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/set-token-price`}
-                  >
-                    Set Token Price
-                  </NavDropdown.Item>
-                </NavDropdown>
-
-                <NavDropdown title="Employees" id="basic-nav-dropdown">
-                  <NavDropdown.Item href={`/administrator/${id}/employees`}>
-                    Employees
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider></NavDropdown.Divider>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/create-employee`}
-                  >
-                    Create Employee
-                  </NavDropdown.Item>
-                </NavDropdown>
-                <NavDropdown title="Trainers" id="basic-nav-dropdown">
-                  <NavDropdown.Item href={`/administrator/${id}/trainers`}>
-                    Trainers
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider></NavDropdown.Divider>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/create-trainer`}
-                  >
-                    Create Trainer
-                  </NavDropdown.Item>
-                </NavDropdown>
-                <Nav.Link href={`/administrator/${id}/clients`}>
-                  Clients
-                </Nav.Link>
-                <NavDropdown title="History" id="basic-nav-dropdown">
-                  <NavDropdown.Item href={`/administrator/${id}/price-history`}>
-                    Package Prices
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/token-price-history`}
-                  >
-                    Token Prices
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/discount-history`}
-                  >
-                    Discounts
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    href={`/administrator/${id}/payment-history`}
-                  >
-                    Client Payments
-                  </NavDropdown.Item>
-                </NavDropdown>
-              </Nav>
               <Navbar.Text>
-                Signed in as:{" "}
+                Status:{" "}
                 <span className="admin_name headers">
-                  {admin.firstname} {admin.surname}
-                </span>{" "}
-                Role:{" "}
-                <span className="admin_name headers admin-role">
-                  Administrator
+                  {client.status === 0 ? (
+                    <span className="client-status-inactive">Inactive</span>
+                  ) : (
+                    <span className="client-status-active">Active</span>
+                  )}
                 </span>
+                Tokens:{" "}
+                <span className="admin_name headers">
+                  P {clientPersonalTokens.numberOfPersonalTokens} G{" "}
+                  {clientGroupTokens.numberOfGroupTokens}
+                </span>
+                Balance:{" "}
+                <span className="admin_name headers">{client.balance}</span>
+                Role:{" "}
+                <span className="admin_name headers client-role">Client</span>
               </Navbar.Text>
               <NavDropdown
                 title={
@@ -156,7 +153,7 @@ export const PurchasePackage = () => {
                     width="16"
                     height="16"
                     fill="white"
-                    className="user-icon"
+                    className="user-icon client-icon"
                     viewBox="0 0 16 16"
                   >
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
@@ -167,7 +164,7 @@ export const PurchasePackage = () => {
                   </svg>
                 }
               >
-                <NavDropdown.Item href={`/administrator/${id}/admin-info`}>
+                <NavDropdown.Item href={`/client/${id}/client-info`}>
                   My Info
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
@@ -215,7 +212,7 @@ export const PurchasePackage = () => {
                     variant="success"
                     type="button"
                     onClick={() => {
-                      handleSubmit(pckg.packageId);
+                      handleSubmit(pckg);
                     }}
                   >
                     Purchase
