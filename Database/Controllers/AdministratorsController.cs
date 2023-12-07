@@ -101,18 +101,6 @@ namespace Database.Controllers
         }
 
         [HttpPost]
-        [Route("TokenPriceCreate")]
-        public IActionResult TokenPriceCreate([FromBody] TokenPriceCreateDto dto)
-        {
-            var newTokenPrice = _mapper.Map<TokenPrice>(dto);
-
-            _context.TokenPrices.Add(newTokenPrice);
-            _context.SaveChanges();
-
-            return Ok(newTokenPrice);
-        }
-
-        [HttpPost]
         [Route("TrainerCreate")]
         public IActionResult TrainerCreate([FromBody] TrainerCreateDto dto)
         {
@@ -134,6 +122,32 @@ namespace Database.Controllers
             _context.SaveChanges();
 
             return Ok(newEmployee);
+        }
+
+        [HttpPost]
+        [Route("CreateTokenPrice")]
+        public IActionResult TokenPriceCreate([FromBody] TokenPriceCreateDto dto)
+        {
+            var newTokenPrice = _mapper.Map<TokenPrice>(dto);
+
+            _context.TokenPrices.Add(newTokenPrice);
+
+            _context.SaveChanges();
+
+            return Ok(newTokenPrice);
+        }
+
+        [HttpPost]
+        [Route("CreateToken")]
+        public IActionResult TokenCreate([FromBody] TokenCreateDto dto)
+        {
+            var newToken = _mapper.Map<Token>(dto);
+
+            _context.Tokens.Add(newToken);
+
+            _context.SaveChanges();
+
+            return Ok(newToken);
         }
 
         //UPDATE
@@ -215,17 +229,37 @@ namespace Database.Controllers
             return Ok(clientDto);
         }
 
+        
+
         // GET
 
         [HttpGet]
         [Route("PackageGet")]
-        public IActionResult GetCurrentPackages()
+        public IActionResult GetPackages()
         {
             
-            var packages = _context.Packages.Include(p => p.PackagePrices).Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.PackageDiscount).ToList();
+            var packages = _context.Packages.Include(p => p.PackagePrices).Include(p => p.TokenPackages).ThenInclude(p => p.Token).Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.PackageDiscount).ToList();
             var packageDtos = _mapper.Map<IEnumerable<PackageGetDto>>(packages);
 
             return Ok(packageDtos);
+        }
+
+        [HttpGet]
+        [Route("PackageGetCurrent/{id:int}")]
+        public IActionResult GetCurrentPackage([FromRoute] int id)
+        {
+
+            //var packages = _context.Packages.Include(p => p.PackagePrices).Include(p => p.TokenPackages).ThenInclude(p => p.Token).Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.PackageDiscount).ToList();
+
+            var package = _context.Packages.Include(p => p.PackagePrices).Include(p => p.TokenPackages).ThenInclude(p => p.Token).Include(p => p.PackagePackageDiscounts).ThenInclude(p => p.PackageDiscount).FirstOrDefault(d => d.PackageId == id);
+            var packageDto = _mapper.Map<PackageGetDto>(package);
+
+            if (package is null)
+            {
+                return NotFound("Admin not found.");
+            }
+
+            return Ok(packageDto);
         }
 
         [HttpGet]
@@ -325,6 +359,34 @@ namespace Database.Controllers
             return Ok(clientDto);
         }
 
+        [HttpGet]
+        [Route("TokenGetCurrent/{id:int}")]
+        public IActionResult GetCurrentToken([FromRoute] int id)
+        {
+
+            var token = _context.Tokens.Include(p => p.TokenPrices).FirstOrDefault(d => d.TokenId == id);
+            var tokenDto = _mapper.Map<TokensGetDto>(token);
+
+            if (token is null)
+            {
+                return NotFound("Token not found.");
+            }
+
+            return Ok(tokenDto);
+        }
+
+        [HttpGet]
+        [Route("TokenPricesGet")]
+        public IActionResult GetTokenPrices()
+        {
+
+            var tokenPrices = _context.TokenPrices.Include(p => p.Token).ToList();
+            var tokenPricesDto = _mapper.Map<IEnumerable<TokenPricesGetDto>>(tokenPrices);
+            Console.WriteLine();
+
+            return Ok(tokenPricesDto);
+        }
+
 
         [HttpGet]
         [Route("PackageDiscountGet")]
@@ -359,6 +421,16 @@ namespace Database.Controllers
             var packagePricesDtos = _mapper.Map<IEnumerable<PackagePriceGetDto>>(packagePrices);
 
             return Ok(packagePricesDtos);
+        }
+
+        [HttpGet]
+        [Route("TokensGet")]
+        public IActionResult TokensGet()
+        {
+            var tokens = _context.Tokens.Include(p => p.TokenPrices).ToList();
+            var tokenPricesDtos = _mapper.Map<IEnumerable<TokensGetDto>>(tokens);
+
+            return Ok(tokenPricesDtos);
         }
 
         // DELETE
