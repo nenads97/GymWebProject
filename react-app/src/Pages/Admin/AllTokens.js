@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-//import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
@@ -8,14 +7,22 @@ import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Table from "react-bootstrap/Table";
 
-export const AdminPage = () => {
+export const AllTokens = () => {
   const [admin, setAdmin] = useState([]);
-  const [employees, setEmployees] = useState([]);
-  const [trainers, setTrainers] = useState([]);
-  const [clients, setClients] = useState([]);
+  const [tokens, setTokens] = useState([]);
 
   const { id } = useParams();
-  //const navigate = useNavigate();
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  };
 
   useEffect(() => {
     axios
@@ -23,21 +30,15 @@ export const AdminPage = () => {
       .then((response) => {
         setAdmin(response.data);
       });
-    axios
-      .get(`https://localhost:7095/api/Administrators/ClientGet`)
-      .then((response) => {
-        setClients(response.data);
-      });
-    axios
-      .get(`https://localhost:7095/api/Administrators/TrainerGet`)
-      .then((response) => {
-        setTrainers(response.data);
-      });
 
     axios
-      .get(`https://localhost:7095/api/Administrators/EmployeeGet`)
+      .get(`https://localhost:7095/api/Administrators/TokensGet`)
       .then((response) => {
-        setEmployees(response.data);
+        const formattedPrices = response.data.map((price) => ({
+          ...price,
+          date: formatDate(price.date),
+        }));
+        setTokens(formattedPrices);
       });
   }, [id]);
 
@@ -173,103 +174,26 @@ export const AdminPage = () => {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        <div className="header-container">
-          <h2 className="clients-header headers">Clients</h2>
-        </div>
-        <Table striped bordered hover variant="dark" className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jmbg</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Gender</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {clients.map((client, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{client.jmbg}</td>
-                <td>{client.firstname}</td>
-                <td>{client.surname}</td>
-                <td>{client.username}</td>
-                <td>{client.password}</td>
-                <td>{client.gender === 0 ? `Male` : `Female`}</td>
-                <td>{client.email}</td>
-                <td>0{client.phoneNumber}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
 
         <div className="header-container">
-          <h2 className="clients-header headers">Trainers</h2>
+          <h2 className="clients-header headers">Tokens</h2>
         </div>
         <Table striped bordered hover variant="dark" className="table">
           <thead>
             <tr>
               <th>#</th>
-              <th>Jmbg</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Gender</th>
-              <th>Email</th>
-              <th>Phone Number</th>
+              <th>Token Type</th>
+              <th>Price (RSD)</th>
+              <th>Price Set Date</th>
             </tr>
           </thead>
           <tbody>
-            {trainers.map((trainer, index) => (
+            {tokens.map((token, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{trainer.jmbg}</td>
-                <td>{trainer.firstname}</td>
-                <td>{trainer.surname}</td>
-                <td>{trainer.username}</td>
-                <td>{trainer.password}</td>
-                <td>{trainer.gender === 0 ? `Male` : `Female`}</td>
-                <td>{trainer.email}</td>
-                <td>0{trainer.phoneNumber}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-
-        <div className="header-container">
-          <h2 className="clients-header headers">Employees</h2>
-        </div>
-        <Table striped bordered hover variant="dark" className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Jmbg</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Gender</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map((employee, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{employee.jmbg}</td>
-                <td>{employee.firstname}</td>
-                <td>{employee.surname}</td>
-                <td>{employee.username}</td>
-                <td>{employee.password}</td>
-                <td>{employee.gender === 0 ? `Male` : `Female`}</td>
-                <td>{employee.email}</td>
-                <td>0{employee.phoneNumber}</td>
+                <td>{token.tokenType === 0 ? "Personal" : "Group"}</td>
+                <td>{token.tokenPriceValue}</td>
+                <td>{token.date}</td>
               </tr>
             ))}
           </tbody>

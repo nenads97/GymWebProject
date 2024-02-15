@@ -27,6 +27,10 @@ import { UpdateClientBalance } from "./Pages/Employee/UpdateBalance";
 import { PaymentHistory } from "./Pages/Employee/PaymentHistory";
 import { ClientPayments } from "./Pages/Admin/ClientPayments";
 import { ClientInfo } from "./Pages/Client/ClientInfo";
+import { AllTokens } from "./Pages/Admin/AllTokens";
+import { SetTokenPrice } from "./Pages/Admin/SetTokenPrice";
+import { TokenPriceHistory } from "./Pages/Admin/TokenPriceHistory";
+import { PurchasePackage } from "./Pages/Client/PurchasePackage";
 // import Layout from "./Components/Layout";
 
 function App() {
@@ -41,6 +45,7 @@ function App() {
       <Route path="/administrator/:id/clients" element={<AllClients />} />
       <Route path="/administrator/:id/employees" element={<AllEmployees />} />
       <Route path="/administrator/:id/trainers" element={<AllTrainers />} />
+      <Route path="/administrator/:id/tokens" element={<AllTokens />} />
       <Route
         path="/administrator/:id/create-trainer"
         element={<CreateTrainer />}
@@ -68,6 +73,10 @@ function App() {
         element={<SetPackagePrice />}
       />
       <Route
+        path="/administrator/:id/set-token-price"
+        element={<SetTokenPrice />}
+      />
+      <Route
         path="/administrator/:id/discount-history"
         element={<DiscountHistory />}
       />
@@ -78,6 +87,10 @@ function App() {
       <Route
         path="/administrator/:id/payment-history"
         element={<ClientPayments />}
+      />
+      <Route
+        path="/administrator/:id/token-price-history"
+        element={<TokenPriceHistory />}
       />
       <Route
         path="/administrator/:id/update-trainer/:trainerId"
@@ -105,6 +118,11 @@ function App() {
       ></Route>
 
       <Route path="/client/:id/client-info" element={<ClientInfo />}></Route>
+
+      <Route
+        path="/client/:id/purchase-package"
+        element={<PurchasePackage />}
+      ></Route>
     </Routes>
   );
 }

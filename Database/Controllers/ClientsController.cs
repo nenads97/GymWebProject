@@ -10,6 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Database.AdditionalRelations;
 using Database.Dtos.Admin;
+using NPOI.SS.Formula.Functions;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Database.Dtos.Employee;
+using Database.Dtos.Client.Update;
 
 namespace Database.Controllers
 {
@@ -51,13 +56,14 @@ namespace Database.Controllers
             var newMembership = _mapper.Map<Membership>(dto);
 
             _context.Memberships.Add(newMembership);
-            var membership = _context.Memberships.Include(p => p.Client).Include(p => p.Package).ToList();
-            var membershipDto = _mapper.Map<IEnumerable<Membership>>(membership);
+
+            _context.Clients.Where(p => p.Id == newMembership.ClientId).FirstOrDefault().Status = Enums.Status.Active;
 
             _context.SaveChanges();
 
             return Ok(newMembership);
         }
+        
 
         [HttpPost]
         [Route("CreatePurchase")]
@@ -86,19 +92,6 @@ namespace Database.Controllers
         }
 
         [HttpPost]
-        [Route("CreateToken")]
-        public IActionResult TokenCreate([FromBody] TokenCreateDto dto)
-        {
-            var newToken = _mapper.Map<Token>(dto);
-
-            _context.Tokens.Add(newToken);
-
-            _context.SaveChanges();
-
-            return Ok(newToken);
-        }
-
-        [HttpPost]
         [Route("CreateTokenPackage")]
         public IActionResult TokenPackageCreate([FromBody] TokenPackageCreateDto dto)
         {
@@ -112,16 +105,63 @@ namespace Database.Controllers
         }
 
         [HttpPost]
-        [Route("CreateTokenPrice")]
-        public IActionResult TokenPriceCreate([FromBody] TokenPriceCreateDto dto)
+        [Route("CreateClientPersonalToken")]
+        public IActionResult ClientPersonalTokenCreate([FromBody] ClientPersonalTokenCreateDto dto)
         {
-            var newTokenPrice = _mapper.Map<TokenPrice>(dto);
+            var newClientPersonalToken = _mapper.Map<ClientPersonalToken>(dto);
 
-            _context.TokenPrices.Add(newTokenPrice);
+            var clientPersonalTokens = _context.ClientPersonalTokens.Include(p => p.Client).Where(p => p.ClientId == newClientPersonalToken.ClientId).ToList().Sum(p => p.NumberOfPersonalTokens);
 
-            _context.SaveChanges();
+            if (dto.NumberOfPersonalTokens < 0 && clientPersonalTokens < Math.Abs(dto.NumberOfPersonalTokens))
+            {
+                return StatusCode(StatusCodes.Status406NotAcceptable, new Database.Authentication.Response { Status = "Error", Message = "Not enough tokens for that!" });
 
-            return Ok(newTokenPrice);
+            }
+            else
+            {
+                _context.ClientPersonalTokens.Add(newClientPersonalToken);
+
+                _context.SaveChanges();
+
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    PropertyNamingPolicy = null
+                };
+
+                var json = JsonSerializer.Serialize(clientPersonalTokens, jsonOptions);
+                return Ok(json);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateClientGroupToken")]
+        public IActionResult ClientGroupTokenCreate([FromBody] ClientGroupTokenCreateDto dto)
+        {
+            var newClientGroupToken = _mapper.Map<ClientGroupToken>(dto);
+
+            var clientGroupTokens = _context.ClientGroupTokens.Include(p => p.Client).Where(p => p.ClientId == newClientGroupToken.ClientId).ToList().Sum(p => p.NumberOfGroupTokens);
+
+            if (dto.NumberOfGroupTokens < 0 && clientGroupTokens < Math.Abs(dto.NumberOfGroupTokens))
+            {
+                return StatusCode(StatusCodes.Status406NotAcceptable, new Database.Authentication.Response { Status = "Error", Message = "Not enough tokens for that!" });
+
+            }
+            else
+            {
+                _context.ClientGroupTokens.Add(newClientGroupToken);
+
+                _context.SaveChanges();
+
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    PropertyNamingPolicy = null
+                };
+
+                var json = JsonSerializer.Serialize(clientGroupTokens, jsonOptions);
+                return Ok(json);
+            }
         }
 
 
@@ -140,6 +180,82 @@ namespace Database.Controllers
 
             return Ok();
         }
+        
+
+        [HttpGet]
+        [Route("GetClientPersonalTokens/{id}")]
+        public IActionResult ClientPersonalTokensGet([FromRoute] int id)
+        {
+            var sum = _context.ClientPersonalTokens.Include(p => p.Client).Where(p => p.ClientId == id).ToList().Sum(p => p.NumberOfPersonalTokens);
+            var clientPersonalTokens = _context.ClientPersonalTokens.Include(p => p.Client).Where(p => p.ClientId == id).FirstOrDefault();
+            clientPersonalTokens.NumberOfPersonalTokens = sum;
+
+            var clientGroupTokensDtos = _mapper.Map<ClientPersonalTokenGetDto>(clientPersonalTokens);
+
+            return Ok(clientGroupTokensDtos);
+        }
+
+        [HttpGet]
+        [Route("GetClientGroupTokens/{id}")]
+        public IActionResult ClientGroupTokensGet([FromRoute] int id)
+        {
+            var sum = _context.ClientGroupTokens.Include(p => p.Client).Where(p => p.ClientId == id).ToList().Sum(p => p.NumberOfGroupTokens);
+            var clientGroupTokens = _context.ClientGroupTokens.Include(p => p.Client).Where(p => p.ClientId == id).FirstOrDefault();
+            clientGroupTokens.NumberOfGroupTokens = sum;
+
+            var clientGroupTokensDtos = _mapper.Map<ClientGroupTokenGetDto>(clientGroupTokens);
+
+            return Ok(clientGroupTokensDtos);
+        }
+
+        [HttpGet]
+        [Route("GetTokenPackage")]
+        public IActionResult TokenPackageGet()
+        {
+            var tokenPackages = _context.TokenPackages.ToList();
+            var tokenPackagesDto = _mapper.Map<IEnumerable<TokenPackageGetDto>>(tokenPackages);
+
+
+            return Ok(tokenPackagesDto);
+        }
+
+        [HttpGet]
+        [Route("GetTokens")]
+        public IActionResult TokensGet()
+        {
+            var tokens = _context.Tokens.Include(p => p.TokenPrices).ToList();
+            var tokensDtos = _mapper.Map<IEnumerable<TokensGetDto>>(tokens);
+
+            return Ok(tokensDtos);
+        }
+
+        [HttpGet]
+        [Route("GetClientMembership/{id}")]
+        public IActionResult MembershipsGet([FromRoute] int id)
+        {
+            var membership = _context.Memberships.Include(p => p.Package).Include(c => c.Client).Where(p => p.ClientId == id).FirstOrDefault();
+            var membershipDto = _mapper.Map<MembershipGetDto>(membership);
+
+            return Ok(membershipDto);
+        }
+
+        //UPDATE
+
+        [HttpPut]
+        [Route("UpdateClientStatus/{id:int}")]
+        public IActionResult UpdateClientStatus([FromRoute] int id, StatusUpdateDto dto)
+        {
+            var client = _context.Clients.FirstOrDefault(q => q.Id == id);
+
+            client.Status = dto.Status;
+
+            _context.SaveChanges();
+
+            return Ok(client);
+        }
+
+
+        //NON ACTION
 
         [NonAction]
         public void CreateWordDoc(string firstName, string surName, DateTime joiningDate)

@@ -34,6 +34,31 @@ namespace Database.AutoMapperConfig
             //Admin get dtos
             CreateMap<Package, PackageGetDto>()
                 .ForMember(dest => dest.PackageName, opt => opt.MapFrom(src => src.PackageName))
+                .ForMember(dest => dest.PersonalTokens, opt => opt.MapFrom(src =>
+                src.TokenPackages
+                    .Where(tp => tp.Token.TokenType == Enums.Category.Personal)
+                    .OrderByDescending(pp => pp.TokenPackageId)
+                    .Select(pp => pp.Quantity)
+                    .FirstOrDefault()))
+                .ForMember(dest => dest.GroupTokens, opt => opt.MapFrom(src =>
+                src.TokenPackages
+                    .Where(tp => tp.Token.TokenType == Enums.Category.Group)
+                    .OrderByDescending(pp => pp.TokenPackageId)
+                    .Select(pp => pp.Quantity)
+                    .FirstOrDefault()))
+                .ForMember(dest => dest.PersonalTokenId, opt => opt.MapFrom(src =>
+                src.TokenPackages
+                    .Where(tp => tp.Token.TokenType == Enums.Category.Personal)
+                    .OrderByDescending(pp => pp.TokenPackageId)
+                    .Select(pp => pp.TokenId)
+                    .FirstOrDefault()))
+                .ForMember(dest => dest.GroupTokenId, opt => opt.MapFrom(src =>
+                src.TokenPackages
+                    .Where(tp => tp.Token.TokenType == Enums.Category.Group)
+                    .OrderByDescending(pp => pp.TokenPackageId)
+                    .Select(pp => pp.TokenId)
+                    .FirstOrDefault()))
+
                 .ForMember(dest => dest.PackagePriceValue, opt => opt.MapFrom(src =>
                 src.PackagePrices
                     .OrderByDescending(pp => pp.Date)
@@ -64,6 +89,21 @@ namespace Database.AutoMapperConfig
                 .ForMember(p => p.EndDate, opt => opt.MapFrom(src => src.PackageDiscount.EndDate))
                 .ForMember(p => p.Value, opt => opt.MapFrom(src => src.PackageDiscount.Value));
 
+            CreateMap<Token, TokensGetDto>()
+                .ForMember(p => p.TokenPriceValue, opt => opt.MapFrom(src =>
+                src.TokenPrices
+                    .OrderByDescending(pp => pp.Date)
+                    .Select(pp => pp.Value)
+                    .FirstOrDefault()))
+                .ForMember(p => p.Date, opt => opt.MapFrom(src =>
+                src.TokenPrices
+                    .OrderByDescending(pp => pp.Date)
+                    .Select(pp => pp.Date)
+                    .FirstOrDefault()));
+
+            CreateMap<TokenPrice, TokenPricesGetDto>()
+                .ForMember(p => p.TokenType, opt => opt.MapFrom(src => src.Token.TokenType));
+
             //Employee Get Dtos
             CreateMap<Client, ClientsGetDto>();
             CreateMap<Payment, PaymentGetDto>()
@@ -80,6 +120,8 @@ namespace Database.AutoMapperConfig
             CreateMap<TokenPurchaseCreateDto, TokenPurchase>();
             CreateMap<TokenCreateDto, Token>();
             CreateMap<TokenPackageCreateDto, TokenPackage>();
+            CreateMap<ClientPersonalTokenCreateDto, ClientPersonalToken>();
+            CreateMap<ClientGroupTokenCreateDto, ClientGroupToken>();
 
             //Client Get Dtos
             CreateMap<Client, ClientGetDto>();
@@ -87,6 +129,21 @@ namespace Database.AutoMapperConfig
                 .ForMember(p => p.PackageName, opt => opt.MapFrom(src => src.Package.PackageName))
                 .ForMember(p => p.ClientName, opt => opt.MapFrom(src => src.Client.Firstname))
                 .ForMember(p => p.ClientSurname, opt => opt.MapFrom(src => src.Client.Surname));
+
+            CreateMap<ClientPersonalToken, ClientPersonalTokenGetDto>();
+            CreateMap<ClientGroupToken, ClientGroupTokenGetDto>();
+            CreateMap<TokenPackage, TokenPackageGetDto>();
+            CreateMap<Token, TokensGetDto>()
+                .ForMember(p => p.Date, opt => opt.MapFrom(src =>
+                src.TokenPrices
+                    .OrderByDescending(pp => pp.Date)
+                    .Select(pp => pp.Date)
+                    .FirstOrDefault()))
+                .ForMember(p => p.TokenPriceValue, opt => opt.MapFrom(src =>
+                src.TokenPrices
+                    .OrderByDescending(pp => pp.Date)
+                    .Select(pp => pp.Value)
+                    .FirstOrDefault()));
         }
 
     }

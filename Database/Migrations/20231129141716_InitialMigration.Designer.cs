@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    [Migration("20231122132533_ClientTokenReformed")]
-    partial class ClientTokenReformed
+    [Migration("20231129141716_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -379,15 +379,10 @@ namespace Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PackageId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TokenType")
                         .HasColumnType("int");
 
                     b.HasKey("TokenId");
-
-                    b.HasIndex("PackageId");
 
                     b.ToTable("Tokens");
 
@@ -710,15 +705,6 @@ namespace Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Client");
-                });
-
-            modelBuilder.Entity("Database.Entities.Token", b =>
-                {
-                    b.HasOne("Database.Entities.Package", "Package")
-                        .WithMany()
-                        .HasForeignKey("PackageId");
-
-                    b.Navigation("Package");
                 });
 
             modelBuilder.Entity("Database.Entities.TokenPrice", b =>
