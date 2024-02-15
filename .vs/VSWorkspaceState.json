@@ -4,9 +4,8 @@
     "\\Database",
     "\\Database\\AutoMapperConfig",
     "\\Database\\Controllers",
-    "\\Database\\Entities",
     "\\Database\\Enums"
   ],
-  "SelectedNode": "\\Database\\Entities\\PersonalToken.cs",
+  "SelectedNode": "\\Database\\Enums\\Category.cs",
   "PreviewInSolutionExplorer": false
 }
