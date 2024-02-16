@@ -11,6 +11,8 @@ import Nav from "react-bootstrap/Nav";
 
 export const ClientPage = () => {
   const [client, setClient] = useState([]);
+  const [groupTokens, setGroupTokens] = useState(0);
+  const [personalTokens, setPersonalTokens] = useState(0);
 
   const { id } = useParams();
   //const navigate = useNavigate();
@@ -20,6 +22,18 @@ export const ClientPage = () => {
       .get(`https://localhost:7095/api/Administrators/ClientGetCurrent/${id}`)
       .then((response) => {
         setClient(response.data);
+      });
+
+    axios
+      .get(`https://localhost:7095/api/Clients/GetClientGroupTokens/${id}`)
+      .then((response) => {
+        setGroupTokens(response.data.numberOfGroupTokens);
+      });
+
+    axios
+      .get(`https://localhost:7095/api/Clients/GetClientPersonalTokens/${id}`)
+      .then((response) => {
+        setPersonalTokens(response.data.numberOfPersonalTokens);
       });
   }, [id]);
 
@@ -37,13 +51,22 @@ export const ClientPage = () => {
               <Nav.Link href={`/employee/${id}/memberships`}>
                 Membership History
               </Nav.Link>
-              <Nav.Link href={`/employee/${id}/payment-history`}>
-                Payment History
+              <Nav.Link href={`/employee/${id}/purchase-tokens`}>
+                Purchase Tokens
               </Nav.Link>
             </Nav>
             <Navbar.Collapse className="justify-content-end">
               <Navbar.Text>
-                Status:{" "}
+                <span className="nav-item">
+                  <span className="span1">Tokens</span>{" "}
+                  <span className="span2">Balance</span>{" "}
+                  <span className="span3">Status</span>{" "}
+                  <span className="span4">Role</span>
+                </span>
+                <span className="admin_name headers">P {personalTokens}</span>
+                <span className="admin_name headers">G {groupTokens}</span>
+                <span className="admin_name headers">{client.balance}</span>
+
                 <span className="admin_name headers">
                   {client.status === 0 ? (
                     <span className="client-status-inactive">Inactive</span>
@@ -51,9 +74,6 @@ export const ClientPage = () => {
                     <span className="client-status-active">Active</span>
                   )}
                 </span>
-                Balance:{" "}
-                <span className="admin_name headers">{client.balance}</span>
-                Role:{" "}
                 <span className="admin_name headers client-role">Client</span>
               </Navbar.Text>
               <NavDropdown

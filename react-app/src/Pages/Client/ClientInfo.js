@@ -6,9 +6,12 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import axios from "axios";
+import Button from "react-bootstrap/Button";
 
 export const ClientInfo = () => {
   const [client, setClient] = useState([]);
+  const [groupTokens, setGroupTokens] = useState(0);
+  const [personalTokens, setPersonalTokens] = useState(0);
 
   const { id } = useParams();
 
@@ -17,6 +20,18 @@ export const ClientInfo = () => {
       .get(`https://localhost:7095/api/Administrators/ClientGetCurrent/${id}`)
       .then((response) => {
         setClient(response.data);
+      });
+
+    axios
+      .get(`https://localhost:7095/api/Clients/GetClientGroupTokens/${id}`)
+      .then((response) => {
+        setGroupTokens(response.data.numberOfGroupTokens);
+      });
+
+    axios
+      .get(`https://localhost:7095/api/Clients/GetClientPersonalTokens/${id}`)
+      .then((response) => {
+        setPersonalTokens(response.data.numberOfPersonalTokens);
       });
   }, [id]);
 
@@ -40,7 +55,16 @@ export const ClientInfo = () => {
             </Nav>
             <Navbar.Collapse className="justify-content-end">
               <Navbar.Text>
-                Status:{" "}
+                <span className="nav-item">
+                  <span className="span1">Tokens</span>{" "}
+                  <span className="span2">Balance</span>{" "}
+                  <span className="span3">Status</span>{" "}
+                  <span className="span4">Role</span>
+                </span>
+                <span className="admin_name headers">P {personalTokens}</span>
+                <span className="admin_name headers">G {groupTokens}</span>
+                <span className="admin_name headers">{client.balance}</span>
+
                 <span className="admin_name headers">
                   {client.status === 0 ? (
                     <span className="client-status-inactive">Inactive</span>
@@ -48,9 +72,6 @@ export const ClientInfo = () => {
                     <span className="client-status-active">Active</span>
                   )}
                 </span>
-                Balance:{" "}
-                <span className="admin_name headers">{client.balance}</span>
-                Role:{" "}
                 <span className="admin_name headers client-role">Client</span>
               </Navbar.Text>
               <NavDropdown
@@ -80,7 +101,6 @@ export const ClientInfo = () => {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-
         <div className="header-container">
           <h2 className="clients-header headers">Your Informations</h2>
         </div>
@@ -119,6 +139,13 @@ export const ClientInfo = () => {
               Phone Number:{" "}
               <span className="body-row-item-client">{client.phoneNumber}</span>
             </span>
+            <Button
+              className="change-info-button"
+              variant="outline-warning"
+              href={`/client/${client.id}/update-info`}
+            >
+              Change Info
+            </Button>
           </div>
         </div>
       </div>

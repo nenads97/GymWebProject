@@ -31,6 +31,8 @@ import { AllTokens } from "./Pages/Admin/AllTokens";
 import { SetTokenPrice } from "./Pages/Admin/SetTokenPrice";
 import { TokenPriceHistory } from "./Pages/Admin/TokenPriceHistory";
 import { PurchasePackage } from "./Pages/Client/PurchasePackage";
+import { UpdateInfo } from "./Pages/Client/UpdateInfo";
+import { PurchaseTokens } from "./Pages/Client/PurchaseTokens";
 // import Layout from "./Components/Layout";
 
 function App() {
@@ -113,8 +115,8 @@ function App() {
         element={<UpdateClientBalance />}
       ></Route>
       <Route
-        path="/employee/:id/payment-history"
-        element={<PaymentHistory />}
+        path="/employee/:id/purchase-tokens"
+        element={<PurchaseTokens />}
       ></Route>
 
       <Route path="/client/:id/client-info" element={<ClientInfo />}></Route>
@@ -123,6 +125,8 @@ function App() {
         path="/client/:id/purchase-package"
         element={<PurchasePackage />}
       ></Route>
+
+      <Route path="/client/:id/update-info" element={<UpdateInfo />}></Route>
     </Routes>
   );
 }

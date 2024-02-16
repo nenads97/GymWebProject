@@ -6,22 +6,34 @@ import Navbar from "react-bootstrap/Navbar";
 import axios from "axios";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 export const PurchaseTokens = () => {
-  const [packages, setPackages] = useState([]);
   const [client, setClient] = useState([]);
   const [clientPersonalTokens, setClientPersonalTokens] = useState(0);
   const [clientGroupTokens, setClientGroupTokens] = useState(0);
+  //const [membership, setMembership] = useState(0);
+  const [errors, setErrors] = useState({});
+
+  const [amountOfPersonalTokens, setAmountOfPersonalTokens] = useState(0);
+  const [amountOfGroupTokens, setAmountOfGroupTokens] = useState(0);
+  const [tokens, setTokens] = useState([]);
+
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const { id } = useParams();
 
-  const statusPayload = {
-    status: 0,
-  };
   //const navigate = useNavigate();
   //Clients/GetClientMembership/
+
+  useEffect(() => {
+    // Update total price whenever the quantities of tokens change
+    setTotalPrice(
+      amountOfPersonalTokens * tokens[0]?.tokenPriceValue +
+        amountOfGroupTokens * tokens[1]?.tokenPriceValue
+    );
+  }, [amountOfPersonalTokens, amountOfGroupTokens, tokens]);
+
   useEffect(() => {
     axios
       .get(`https://localhost:7095/api/Administrators/ClientGetCurrent/${id}`)
@@ -41,58 +53,92 @@ export const PurchaseTokens = () => {
         setClientGroupTokens(response.data);
       });
 
-    if (membership.expiryDate < new Date()) {
-      axios.put(
-        `https://localhost:7095/api/Clients/UpdateClientStatus/${id}`,
-        statusPayload
-      );
-    }
+    axios
+      .get(`https://localhost:7095/api/Administrators/TokensGet`)
+      .then((response) => {
+        setTokens(response.data);
+      });
+    // if (membership.expiryDate < new Date()) {
+    //   axios.put(
+    //     `https://localhost:7095/api/Clients/UpdateClientStatus/${id}`,
+    //     statusPayload
+    //   );
+    // }
   }, [id]);
 
-  const handleSubmit = (pckg) => {
-    const payload = {
-      packageId: pckg.packageId,
-      clientId: parseInt(id),
-    };
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = {};
 
-    const payloadPersonal = {
-      numberOfPersonalTokens: pckg.personalTokens,
-      clientId: parseInt(id),
-      personalTokenId: pckg.personalTokenId,
-    };
-
-    const payloadGroup = {
-      numberOfGroupTokens: pckg.groupTokens,
-      clientId: parseInt(id),
-      groupTokenId: pckg.groupTokenId,
-    };
-
-    const payloadBalance = {
-      balance: -pckg.packagePriceValue,
-    };
-
-    axios.post(`https://localhost:7095/api/Clients/CreateMembership`, payload);
-
-    if (payloadPersonal.numberOfPersonalTokens !== 0) {
-      axios.post(
-        `https://localhost:7095/api/Clients/CreateClientPersonalToken`,
-        payloadPersonal
-      );
+    // Validate amount of personal tokens
+    if (amountOfPersonalTokens < 0) {
+      newErrors.amountOfPersonalTokens =
+        "Amount of personal tokens cannot be less than 0.";
+      valid = false;
     }
-    if (payloadGroup.numberOfGroupTokens !== 0) {
-      axios.post(
-        `https://localhost:7095/api/Clients/CreateClientGroupToken`,
-        payloadGroup
-      );
+
+    if (amountOfGroupTokens < 0) {
+      newErrors.amountOfGroupTokens =
+        "Amount of group tokens cannot be less than 0.";
+      valid = false;
     }
-    axios
-      .put(
-        `https://localhost:7095/api/Employees/UpdateClientBalance/${id}`,
-        payloadBalance
-      )
-      .then(() => {
-        window.location.reload();
-      });
+
+    if (client.balance < totalPrice) {
+      newErrors.insufficientFunds = "Insufficient funds in the balance.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (validateForm()) {
+      const payloadPersonal = {
+        numberOfPersonalTokens: amountOfPersonalTokens,
+        clientId: parseInt(id),
+        personalTokenId: clientPersonalTokens.personalTokenId,
+      };
+
+      const payloadGroup = {
+        numberOfGroupTokens: amountOfGroupTokens,
+        clientId: parseInt(id),
+        groupTokenId: clientGroupTokens.groupTokenId,
+      };
+
+      const payloadBalance = {
+        balance: -totalPrice,
+      };
+
+      //axios.post(`https://localhost:7095/api/Clients/CreateMembership`, payload);
+
+      if (payloadPersonal.numberOfPersonalTokens > 0) {
+        axios.post(
+          `https://localhost:7095/api/Clients/CreateClientPersonalToken`,
+          payloadPersonal
+        );
+      }
+      if (payloadGroup.numberOfGroupTokens > 0) {
+        axios.post(
+          `https://localhost:7095/api/Clients/CreateClientGroupToken`,
+          payloadGroup
+        );
+      }
+      axios
+        .put(
+          `https://localhost:7095/api/Employees/UpdateClientBalance/${id}`,
+          payloadBalance
+        )
+        .then(() => {
+          window.location.reload();
+        });
+
+      setAmountOfPersonalTokens(0);
+      setAmountOfGroupTokens(0);
+      setErrors({});
+    }
   };
 
   return (
@@ -161,54 +207,95 @@ export const PurchaseTokens = () => {
           </Container>
         </Navbar>
 
-        <div className="header-container">
-          <h2 className="clients-header headers">Packages</h2>
+        <div className="token-price-create-page">
+          <div className="auth-form-container auth-form-container-black">
+            <h2 className="register-header-white">Set Token Price</h2>
+
+            <Form onSubmit={handleSubmit}>
+              {/* Price Value */}
+              <Form.Group className="mb-3" controlId="formValue">
+                <Form.Label
+                  className="form-label-white"
+                  style={{ width: 100 + "%" }}
+                >
+                  Amount of personal tokens:
+                </Form.Label>
+                <input
+                  className={`register-input register-input-left ${
+                    errors.amountOfPersonalTokens ? "input-error" : ""
+                  }`}
+                  type="number"
+                  placeholder="Amount"
+                  id="amountOfPersonalTokens"
+                  name="amountOfPersonalTokens"
+                  value={amountOfPersonalTokens}
+                  onChange={(e) => setAmountOfPersonalTokens(e.target.value)}
+                />
+                {errors.amountOfPersonalTokens && (
+                  <p className="error-message" style={{ color: "red" }}>
+                    {errors.amountOfPersonalTokens}
+                  </p>
+                )}
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formValue">
+                <Form.Label
+                  className="form-label-white"
+                  style={{ width: 100 + "%" }}
+                >
+                  Amount of group tokens:
+                </Form.Label>
+                <input
+                  className={`register-input register-input-left ${
+                    errors.amountOfGroupTokens ? "input-error" : ""
+                  }`}
+                  type="number"
+                  placeholder="Amount"
+                  id="amountOfGroupTokens"
+                  name="amountOfGroupTokens"
+                  value={amountOfGroupTokens}
+                  onChange={(e) => setAmountOfGroupTokens(e.target.value)}
+                />
+                {errors.amountOfGroupTokens && (
+                  <p className="error-message" style={{ color: "red" }}>
+                    {errors.amountOfGroupTokens}
+                  </p>
+                )}
+              </Form.Group>
+
+              <Form.Group
+                className="mb-3"
+                controlId="formTotalPrice"
+                style={{ textAlign: "center" }}
+              >
+                <Form.Label
+                  className="form-label-white"
+                  style={{ textAlign: "center" }}
+                >
+                  Total Price:
+                </Form.Label>
+                <p
+                  className={`total-price ${
+                    totalPrice < 0 ? "negative-total" : ""
+                  }`}
+                  style={{ color: "#66FF99" }}
+                >
+                  {totalPrice}
+                </p>
+              </Form.Group>
+
+              {errors.insufficientFunds && (
+                <p className="error-message" style={{ color: "red" }}>
+                  {errors.insufficientFunds}
+                </p>
+              )}
+
+              <button className="register-button" type="submit">
+                Purchase
+              </button>
+            </Form>
+          </div>
         </div>
-        <Table striped bordered hover variant="dark" className="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Type</th>
-              <th>Personal Tokens</th>
-              <th>Group Tokens</th>
-              <th>Price (RSD)</th>
-              <th>Discount (%)</th>
-              <th>Discounted Price (RSD)</th>
-              <th>Commands</th>
-            </tr>
-          </thead>
-          <tbody>
-            {packages.map((pckg, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{pckg.packageName}</td>
-                <td>{pckg.personalTokens}</td>
-                <td>{pckg.groupTokens}</td>
-                <td>{pckg.packagePriceValue}</td>
-                <td>{pckg.packageDiscountValue}</td>
-                <td>
-                  {pckg.packageDiscountValue === 0
-                    ? pckg.packagePriceValue
-                    : pckg.packagePriceValue -
-                      (pckg.packagePriceValue * pckg.packageDiscountValue) /
-                        100}
-                </td>
-                <td>
-                  <Button
-                    className="purchase-button"
-                    variant="success"
-                    type="button"
-                    onClick={() => {
-                      handleSubmit(pckg);
-                    }}
-                  >
-                    Purchase
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
       </div>
     </>
   );

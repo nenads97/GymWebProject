@@ -133,6 +133,12 @@
   margin: 30px auto 10px;
 }
 
+.change-info-button {
+    margin: 0 auto;
+    display: block !important;
+    margin-top: 21px;
+}
+
 .login-button {
   background-color: #3776ff;
 }
@@ -346,3 +352,24 @@ h2 {
 .body-row-item-client {
   color: #61fb00;
 }
+
+.nav-item {
+    display: block;
+}
+
+.span1 {
+    padding-left: 70px;
+    padding-right: 91px;
+}
+
+.span2 {
+    padding-right: 56px;
+}
+
+.span3 {
+    padding-right: 66px;
+}
+
+.negative-total {
+    color: red !important;
+  }
