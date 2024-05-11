@@ -4,6 +4,7 @@ using Database.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    partial class GymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240406175413_AddTokenData")]
+    partial class AddTokenData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,50 +209,6 @@ namespace Database.Migrations
                     b.HasIndex("TokenId");
 
                     b.ToTable("TokenPackages");
-
-                    b.HasData(
-                        new
-                        {
-                            TokenPackageId = 1,
-                            PackageId = 1,
-                            Quantity = 0,
-                            TokenId = 1
-                        },
-                        new
-                        {
-                            TokenPackageId = 2,
-                            PackageId = 1,
-                            Quantity = 0,
-                            TokenId = 1
-                        },
-                        new
-                        {
-                            TokenPackageId = 3,
-                            PackageId = 2,
-                            Quantity = 10,
-                            TokenId = 2
-                        },
-                        new
-                        {
-                            TokenPackageId = 4,
-                            PackageId = 2,
-                            Quantity = 0,
-                            TokenId = 1
-                        },
-                        new
-                        {
-                            TokenPackageId = 5,
-                            PackageId = 3,
-                            Quantity = 10,
-                            TokenId = 1
-                        },
-                        new
-                        {
-                            TokenPackageId = 6,
-                            PackageId = 3,
-                            Quantity = 10,
-                            TokenId = 2
-                        });
                 });
 
             modelBuilder.Entity("Database.AdditionalRelations.TokenPurchase", b =>
@@ -406,26 +365,6 @@ namespace Database.Migrations
                     b.HasIndex("AdministratorId");
 
                     b.ToTable("Packages");
-
-                    b.HasData(
-                        new
-                        {
-                            PackageId = 1,
-                            AdministratorId = 1,
-                            PackageName = "Silver"
-                        },
-                        new
-                        {
-                            PackageId = 2,
-                            AdministratorId = 1,
-                            PackageName = "Gold"
-                        },
-                        new
-                        {
-                            PackageId = 3,
-                            AdministratorId = 1,
-                            PackageName = "Premium"
-                        });
                 });
 
             modelBuilder.Entity("Database.Entities.PackageDiscount", b =>
@@ -482,32 +421,6 @@ namespace Database.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("PackagePrices");
-
-                    b.HasData(
-                        new
-                        {
-                            PackagePriceId = 1,
-                            AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4346),
-                            PackageId = 1,
-                            Value = 3000.0
-                        },
-                        new
-                        {
-                            PackagePriceId = 2,
-                            AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4384),
-                            PackageId = 2,
-                            Value = 4500.0
-                        },
-                        new
-                        {
-                            PackagePriceId = 3,
-                            AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4387),
-                            PackageId = 3,
-                            Value = 8000.0
-                        });
                 });
 
             modelBuilder.Entity("Database.Entities.Payment", b =>
@@ -789,24 +702,6 @@ namespace Database.Migrations
                     b.HasIndex("TokenId");
 
                     b.ToTable("TokenPrices");
-
-                    b.HasData(
-                        new
-                        {
-                            TokenPriceId = 1,
-                            AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4434),
-                            TokenId = 1,
-                            Value = 1000.0
-                        },
-                        new
-                        {
-                            TokenPriceId = 2,
-                            AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4439),
-                            TokenId = 2,
-                            Value = 500.0
-                        });
                 });
 
             modelBuilder.Entity("Database.Entities.Training", b =>

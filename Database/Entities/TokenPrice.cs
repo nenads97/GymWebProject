@@ -5,6 +5,15 @@ namespace Database.Entities
 {
     public class TokenPrice
     {
+        public TokenPrice(int tokenPriceId, double value, DateTime date, int administratorId, int tokenId)
+        {
+            TokenPriceId = tokenPriceId;
+            Value = value;
+            Date = date;
+            AdministratorId = administratorId;
+            TokenId = tokenId;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TokenPriceId { get; set; }

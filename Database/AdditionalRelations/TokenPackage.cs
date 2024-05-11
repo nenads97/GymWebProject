@@ -6,6 +6,14 @@ namespace Database.AdditionalRelations
 {
     public class TokenPackage
     {
+        public TokenPackage(int tokenPackageId, int quantity, int tokenId, int packageId)
+        {
+            TokenPackageId = tokenPackageId;
+            Quantity = quantity;
+            TokenId = tokenId;
+            PackageId = packageId;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TokenPackageId { get; set; }

@@ -7,15 +7,15 @@ namespace Database.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdPrijavljivanja { get; set; }
-        public DateTime DatumIVremePrijavljivanja { get; set; }
+        public int SignUpId { get; set; }
+        public DateTime DateTimeOfSignUp { get; set; }
 
         [ForeignKey("Client")]
         public int ClientId { get; set; }
         public virtual Client Client { get; set; }
 
-        [ForeignKey("SignUpForTraining")]
-        public int SignUpId { get; set; }
-        public virtual SignUpForTraining SignUp { get; set; }
+        [ForeignKey("Application")]
+        public int ApplicationId { get; set; }
+        public virtual Application Application { get; set; }
     }
 }

@@ -15,5 +15,7 @@ namespace Database.Dtos.Employee.Get
         public string Firstname { get; set; }
         public double Balance { get; set; }
         public Status Status { get; set; }
+        public int PersonalTokens { get; set; }
+        public int GroupTokens { get; set; }
     }
 }

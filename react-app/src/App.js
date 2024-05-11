@@ -33,6 +33,8 @@ import { TokenPriceHistory } from "./Pages/Admin/TokenPriceHistory";
 import { PurchasePackage } from "./Pages/Client/PurchasePackage";
 import { UpdateInfo } from "./Pages/Client/UpdateInfo";
 import { PurchaseTokens } from "./Pages/Client/PurchaseTokens";
+import { SetPackageTokens } from "./Pages/Admin/SetPackageTokens";
+import { CreateGroupTraining } from "./Pages/Trainer/CreateGroupTraining";
 // import Layout from "./Components/Layout";
 
 function App() {
@@ -73,6 +75,10 @@ function App() {
       <Route
         path="/administrator/:id/set-package-price"
         element={<SetPackagePrice />}
+      />
+      <Route
+        path="/administrator/:id/set-package-tokens"
+        element={<SetPackageTokens />}
       />
       <Route
         path="/administrator/:id/set-token-price"
@@ -127,6 +133,11 @@ function App() {
       ></Route>
 
       <Route path="/client/:id/update-info" element={<UpdateInfo />}></Route>
+
+      <Route
+        path="/trainer/:id/create-group-training"
+        element={<CreateGroupTraining />}
+      ></Route>
     </Routes>
   );
 }

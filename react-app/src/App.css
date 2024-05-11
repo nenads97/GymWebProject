@@ -187,7 +187,9 @@
   background-image: url("/src/Images/teahub.io-wallpaper-black-metal-1726360.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  min-height: 931px;
+  height: 100%;
+  width: 100%;
+  position: fixed;
 }
 
 .admin-link {
@@ -308,7 +310,29 @@ h2 {
   background-image: url("/src/Images/employee-background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  min-height: 931px;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+}
+
+.trainer-page {
+    background-image: url("/src/Images/trainer-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 2;
+  }
+
+.dark-opacity {
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
 }
 
 .employee-icon,
@@ -372,4 +396,60 @@ h2 {
 
 .negative-total {
     color: red !important;
+  }
+
+  .client-header {
+    color: #b4b4b4;
+    display: block;
+    margin: 26px auto 50px;
+    width: fit-content;
+    padding: 30px;
+  }
+
+  .card {
+    align-items: center;
+    --bs-card-spacer-x: 8rem;
+    --bs-card-title-spacer-y: 1.5rem;
+    --bs-card-bg: rgb(43, 48, 53, 0.85) !important;
+    color: white !important;
+    margin: 0 120px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+    --bs-card-bg: rgb(43, 48, 53, 1) !important;
+  }
+
+  .card-purchase {
+    position: relative;
+  }
+
+  .card-purchase-p {
+    position: absolute;
+    top: 35%;
+    left: 21%;
+    font-size: 40px;
+  }
+
+  .card-title {
+    text-align: center;
+    margin-bottom: 19px;
+  }
+
+  :root, [data-bs-theme=light] {
+    --bs-secondary-color: white !important;
+  }
+
+  .card-text {
+    padding: 10px 40px 10px;
+    text-align: center;
+  }
+
+  .card-svg {
+    margin: 31px 0;
+  }
+
+  .card-footer {
+    margin-bottom: 31px;
   }

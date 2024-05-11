@@ -5,6 +5,15 @@ namespace Database.Entities
 {
     public class PackagePrice
     {
+        public PackagePrice(int packagePriceId, double value, DateTime date, int administratorId, int packageId)
+        {
+            PackagePriceId = packagePriceId;
+            Value = value;
+            Date = date;
+            AdministratorId = administratorId;
+            PackageId = packageId;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PackagePriceId { get; set; }

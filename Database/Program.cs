@@ -1,5 +1,6 @@
 using Database.AutoMapperConfig;
 using Database.Data;
+using Database.Entities.Threads;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,6 @@ builder.Services.AddCors(options =>
         .AllowAnyOrigin()
     );
 });
-
 builder.Services.AddAutoMapper(typeof(AutoMapperConfigProfile));
 
 builder.Services.AddDbContext<GymDbContext>(options =>
@@ -43,8 +43,6 @@ builder.Services.AddAuthentication(options =>
 });
 */
 
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -61,5 +59,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//var membershipChecker = app.Services.GetRequiredService<MembershipExpirationChecker>();
+//membershipChecker.Start();
 
 app.Run();

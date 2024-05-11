@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Database.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,6 +33,27 @@ namespace Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Persons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClientRequests",
+                columns: table => new
+                {
+                    ClientRequestId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateTimeOfSubmission = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    RequestId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientRequests", x => x.ClientRequestId);
+                    table.ForeignKey(
+                        name: "FK_ClientRequests_Persons_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,6 +171,70 @@ namespace Database.Migrations
                         column: x => x.GroupToken_ClientId,
                         principalTable: "Persons",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrainerTrainingSignOuts",
+                columns: table => new
+                {
+                    TrainerTrainingSignOutId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DafeOfSignOut = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TrainerId = table.Column<int>(type: "int", nullable: false),
+                    TrainingId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainerTrainingSignOuts", x => x.TrainerTrainingSignOutId);
+                    table.ForeignKey(
+                        name: "FK_TrainerTrainingSignOuts_Persons_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TrainerTrainingSignUps",
+                columns: table => new
+                {
+                    IdTrenerTreningZakazivanje = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DatumZakazivanja = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TrainerId = table.Column<int>(type: "int", nullable: false),
+                    TrainingId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrainerTrainingSignUps", x => x.IdTrenerTreningZakazivanje);
+                    table.ForeignKey(
+                        name: "FK_TrainerTrainingSignUps_Persons_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Requests",
+                columns: table => new
+                {
+                    RequestId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateAndTimeOfRequestOpening = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClientRequestId = table.Column<int>(type: "int", nullable: false),
+                    ResponseId = table.Column<int>(type: "int", nullable: true),
+                    PersonalTrainingId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Requests", x => x.RequestId);
+                    table.ForeignKey(
+                        name: "FK_Requests_ClientRequests_ClientRequestId",
+                        column: x => x.ClientRequestId,
+                        principalTable: "ClientRequests",
+                        principalColumn: "ClientRequestId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -397,10 +482,231 @@ namespace Database.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Responses",
+                columns: table => new
+                {
+                    ResponseId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<bool>(type: "bit", nullable: false),
+                    DateAndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RequestId = table.Column<int>(type: "int", nullable: false),
+                    TrainerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Responses", x => x.ResponseId);
+                    table.ForeignKey(
+                        name: "FK_Responses_Persons_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Responses_Requests_RequestId",
+                        column: x => x.RequestId,
+                        principalTable: "Requests",
+                        principalColumn: "RequestId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Applications",
+                columns: table => new
+                {
+                    ApplicationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OpeningDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    numberOfSpots = table.Column<int>(type: "int", nullable: false),
+                    GroupTrainingId = table.Column<int>(type: "int", nullable: false),
+                    TrainerId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Applications", x => x.ApplicationId);
+                    table.ForeignKey(
+                        name: "FK_Applications_Persons_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SignOutsFromTraining",
+                columns: table => new
+                {
+                    SignOutId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateTimeOfSignOut = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    ApplicationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SignOutsFromTraining", x => x.SignOutId);
+                    table.ForeignKey(
+                        name: "FK_SignOutsFromTraining_Applications_ApplicationId",
+                        column: x => x.ApplicationId,
+                        principalTable: "Applications",
+                        principalColumn: "ApplicationId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SignOutsFromTraining_Persons_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SignUpsForTraining",
+                columns: table => new
+                {
+                    SignUpId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateTimeOfSignUp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: false),
+                    ApplicationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SignUpsForTraining", x => x.SignUpId);
+                    table.ForeignKey(
+                        name: "FK_SignUpsForTraining_Applications_ApplicationId",
+                        column: x => x.ApplicationId,
+                        principalTable: "Applications",
+                        principalColumn: "ApplicationId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SignUpsForTraining_Persons_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Training",
+                columns: table => new
+                {
+                    TrainingId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TrainingType = table.Column<int>(type: "int", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    DateAndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TrainerId = table.Column<int>(type: "int", nullable: false),
+                    TrainerTrainingSignOutId = table.Column<int>(type: "int", nullable: false),
+                    TrainerTrainingSignUpId = table.Column<int>(type: "int", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SignUpId = table.Column<int>(type: "int", nullable: true),
+                    RequestId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Training", x => x.TrainingId);
+                    table.ForeignKey(
+                        name: "FK_Training_Persons_TrainerId",
+                        column: x => x.TrainerId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Training_Requests_RequestId",
+                        column: x => x.RequestId,
+                        principalTable: "Requests",
+                        principalColumn: "RequestId");
+                    table.ForeignKey(
+                        name: "FK_Training_SignUpsForTraining_SignUpId",
+                        column: x => x.SignUpId,
+                        principalTable: "SignUpsForTraining",
+                        principalColumn: "SignUpId");
+                    table.ForeignKey(
+                        name: "FK_Training_TrainerTrainingSignOuts_TrainerTrainingSignOutId",
+                        column: x => x.TrainerTrainingSignOutId,
+                        principalTable: "TrainerTrainingSignOuts",
+                        principalColumn: "TrainerTrainingSignOutId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Training_TrainerTrainingSignUps_TrainerTrainingSignUpId",
+                        column: x => x.TrainerTrainingSignUpId,
+                        principalTable: "TrainerTrainingSignUps",
+                        principalColumn: "IdTrenerTreningZakazivanje",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GTokenGTraining",
+                columns: table => new
+                {
+                    GTrainingGTokenId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GroupTrainingId = table.Column<int>(type: "int", nullable: false),
+                    GroupTokenId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GTokenGTraining", x => x.GTrainingGTokenId);
+                    table.ForeignKey(
+                        name: "FK_GTokenGTraining_Tokens_GroupTokenId",
+                        column: x => x.GroupTokenId,
+                        principalTable: "Tokens",
+                        principalColumn: "TokenId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GTokenGTraining_Training_GroupTrainingId",
+                        column: x => x.GroupTrainingId,
+                        principalTable: "Training",
+                        principalColumn: "TrainingId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PTokenPTraining",
+                columns: table => new
+                {
+                    PTokenPTrainingId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PersonalTrainingId = table.Column<int>(type: "int", nullable: false),
+                    PersonalTokenId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PTokenPTraining", x => x.PTokenPTrainingId);
+                    table.ForeignKey(
+                        name: "FK_PTokenPTraining_Tokens_PersonalTokenId",
+                        column: x => x.PersonalTokenId,
+                        principalTable: "Tokens",
+                        principalColumn: "TokenId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PTokenPTraining_Training_PersonalTrainingId",
+                        column: x => x.PersonalTrainingId,
+                        principalTable: "Training",
+                        principalColumn: "TrainingId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Persons",
                 columns: new[] { "Id", "Discriminator", "Email", "Firstname", "Gender", "JMBG", "Password", "PhoneNumber", "Role", "Surname", "Username" },
                 values: new object[] { 1, "Administrator", "nenad.suknovic@gmail.com", "Nenad", 0, 1001997800095L, "admin", 613618201.0, 0, "Suknovic", "admin" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applications_GroupTrainingId",
+                table: "Applications",
+                column: "GroupTrainingId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applications_TrainerId",
+                table: "Applications",
+                column: "TrainerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientGroupTokens_ClientId",
@@ -421,6 +727,21 @@ namespace Database.Migrations
                 name: "IX_ClientPersonalTokens_PersonalTokenId",
                 table: "ClientPersonalTokens",
                 column: "PersonalTokenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ClientRequests_ClientId",
+                table: "ClientRequests",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GTokenGTraining_GroupTokenId",
+                table: "GTokenGTraining",
+                column: "GroupTokenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GTokenGTraining_GroupTrainingId",
+                table: "GTokenGTraining",
+                column: "GroupTrainingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Memberships_ClientId",
@@ -483,8 +804,55 @@ namespace Database.Migrations
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PTokenPTraining_PersonalTokenId",
+                table: "PTokenPTraining",
+                column: "PersonalTokenId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PTokenPTraining_PersonalTrainingId",
+                table: "PTokenPTraining",
+                column: "PersonalTrainingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Purchases_ClientId",
                 table: "Purchases",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Requests_ClientRequestId",
+                table: "Requests",
+                column: "ClientRequestId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Responses_RequestId",
+                table: "Responses",
+                column: "RequestId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Responses_TrainerId",
+                table: "Responses",
+                column: "TrainerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SignOutsFromTraining_ApplicationId",
+                table: "SignOutsFromTraining",
+                column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SignOutsFromTraining_ClientId",
+                table: "SignOutsFromTraining",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SignUpsForTraining_ApplicationId",
+                table: "SignUpsForTraining",
+                column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SignUpsForTraining_ClientId",
+                table: "SignUpsForTraining",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
@@ -526,16 +894,94 @@ namespace Database.Migrations
                 name: "IX_Tokens_GroupToken_ClientId",
                 table: "Tokens",
                 column: "GroupToken_ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrainerTrainingSignOuts_TrainerId",
+                table: "TrainerTrainingSignOuts",
+                column: "TrainerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TrainerTrainingSignUps_TrainerId",
+                table: "TrainerTrainingSignUps",
+                column: "TrainerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Training_RequestId",
+                table: "Training",
+                column: "RequestId",
+                unique: true,
+                filter: "[RequestId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Training_SignUpId",
+                table: "Training",
+                column: "SignUpId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Training_TrainerId",
+                table: "Training",
+                column: "TrainerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Training_TrainerTrainingSignOutId",
+                table: "Training",
+                column: "TrainerTrainingSignOutId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Training_TrainerTrainingSignUpId",
+                table: "Training",
+                column: "TrainerTrainingSignUpId",
+                unique: true);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Applications_Training_GroupTrainingId",
+                table: "Applications",
+                column: "GroupTrainingId",
+                principalTable: "Training",
+                principalColumn: "TrainingId",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Applications_Persons_TrainerId",
+                table: "Applications");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_ClientRequests_Persons_ClientId",
+                table: "ClientRequests");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_SignUpsForTraining_Persons_ClientId",
+                table: "SignUpsForTraining");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_TrainerTrainingSignOuts_Persons_TrainerId",
+                table: "TrainerTrainingSignOuts");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_TrainerTrainingSignUps_Persons_TrainerId",
+                table: "TrainerTrainingSignUps");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Training_Persons_TrainerId",
+                table: "Training");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Applications_Training_GroupTrainingId",
+                table: "Applications");
+
             migrationBuilder.DropTable(
                 name: "ClientGroupTokens");
 
             migrationBuilder.DropTable(
                 name: "ClientPersonalTokens");
+
+            migrationBuilder.DropTable(
+                name: "GTokenGTraining");
 
             migrationBuilder.DropTable(
                 name: "Memberships");
@@ -551,6 +997,15 @@ namespace Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Payments");
+
+            migrationBuilder.DropTable(
+                name: "PTokenPTraining");
+
+            migrationBuilder.DropTable(
+                name: "Responses");
+
+            migrationBuilder.DropTable(
+                name: "SignOutsFromTraining");
 
             migrationBuilder.DropTable(
                 name: "TokenPackages");
@@ -575,6 +1030,27 @@ namespace Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Persons");
+
+            migrationBuilder.DropTable(
+                name: "Training");
+
+            migrationBuilder.DropTable(
+                name: "Requests");
+
+            migrationBuilder.DropTable(
+                name: "SignUpsForTraining");
+
+            migrationBuilder.DropTable(
+                name: "TrainerTrainingSignOuts");
+
+            migrationBuilder.DropTable(
+                name: "TrainerTrainingSignUps");
+
+            migrationBuilder.DropTable(
+                name: "ClientRequests");
+
+            migrationBuilder.DropTable(
+                name: "Applications");
         }
     }
 }

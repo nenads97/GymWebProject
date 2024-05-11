@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    [Migration("20231129141716_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240406173008_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,88 @@ namespace Database.Migrations
                     b.HasIndex("PersonalTokenId");
 
                     b.ToTable("ClientPersonalTokens");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.ClientRequest", b =>
+                {
+                    b.Property<int>("ClientRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ClientRequestId"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTimeOfSubmission")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ClientRequestId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientRequests");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.GTokenGTraining", b =>
+                {
+                    b.Property<int>("GTrainingGTokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GTrainingGTokenId"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GroupTokenId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupTrainingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("GTrainingGTokenId");
+
+                    b.HasIndex("GroupTokenId");
+
+                    b.HasIndex("GroupTrainingId");
+
+                    b.ToTable("GTokenGTraining");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.PTokenPTraining", b =>
+                {
+                    b.Property<int>("PTokenPTrainingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PTokenPTrainingId"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PersonalTokenId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonalTrainingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("PTokenPTrainingId");
+
+                    b.HasIndex("PersonalTokenId");
+
+                    b.HasIndex("PersonalTrainingId");
+
+                    b.ToTable("PTokenPTraining");
                 });
 
             modelBuilder.Entity("Database.AdditionalRelations.PackageAdministrator", b =>
@@ -153,6 +235,86 @@ namespace Database.Migrations
                     b.HasIndex("TokenId");
 
                     b.ToTable("TokenPurchases");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TrainerTrainingSignOut", b =>
+                {
+                    b.Property<int>("TrainerTrainingSignOutId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerTrainingSignOutId"));
+
+                    b.Property<DateTime>("DafeOfSignOut")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TrainerTrainingSignOutId");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("TrainerTrainingSignOuts");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TrainerTrainingSignUp", b =>
+                {
+                    b.Property<int>("IdTrenerTreningZakazivanje")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTrenerTreningZakazivanje"));
+
+                    b.Property<DateTime>("DatumZakazivanja")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainingId")
+                        .HasColumnType("int");
+
+                    b.HasKey("IdTrenerTreningZakazivanje");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("TrainerTrainingSignUps");
+                });
+
+            modelBuilder.Entity("Database.Entities.Application", b =>
+                {
+                    b.Property<int>("ApplicationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationId"));
+
+                    b.Property<DateTime>("EventDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GroupTrainingId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("OpeningDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("numberOfSpots")
+                        .HasColumnType("int");
+
+                    b.HasKey("ApplicationId");
+
+                    b.HasIndex("GroupTrainingId");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("Applications");
                 });
 
             modelBuilder.Entity("Database.Entities.Membership", b =>
@@ -367,6 +529,116 @@ namespace Database.Migrations
                     b.ToTable("Purchases");
                 });
 
+            modelBuilder.Entity("Database.Entities.Request", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestId"));
+
+                    b.Property<int>("ClientRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateAndTimeOfRequestOpening")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PersonalTrainingId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ResponseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RequestId");
+
+                    b.HasIndex("ClientRequestId")
+                        .IsUnique();
+
+                    b.ToTable("Requests");
+                });
+
+            modelBuilder.Entity("Database.Entities.Response", b =>
+                {
+                    b.Property<int>("ResponseId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResponseId"));
+
+                    b.Property<bool>("Content")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("DateAndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ResponseId");
+
+                    b.HasIndex("RequestId")
+                        .IsUnique();
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("Responses");
+                });
+
+            modelBuilder.Entity("Database.Entities.SignOutFromTraining", b =>
+                {
+                    b.Property<int>("SignOutId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SignOutId"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTimeOfSignOut")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("SignOutId");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("SignOutsFromTraining");
+                });
+
+            modelBuilder.Entity("Database.Entities.SignUpForTraining", b =>
+                {
+                    b.Property<int>("SignUpId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SignUpId"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTimeOfSignUp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("SignUpId");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("SignUpsForTraining");
+                });
+
             modelBuilder.Entity("Database.Entities.Token", b =>
                 {
                     b.Property<int>("TokenId")
@@ -418,6 +690,56 @@ namespace Database.Migrations
                     b.HasIndex("TokenId");
 
                     b.ToTable("TokenPrices");
+                });
+
+            modelBuilder.Entity("Database.Entities.Training", b =>
+                {
+                    b.Property<int>("TrainingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainingId"));
+
+                    b.Property<DateTime>("DateAndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainerTrainingSignOutId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainerTrainingSignUpId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainingType")
+                        .HasColumnType("int");
+
+                    b.HasKey("TrainingId");
+
+                    b.HasIndex("TrainerId");
+
+                    b.HasIndex("TrainerTrainingSignOutId")
+                        .IsUnique();
+
+                    b.HasIndex("TrainerTrainingSignUpId")
+                        .IsUnique();
+
+                    b.ToTable("Training");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Training");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Database.JoinTables.PackagePackageDiscount", b =>
@@ -522,6 +844,32 @@ namespace Database.Migrations
                     b.HasDiscriminator().HasValue("PersonalToken");
                 });
 
+            modelBuilder.Entity("Database.Entities.GroupTraining", b =>
+                {
+                    b.HasBaseType("Database.Entities.Training");
+
+                    b.Property<int?>("SignUpId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("SignUpId");
+
+                    b.HasDiscriminator().HasValue("GroupTraining");
+                });
+
+            modelBuilder.Entity("Database.Entities.PersonalTraining", b =>
+                {
+                    b.HasBaseType("Database.Entities.Training");
+
+                    b.Property<int?>("RequestId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("RequestId")
+                        .IsUnique()
+                        .HasFilter("[RequestId] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue("PersonalTraining");
+                });
+
             modelBuilder.Entity("Database.AdditionalRelations.ClientGroupToken", b =>
                 {
                     b.HasOne("Database.Entities.Client", "Client")
@@ -558,6 +906,55 @@ namespace Database.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("PersonalToken");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.ClientRequest", b =>
+                {
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany("ClientRequests")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.GTokenGTraining", b =>
+                {
+                    b.HasOne("Database.Entities.GroupToken", "GroupToken")
+                        .WithMany()
+                        .HasForeignKey("GroupTokenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.GroupTraining", "GroupTraining")
+                        .WithMany("GTokenGTraining")
+                        .HasForeignKey("GroupTrainingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GroupToken");
+
+                    b.Navigation("GroupTraining");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.PTokenPTraining", b =>
+                {
+                    b.HasOne("Database.Entities.PersonalToken", "PersonalToken")
+                        .WithMany()
+                        .HasForeignKey("PersonalTokenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.PersonalTraining", "PersonalTraining")
+                        .WithMany("PTokenPTraining")
+                        .HasForeignKey("PersonalTrainingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PersonalToken");
+
+                    b.Navigation("PersonalTraining");
                 });
 
             modelBuilder.Entity("Database.AdditionalRelations.PackageAdministrator", b =>
@@ -615,6 +1012,47 @@ namespace Database.Migrations
                     b.Navigation("Purchase");
 
                     b.Navigation("Token");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TrainerTrainingSignOut", b =>
+                {
+                    b.HasOne("Database.Entities.Trainer", "Trainer")
+                        .WithMany("TrainerTrainingSignOuts")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Trainer");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TrainerTrainingSignUp", b =>
+                {
+                    b.HasOne("Database.Entities.Trainer", "Trainer")
+                        .WithMany("TrainerTrainingSignUps")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Trainer");
+                });
+
+            modelBuilder.Entity("Database.Entities.Application", b =>
+                {
+                    b.HasOne("Database.Entities.GroupTraining", "GroupTraining")
+                        .WithMany()
+                        .HasForeignKey("GroupTrainingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Trainer", "Trainer")
+                        .WithMany("Applications")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("GroupTraining");
+
+                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("Database.Entities.Membership", b =>
@@ -707,6 +1145,74 @@ namespace Database.Migrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("Database.Entities.Request", b =>
+                {
+                    b.HasOne("Database.AdditionalRelations.ClientRequest", "ClientRequest")
+                        .WithOne("Request")
+                        .HasForeignKey("Database.Entities.Request", "ClientRequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ClientRequest");
+                });
+
+            modelBuilder.Entity("Database.Entities.Response", b =>
+                {
+                    b.HasOne("Database.Entities.Request", "Request")
+                        .WithOne("Response")
+                        .HasForeignKey("Database.Entities.Response", "RequestId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Trainer", "Trainer")
+                        .WithMany("Responses")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Request");
+
+                    b.Navigation("Trainer");
+                });
+
+            modelBuilder.Entity("Database.Entities.SignOutFromTraining", b =>
+                {
+                    b.HasOne("Database.Entities.Application", "Application")
+                        .WithMany("SignOut")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany("SignOutsFromTraining")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("Database.Entities.SignUpForTraining", b =>
+                {
+                    b.HasOne("Database.Entities.Application", "Application")
+                        .WithMany("SignUp")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.Client", "Client")
+                        .WithMany("SignUpsForTraining")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Application");
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("Database.Entities.TokenPrice", b =>
                 {
                     b.HasOne("Database.Entities.Administrator", "Administrator")
@@ -724,6 +1230,33 @@ namespace Database.Migrations
                     b.Navigation("Administrator");
 
                     b.Navigation("Token");
+                });
+
+            modelBuilder.Entity("Database.Entities.Training", b =>
+                {
+                    b.HasOne("Database.Entities.Trainer", "Trainer")
+                        .WithMany("Trainings")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Database.AdditionalRelations.TrainerTrainingSignOut", "TrainerTrainingSignOut")
+                        .WithOne("Training")
+                        .HasForeignKey("Database.Entities.Training", "TrainerTrainingSignOutId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Database.AdditionalRelations.TrainerTrainingSignUp", "TrainerTrainingSignUp")
+                        .WithOne("Training")
+                        .HasForeignKey("Database.Entities.Training", "TrainerTrainingSignUpId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Trainer");
+
+                    b.Navigation("TrainerTrainingSignOut");
+
+                    b.Navigation("TrainerTrainingSignUp");
                 });
 
             modelBuilder.Entity("Database.JoinTables.PackagePackageDiscount", b =>
@@ -763,6 +1296,46 @@ namespace Database.Migrations
                     b.Navigation("Client");
                 });
 
+            modelBuilder.Entity("Database.Entities.GroupTraining", b =>
+                {
+                    b.HasOne("Database.Entities.SignUpForTraining", "SignUp")
+                        .WithMany()
+                        .HasForeignKey("SignUpId");
+
+                    b.Navigation("SignUp");
+                });
+
+            modelBuilder.Entity("Database.Entities.PersonalTraining", b =>
+                {
+                    b.HasOne("Database.Entities.Request", "Request")
+                        .WithOne("PersonalTraining")
+                        .HasForeignKey("Database.Entities.PersonalTraining", "RequestId");
+
+                    b.Navigation("Request");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.ClientRequest", b =>
+                {
+                    b.Navigation("Request");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TrainerTrainingSignOut", b =>
+                {
+                    b.Navigation("Training");
+                });
+
+            modelBuilder.Entity("Database.AdditionalRelations.TrainerTrainingSignUp", b =>
+                {
+                    b.Navigation("Training");
+                });
+
+            modelBuilder.Entity("Database.Entities.Application", b =>
+                {
+                    b.Navigation("SignOut");
+
+                    b.Navigation("SignUp");
+                });
+
             modelBuilder.Entity("Database.Entities.Package", b =>
                 {
                     b.Navigation("Memberships");
@@ -784,6 +1357,13 @@ namespace Database.Migrations
             modelBuilder.Entity("Database.Entities.Purchase", b =>
                 {
                     b.Navigation("TokenPurchases");
+                });
+
+            modelBuilder.Entity("Database.Entities.Request", b =>
+                {
+                    b.Navigation("PersonalTraining");
+
+                    b.Navigation("Response");
                 });
 
             modelBuilder.Entity("Database.Entities.Token", b =>
@@ -812,16 +1392,35 @@ namespace Database.Migrations
 
                     b.Navigation("ClientPersonalTokens");
 
+                    b.Navigation("ClientRequests");
+
                     b.Navigation("Memberships");
 
                     b.Navigation("Payments");
 
                     b.Navigation("Purchases");
+
+                    b.Navigation("SignOutsFromTraining");
+
+                    b.Navigation("SignUpsForTraining");
                 });
 
             modelBuilder.Entity("Database.Entities.Employee", b =>
                 {
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("Database.Entities.Trainer", b =>
+                {
+                    b.Navigation("Applications");
+
+                    b.Navigation("Responses");
+
+                    b.Navigation("TrainerTrainingSignOuts");
+
+                    b.Navigation("TrainerTrainingSignUps");
+
+                    b.Navigation("Trainings");
                 });
 
             modelBuilder.Entity("Database.Entities.GroupToken", b =>
@@ -832,6 +1431,16 @@ namespace Database.Migrations
             modelBuilder.Entity("Database.Entities.PersonalToken", b =>
                 {
                     b.Navigation("ClientPersonalTokens");
+                });
+
+            modelBuilder.Entity("Database.Entities.GroupTraining", b =>
+                {
+                    b.Navigation("GTokenGTraining");
+                });
+
+            modelBuilder.Entity("Database.Entities.PersonalTraining", b =>
+                {
+                    b.Navigation("PTokenPTraining");
                 });
 #pragma warning restore 612, 618
         }

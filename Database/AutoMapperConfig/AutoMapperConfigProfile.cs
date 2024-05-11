@@ -8,6 +8,7 @@ using Database.Dtos.Client.Create;
 using Database.Dtos.Client.Get;
 using Database.Dtos.Employee.Create;
 using Database.Dtos.Employee.Get;
+using Database.Dtos.Trainer;
 using Database.Entities;
 using Database.JoinTables;
 
@@ -30,6 +31,7 @@ namespace Database.AutoMapperConfig
             CreateMap<PackageCreateDto, Package>();
             CreateMap<TrainerCreateDto, Trainer>();
             CreateMap<EmployeeCreateDto, Employee>();
+            CreateMap<TokenPackageCreateDto, TokenPackage>();
 
             //Admin get dtos
             CreateMap<Package, PackageGetDto>()
@@ -144,6 +146,17 @@ namespace Database.AutoMapperConfig
                     .OrderByDescending(pp => pp.Date)
                     .Select(pp => pp.Value)
                     .FirstOrDefault()));
+
+            //Trainer Dtos
+            CreateMap<Application, ApplicationDto>();
+            CreateMap<ApplicationDto, Application>();
+
+            CreateMap<SignOutFromTraining, SignOutFromTrainingDto>();
+            CreateMap<SignOutFromTrainingDto, SignOutFromTraining>();
+
+            CreateMap<SignUpForTraining, SignUpForTrainingDto>(); 
+            CreateMap<SignUpForTrainingDto, SignUpForTraining>();
+
         }
 
     }

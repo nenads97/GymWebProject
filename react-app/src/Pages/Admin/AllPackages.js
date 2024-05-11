@@ -110,6 +110,11 @@ export const AllPackages = () => {
                   >
                     Set Package Price
                   </NavDropdown.Item>
+                  <NavDropdown.Item
+                    href={`/administrator/${id}/set-package-tokens`}
+                  >
+                    Set Package Tokens
+                  </NavDropdown.Item>
                 </NavDropdown>
 
                 <NavDropdown title="Tokens" id="basic-nav-dropdown">
@@ -216,6 +221,8 @@ export const AllPackages = () => {
               <th>#</th>
               <th>Name</th>
               <th>Price (RSD)</th>
+              <th>Personal Tokens</th>
+              <th>Group Tokens</th>
               <th>Discount (%)</th>
               <th>Discounted Price (RSD)</th>
               <th>Commands</th>
@@ -227,6 +234,8 @@ export const AllPackages = () => {
                 <td>{index + 1}</td>
                 <td>{pckg.packageName}</td>
                 <td>{pckg.packagePriceValue}</td>
+                <td>{pckg.personalTokens}</td>
+                <td>{pckg.groupTokens}</td>
                 <td>{pckg.packageDiscountValue}</td>
                 <td>
                   {pckg.packageDiscountValue === 0

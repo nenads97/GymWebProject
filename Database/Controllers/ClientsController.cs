@@ -61,7 +61,7 @@ namespace Database.Controllers
 
             _context.SaveChanges();
 
-            return Ok(newMembership);
+            return Ok();
         }
         
 
@@ -188,7 +188,10 @@ namespace Database.Controllers
         {
             var sum = _context.ClientPersonalTokens.Include(p => p.Client).Where(p => p.ClientId == id).ToList().Sum(p => p.NumberOfPersonalTokens);
             var clientPersonalTokens = _context.ClientPersonalTokens.Include(p => p.Client).Where(p => p.ClientId == id).FirstOrDefault();
-            clientPersonalTokens.NumberOfPersonalTokens = sum;
+            if (clientPersonalTokens != null)
+            {
+                clientPersonalTokens.NumberOfPersonalTokens = sum;
+            }
 
             var clientGroupTokensDtos = _mapper.Map<ClientPersonalTokenGetDto>(clientPersonalTokens);
 
@@ -199,9 +202,14 @@ namespace Database.Controllers
         [Route("GetClientGroupTokens/{id}")]
         public IActionResult ClientGroupTokensGet([FromRoute] int id)
         {
-            var sum = _context.ClientGroupTokens.Include(p => p.Client).Where(p => p.ClientId == id).ToList().Sum(p => p.NumberOfGroupTokens);
+            var client = new Client(_context);
+            int sum = client.GetGroupTokens(id);
+
             var clientGroupTokens = _context.ClientGroupTokens.Include(p => p.Client).Where(p => p.ClientId == id).FirstOrDefault();
-            clientGroupTokens.NumberOfGroupTokens = sum;
+            if (clientGroupTokens != null)
+            {
+                clientGroupTokens.NumberOfGroupTokens = sum;
+            }
 
             var clientGroupTokensDtos = _mapper.Map<ClientGroupTokenGetDto>(clientGroupTokens);
 

@@ -54,12 +54,13 @@ export const PurchasePackage = () => {
         setClientGroupTokens(response.data);
       });
 
-    if (membership.expiryDate < new Date()) {
+    /*if (membership.expiryDate < new Date()) {
       axios.put(
         `https://localhost:7095/api/Clients/UpdateClientStatus/${id}`,
         statusPayload
       );
     }
+    */
   }, [id]);
 
   const handleSubmit = (pckg) => {

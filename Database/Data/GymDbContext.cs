@@ -1,5 +1,4 @@
-﻿using Azure;
-using Database.AdditionalRelations;
+﻿using Database.AdditionalRelations;
 using Database.Entities;
 using Database.JoinTables;
 using Microsoft.EntityFrameworkCore;
@@ -41,11 +40,14 @@ namespace Database.Data
         public virtual DbSet<TokenPurchase> TokenPurchases { get; set; }
         public virtual DbSet<Token> Tokens { get; set; }
         public virtual DbSet<TokenPackage> TokenPackages { get; set; }
-
-
-
-
-
+        public virtual DbSet<Application> Applications { get; set; }
+        public virtual DbSet<SignUpForTraining> SignUpsForTraining { get; set; }
+        public virtual DbSet<SignOutFromTraining> SignOutsFromTraining { get; set; }
+        public virtual DbSet<Request> Requests { get; set; }
+        public virtual DbSet<Response> Responses { get; set; }
+        public virtual DbSet<ClientRequest> ClientRequests { get; set; }
+        public virtual DbSet<TrainerTrainingSignOut> TrainerTrainingSignOuts { get; set; }
+        public virtual DbSet<TrainerTrainingSignUp> TrainerTrainingSignUps { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -54,6 +56,36 @@ namespace Database.Data
                 new Administrator (1, 1001997800095, 0613618201, "admin", "admin", Enums.Gender.Male,"nenad.suknovic@gmail.com", "Suknovic", "Nenad")
                 );
 
+            modelBuilder.Entity<Token>().HasData(
+                new Token (1, Enums.Category.Personal),
+                new Token (2, Enums.Category.Group)
+                );
+
+            modelBuilder.Entity<Package>().HasData(
+                new Package (1, "Silver", 1),
+                new Package (2, "Gold", 1),
+                new Package (3, "Premium", 1)
+                );
+
+            modelBuilder.Entity<PackagePrice>().HasData(
+                new PackagePrice (1, 3000, DateTime.Now, 1, 1),
+                new PackagePrice (2, 4500, DateTime.Now, 1, 2),
+                new PackagePrice (3, 8000, DateTime.Now, 1, 3)
+                );
+
+            modelBuilder.Entity<TokenPackage>().HasData(
+                new TokenPackage (1, 0, 1, 1),
+                new TokenPackage (2, 0, 1, 1),
+                new TokenPackage (3, 10, 2, 2),
+                new TokenPackage (4, 0, 1, 2),
+                new TokenPackage (5, 10, 1, 3),
+                new TokenPackage (6, 10, 2, 3)
+                );
+
+            modelBuilder.Entity<TokenPrice>().HasData(
+                new TokenPrice (1, 1000, DateTime.Now, 1, 1),
+                new TokenPrice (2, 500, DateTime.Now, 1, 2)
+                );
 
             modelBuilder.Entity<PackagePrice>()
                 .HasOne(m => m.Administrator)
@@ -152,6 +184,62 @@ namespace Database.Data
             modelBuilder.Entity<ClientGroupToken>()
                 .HasOne(m => m.Client)
                 .WithMany(p => p.ClientGroupTokens)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //Trainer
+            modelBuilder.Entity<Application>()
+                .HasOne(a => a.Trainer)
+                .WithMany(a => a.Applications)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Application>()
+                .HasMany(a => a.SignOut)
+                .WithOne(a => a.Application)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Application>()
+                .HasMany(a => a.SignUp)
+                .WithOne(a => a.Application)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Response>()
+                .HasOne(a => a.Trainer)
+                .WithMany(a => a.Responses)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Request>()
+                .HasOne(a => a.Response)
+                .WithOne(a => a.Request)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Request>()
+                .HasOne(a => a.ClientRequest)
+                .WithOne(a => a.Request)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Client>()
+                .HasMany(a => a.ClientRequests)
+                .WithOne(a => a.Client)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Trainer>()
+                .HasMany(a => a.TrainerTrainingSignUps)
+                .WithOne(a => a.Trainer)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Trainer>()
+                .HasMany(a => a.TrainerTrainingSignOuts)
+                .WithOne(a => a.Trainer)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Training>()
+                .HasOne(a => a.TrainerTrainingSignOut)
+                .WithOne(a => a.Training)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Training>()
+                .HasOne(a => a.TrainerTrainingSignUp)
+                .WithOne(a => a.Training)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

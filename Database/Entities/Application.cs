@@ -9,6 +9,8 @@ namespace Database.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ApplicationId { get; set; }
         public DateTime EventDate { get; set; }
+        public DateTime OpeningDate { get; set; }
+        public int numberOfSpots { get; set; }
 
         public ICollection<SignUpForTraining> SignUp { get; set; }
         public ICollection<SignOutFromTraining> SignOut { get; set; }

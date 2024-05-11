@@ -1,4 +1,5 @@
 ﻿using Database.AdditionalRelations;
+using Database.Enums;
 using Database.JoinTables;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +8,13 @@ namespace Database.Entities
 {
     public class Package
     {
+        public Package(int packageId, string packageName, int administratorId )
+        {
+            PackageId = packageId;
+            PackageName = packageName;
+            AdministratorId = administratorId;
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PackageId { get; set; }

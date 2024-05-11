@@ -221,13 +221,12 @@ C:\Users\nsuknovic\Source\Repos\nenads97\GymWebProject\Database\obj\Debug\net6.0
 C:\Users\nsuknovic\Source\Repos\nenads97\GymWebProject\Database\obj\Debug\net6.0\Database.pdb
 C:\Users\nsuknovic\Source\Repos\nenads97\GymWebProject\Database\obj\Debug\net6.0\Database.genruntimeconfig.cache
 C:\Users\nsuknovic\Source\Repos\nenads97\GymWebProject\Database\obj\Debug\net6.0\ref\Database.dll
+C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\Database.dll
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\appsettings.json
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\Database.exe
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\Database.deps.json
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\Database.runtimeconfig.json
-C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\Database.dll
-C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\Database.pdb
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\Azure.Core.dll
@@ -340,4 +339,5 @@ C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\obj\Debug\net6.0\Database.d
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\obj\Debug\net6.0\refint\Database.dll
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\obj\Debug\net6.0\Database.pdb
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\obj\Debug\net6.0\Database.genruntimeconfig.cache
+C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\bin\Debug\net6.0\Database.pdb
 C:\Users\Nenad\Desktop\GitHub\GymWebProject\Database\obj\Debug\net6.0\ref\Database.dll

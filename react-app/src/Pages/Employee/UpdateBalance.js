@@ -10,7 +10,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 
 export const UpdateClientBalance = () => {
   const [balance, setNewBalance] = useState(0);
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
   const navigate = useNavigate();
   const { id } = useParams();
   const { clientId } = useParams();

@@ -37,17 +37,23 @@ namespace Database.Controllers
         public IActionResult PackagePriceCreate([FromBody] PackagePriceCreateDto dto)
         {
             var newPrice = _mapper.Map<PackagePrice>(dto);
-            foreach (var c in _context.PackagePrices)
-            {
-                if (c.Value == newPrice.Value)
-                {
-                    return StatusCode(StatusCodes.Status403Forbidden, new Database.Authentication.Response { Status = "Error", Message = "Already exist that package price" });
-                }
-            }
+
             _context.PackagePrices.Add(newPrice);
             _context.SaveChanges();
 
             return Ok(newPrice);
+        }
+
+        [HttpPost]
+        [Route("PackageTokenCreate")]
+        public IActionResult PackageTokenCreate([FromBody] TokenPackageCreateDto dto)
+        {
+            var tokenPackage = _mapper.Map<TokenPackage>(dto);
+
+            _context.TokenPackages.Add(tokenPackage);
+            _context.SaveChanges();
+
+            return Ok(tokenPackage);
         }
 
         [HttpPost]

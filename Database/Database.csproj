@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\Package\**" />
+    <Content Remove="Dtos\Package\**" />
+    <EmbeddedResource Remove="Dtos\Package\**" />
+    <None Remove="Dtos\Package\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="DocX" Version="2.5.0" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
@@ -24,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Authentication\Login\" />
-    <Folder Include="Dtos\Package\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

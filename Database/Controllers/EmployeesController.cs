@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Database.AdditionalRelations;
 using Database.Data;
 using Database.Dtos.Admin.Get;
 using Database.Dtos.Client;
@@ -31,9 +32,15 @@ namespace Database.Controllers
         [Route("ClientGet")]
         public IActionResult GetClients()
         {
-
+            var client = new Client(_context);
             var clients = _context.Clients.ToList();
             var clientDtos = _mapper.Map<IEnumerable<ClientsGetDto>>(clients);
+
+            foreach (var cl in clientDtos)
+            {
+                cl.GroupTokens = client.GetGroupTokens(cl.Id);
+                cl.PersonalTokens = client.GetPersonalTokens(cl.Id);
+            }
 
             return Ok(clientDtos);
         }

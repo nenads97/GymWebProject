@@ -13,13 +13,11 @@ namespace Database.Entities
         {
             Role = Role.Trainer;
         }
-
-        /*
+        
         public ICollection<Response> Responses { get; set; }
         public ICollection<Application> Applications { get; set; }
         public ICollection<Training> Trainings { get; set; }
         public ICollection<TrainerTrainingSignOut> TrainerTrainingSignOuts { get; set; }
         public ICollection<TrainerTrainingSignUp> TrainerTrainingSignUps { get; set; }
-        */
     }
 }
