@@ -9,7 +9,7 @@ namespace Database.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ResponseId { get; set; }
         public bool Content { get; set; }
-        public DateTime DateAndTime { get; set; }
+        public DateTime DateAndTime { get; set; } = DateTime.Now;
 
         [ForeignKey("Request")]
         public int RequestId { get; set; }

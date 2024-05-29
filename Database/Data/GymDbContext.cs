@@ -48,6 +48,9 @@ namespace Database.Data
         public virtual DbSet<ClientRequest> ClientRequests { get; set; }
         public virtual DbSet<TrainerTrainingSignOut> TrainerTrainingSignOuts { get; set; }
         public virtual DbSet<TrainerTrainingSignUp> TrainerTrainingSignUps { get; set; }
+        public virtual DbSet<Training> Trainings { get; set; }
+        public virtual DbSet<GroupTraining> GroupTrainings { get; set; }
+        public virtual DbSet<PersonalTraining> PersonalTrainings { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

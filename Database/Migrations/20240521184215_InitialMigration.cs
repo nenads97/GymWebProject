@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Database.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -588,49 +590,48 @@ namespace Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Training",
+                name: "Trainings",
                 columns: table => new
                 {
-                    TrainingId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TrainingId = table.Column<int>(type: "int", nullable: false),
                     TrainingType = table.Column<int>(type: "int", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     DateAndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TrainerId = table.Column<int>(type: "int", nullable: false),
-                    TrainerTrainingSignOutId = table.Column<int>(type: "int", nullable: false),
-                    TrainerTrainingSignUpId = table.Column<int>(type: "int", nullable: false),
+                    TrainerTrainingSignOutId = table.Column<int>(type: "int", nullable: true),
+                    TrainerTrainingSignUpId = table.Column<int>(type: "int", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SignUpId = table.Column<int>(type: "int", nullable: true),
                     RequestId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Training", x => x.TrainingId);
+                    table.PrimaryKey("PK_Trainings", x => x.TrainingId);
                     table.ForeignKey(
-                        name: "FK_Training_Persons_TrainerId",
+                        name: "FK_Trainings_Persons_TrainerId",
                         column: x => x.TrainerId,
                         principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Training_Requests_RequestId",
+                        name: "FK_Trainings_Requests_RequestId",
                         column: x => x.RequestId,
                         principalTable: "Requests",
                         principalColumn: "RequestId");
                     table.ForeignKey(
-                        name: "FK_Training_SignUpsForTraining_SignUpId",
+                        name: "FK_Trainings_SignUpsForTraining_SignUpId",
                         column: x => x.SignUpId,
                         principalTable: "SignUpsForTraining",
                         principalColumn: "SignUpId");
                     table.ForeignKey(
-                        name: "FK_Training_TrainerTrainingSignOuts_TrainerTrainingSignOutId",
+                        name: "FK_Trainings_TrainerTrainingSignOuts_TrainerTrainingSignOutId",
                         column: x => x.TrainerTrainingSignOutId,
                         principalTable: "TrainerTrainingSignOuts",
                         principalColumn: "TrainerTrainingSignOutId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Training_TrainerTrainingSignUps_TrainerTrainingSignUpId",
+                        name: "FK_Trainings_TrainerTrainingSignUps_TrainerTrainingSignUpId",
                         column: x => x.TrainerTrainingSignUpId,
                         principalTable: "TrainerTrainingSignUps",
                         principalColumn: "IdTrenerTreningZakazivanje",
@@ -658,9 +659,9 @@ namespace Database.Migrations
                         principalColumn: "TokenId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_GTokenGTraining_Training_GroupTrainingId",
+                        name: "FK_GTokenGTraining_Trainings_GroupTrainingId",
                         column: x => x.GroupTrainingId,
-                        principalTable: "Training",
+                        principalTable: "Trainings",
                         principalColumn: "TrainingId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -686,9 +687,9 @@ namespace Database.Migrations
                         principalColumn: "TokenId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PTokenPTraining_Training_PersonalTrainingId",
+                        name: "FK_PTokenPTraining_Trainings_PersonalTrainingId",
                         column: x => x.PersonalTrainingId,
-                        principalTable: "Training",
+                        principalTable: "Trainings",
                         principalColumn: "TrainingId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -697,6 +698,57 @@ namespace Database.Migrations
                 table: "Persons",
                 columns: new[] { "Id", "Discriminator", "Email", "Firstname", "Gender", "JMBG", "Password", "PhoneNumber", "Role", "Surname", "Username" },
                 values: new object[] { 1, "Administrator", "nenad.suknovic@gmail.com", "Nenad", 0, 1001997800095L, "admin", 613618201.0, 0, "Suknovic", "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Tokens",
+                columns: new[] { "TokenId", "Discriminator", "TokenType" },
+                values: new object[,]
+                {
+                    { 1, "Token", 0 },
+                    { 2, "Token", 1 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Packages",
+                columns: new[] { "PackageId", "AdministratorId", "PackageName" },
+                values: new object[,]
+                {
+                    { 1, 1, "Silver" },
+                    { 2, 1, "Gold" },
+                    { 3, 1, "Premium" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TokenPrices",
+                columns: new[] { "TokenPriceId", "AdministratorId", "Date", "TokenId", "Value" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5634), 1, 1000.0 },
+                    { 2, 1, new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5643), 2, 500.0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PackagePrices",
+                columns: new[] { "PackagePriceId", "AdministratorId", "Date", "PackageId", "Value" },
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5550), 1, 3000.0 },
+                    { 2, 1, new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5595), 2, 4500.0 },
+                    { 3, 1, new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5599), 3, 8000.0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TokenPackages",
+                columns: new[] { "TokenPackageId", "PackageId", "Quantity", "TokenId" },
+                values: new object[,]
+                {
+                    { 1, 1, 0, 1 },
+                    { 2, 1, 0, 1 },
+                    { 3, 2, 10, 2 },
+                    { 4, 2, 0, 1 },
+                    { 5, 3, 10, 1 },
+                    { 6, 3, 10, 2 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_GroupTrainingId",
@@ -906,39 +958,41 @@ namespace Database.Migrations
                 column: "TrainerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Training_RequestId",
-                table: "Training",
+                name: "IX_Trainings_RequestId",
+                table: "Trainings",
                 column: "RequestId",
                 unique: true,
                 filter: "[RequestId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Training_SignUpId",
-                table: "Training",
+                name: "IX_Trainings_SignUpId",
+                table: "Trainings",
                 column: "SignUpId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Training_TrainerId",
-                table: "Training",
+                name: "IX_Trainings_TrainerId",
+                table: "Trainings",
                 column: "TrainerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Training_TrainerTrainingSignOutId",
-                table: "Training",
+                name: "IX_Trainings_TrainerTrainingSignOutId",
+                table: "Trainings",
                 column: "TrainerTrainingSignOutId",
-                unique: true);
+                unique: true,
+                filter: "[TrainerTrainingSignOutId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Training_TrainerTrainingSignUpId",
-                table: "Training",
+                name: "IX_Trainings_TrainerTrainingSignUpId",
+                table: "Trainings",
                 column: "TrainerTrainingSignUpId",
-                unique: true);
+                unique: true,
+                filter: "[TrainerTrainingSignUpId] IS NOT NULL");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Applications_Training_GroupTrainingId",
+                name: "FK_Applications_Trainings_GroupTrainingId",
                 table: "Applications",
                 column: "GroupTrainingId",
-                principalTable: "Training",
+                principalTable: "Trainings",
                 principalColumn: "TrainingId",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -967,11 +1021,11 @@ namespace Database.Migrations
                 table: "TrainerTrainingSignUps");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Training_Persons_TrainerId",
-                table: "Training");
+                name: "FK_Trainings_Persons_TrainerId",
+                table: "Trainings");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Applications_Training_GroupTrainingId",
+                name: "FK_Applications_Trainings_GroupTrainingId",
                 table: "Applications");
 
             migrationBuilder.DropTable(
@@ -1032,7 +1086,7 @@ namespace Database.Migrations
                 name: "Persons");
 
             migrationBuilder.DropTable(
-                name: "Training");
+                name: "Trainings");
 
             migrationBuilder.DropTable(
                 name: "Requests");

@@ -4,4 +4,9 @@
     {
         Inactive, Active
     }
+
+    public enum TrainingStatus
+    {
+        Unavailable, Available, Canceled, Held
+    }
 }

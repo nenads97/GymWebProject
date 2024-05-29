@@ -16,6 +16,8 @@ using System.Text.Json;
 using Database.Dtos.Employee;
 using Database.Dtos.Client.Update;
 using Database.Dtos.Trainer;
+using Database.Enums;
+using Database.Dtos.Admin.Create;
 
 namespace Database.Controllers
 {
@@ -33,26 +35,149 @@ namespace Database.Controllers
         }
 
         [HttpPost]
+        [Route("CreateTraining")]
+        public IActionResult CreateTraining(TrainingDto groupTraining)
+        {
+            var application = _mapper.Map<Training>(groupTraining);
+
+            TrainerTrainingSignUp trainerTrainingSignUp = new TrainerTrainingSignUp();
+            trainerTrainingSignUp.TrainerId = application.TrainerId;
+            trainerTrainingSignUp.TrainingId = application.TrainingId;
+            trainerTrainingSignUp.DatumZakazivanja = DateTime.Now;
+
+            _context.TrainerTrainingSignUps.Add(trainerTrainingSignUp);
+            _context.Trainings.Add(application);
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpPost]
         [Route("CreateApplication")]
         public IActionResult CreateApplication(ApplicationDto applicationDto)
         {
             var application = _mapper.Map<Application>(applicationDto);
-            var resault = _context.Applications.Add(application);
+            _context.Applications.Add(application);
 
             _context.Applications.Add(application);
             _context.SaveChanges();
 
-            return Ok(resault);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("CreateResponse")]
+        public IActionResult CreateResponse([FromBody] ResponseDto dto)
+        {
+
+            var response = new Response() { RequestId = dto.RequestId, Content = dto.Content, TrainerId = dto.TrainerId };
+
+            _context.Responses.Add(response);
+            _context.SaveChanges();
+            var resp = _context.Responses.FirstOrDefault(r => r.RequestId == dto.RequestId);
+
+            var request = _context.Requests.FirstOrDefault(x => x.RequestId == dto.RequestId);
+
+            var clientRequest = _context.ClientRequests.FirstOrDefault(x => x.RequestId == dto.RequestId);
+
+            request.ResponseId = resp.ResponseId;
+
+            if (response.Content)
+            {
+                var personalTraining = new PersonalTraining(Category.Personal, 60, request.DateAndTimeOfRequestOpening, dto.Description, response.TrainerId);
+                personalTraining.RequestId = dto.RequestId;
+                Random random = new Random();
+                int randomNumber = random.Next(10000, 100000);
+                personalTraining.TrainingId = randomNumber;
+
+                _context.PersonalTrainings.Add(personalTraining);
+                request.PersonalTrainingId = personalTraining.TrainingId;
+
+                _context.ClientPersonalTokens.Add(new ClientPersonalToken { ClientId = clientRequest.ClientId, PersonalTokenId = 0, NumberOfPersonalTokens = -1 });
+            }
+
+            _context.Requests.Update(request);
+
+            //_context.Requests.Update()
+
+            _context.SaveChanges();
+
+            return Ok();
         }
 
         [HttpGet]
         [Route("GetAllApplications")]
         public IActionResult GetAllApplications()
         {
-            var applications = _context.Applications.ToList();
-            var applicationsDto = _mapper.Map<ApplicationDto>(applications);
+            // Fetch applications and include the necessary related entities
+            var applications = _context.Applications
+                .Include(a => a.Trainer)
+                .Include(a => a.GroupTraining)
+                .ToList();
 
-            return Ok(applicationsDto);
+            var applicationDtos = applications.Select(application => new AllApplicationsDto
+            {
+                Firstname = application.Trainer.Firstname,
+                Surname = application.Trainer.Surname,
+                EventDate = application.EventDate,
+                NumberOfSpots = application.numberOfSpots,
+                GroupTrainingId = application.GroupTrainingId,
+                TrainingId = application.GroupTraining.TrainingId,
+                TrainingType = application.GroupTraining.TrainingType,
+                Duration = application.GroupTraining.Duration,
+                OpeningDate = application.OpeningDate,
+                Description = application.GroupTraining.Description,
+                TrainerId = application.TrainerId,
+                TrainingStatus = application.GroupTraining.Status,
+                NumberOfReservedSpots = application.numberOfReservedSpots,
+                ApplicationId = application.ApplicationId
+            }).ToList();
+
+            return Ok(applicationDtos);
+        }
+
+        [HttpGet]
+        [Route("GetAllPersonalTrainings/{id:int}")]
+        public IActionResult GetAllPersonalTrainings([FromRoute] int id)
+        {
+            var applications = _context.Trainings.Where(a => a.TrainerId == id && a.TrainingType == Category.Personal).ToList();
+
+            return Ok(applications);
+        }
+
+
+        [HttpGet]
+        [Route("GetAllApplicationsForSpecificTrainer/{id:int}")]
+        public IActionResult GetAllApplicationsForSpecificTrainer([FromRoute]int id)
+        {
+            var applications = _context.Applications.Where(a => a.TrainerId == id).Include(a => a.GroupTraining).ToList();
+
+            return Ok(applications);
+        }
+
+        [HttpPut]
+        [Route("ChangeTrainingStatusToCanceled/{id:int}")]
+        public IActionResult ChangeTrainingStatusToCanceled([FromRoute] int id)
+        {
+            var training = _context.Trainings.FirstOrDefault(a => a.TrainingId == id);
+            training.Status = Enums.TrainingStatus.Canceled;
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("ChangeTrainingStatusToHeld/{id:int}")]
+        public IActionResult ChangeTrainingStatusToHeld([FromRoute] int id)
+        {
+            var training = _context.Trainings.FirstOrDefault(a => a.TrainingId == id);
+            training.Status = Enums.TrainingStatus.Held;
+
+            _context.SaveChanges();
+
+            return Ok();
         }
 
         [HttpDelete]

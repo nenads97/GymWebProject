@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Authentication\Login\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

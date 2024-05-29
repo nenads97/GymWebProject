@@ -9,7 +9,7 @@ namespace Database.AdditionalRelations
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ClientRequestId { get; set; }
-        public DateTime DateTimeOfSubmission { get; set; }
+        public DateTime DateTimeOfSubmission { get; set; } = DateTime.Now;
 
         [ForeignKey("Client")]
         public int ClientId { get; set; }

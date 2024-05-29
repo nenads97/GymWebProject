@@ -346,6 +346,9 @@ namespace Database.Migrations
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("numberOfReservedSpots")
+                        .HasColumnType("int");
+
                     b.Property<int>("numberOfSpots")
                         .HasColumnType("int");
 
@@ -488,7 +491,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 1,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4346),
+                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4526),
                             PackageId = 1,
                             Value = 3000.0
                         },
@@ -496,7 +499,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 2,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4384),
+                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4568),
                             PackageId = 2,
                             Value = 4500.0
                         },
@@ -504,7 +507,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 3,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4387),
+                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4572),
                             PackageId = 3,
                             Value = 8000.0
                         });
@@ -624,7 +627,7 @@ namespace Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestId"));
 
-                    b.Property<int>("ClientRequestId")
+                    b.Property<int?>("ClientRequestId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DateAndTimeOfRequestOpening")
@@ -639,7 +642,8 @@ namespace Database.Migrations
                     b.HasKey("RequestId");
 
                     b.HasIndex("ClientRequestId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[ClientRequestId] IS NOT NULL");
 
                     b.ToTable("Requests");
                 });
@@ -795,7 +799,7 @@ namespace Database.Migrations
                         {
                             TokenPriceId = 1,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4434),
+                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4653),
                             TokenId = 1,
                             Value = 1000.0
                         },
@@ -803,7 +807,7 @@ namespace Database.Migrations
                         {
                             TokenPriceId = 2,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 4, 23, 18, 10, 0, 779, DateTimeKind.Local).AddTicks(4439),
+                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4658),
                             TokenId = 2,
                             Value = 500.0
                         });
@@ -812,10 +816,7 @@ namespace Database.Migrations
             modelBuilder.Entity("Database.Entities.Training", b =>
                 {
                     b.Property<int>("TrainingId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainingId"));
 
                     b.Property<DateTime>("DateAndTime")
                         .HasColumnType("datetime2");
@@ -830,13 +831,18 @@ namespace Database.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainerTrainingSignOutId")
+                    b.Property<int?>("TrainerTrainingSignOutId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainerTrainingSignUpId")
+                    b.Property<int?>("TrainerTrainingSignUpId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<int>("TrainingType")
@@ -847,12 +853,14 @@ namespace Database.Migrations
                     b.HasIndex("TrainerId");
 
                     b.HasIndex("TrainerTrainingSignOutId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[TrainerTrainingSignOutId] IS NOT NULL");
 
                     b.HasIndex("TrainerTrainingSignUpId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[TrainerTrainingSignUpId] IS NOT NULL");
 
-                    b.ToTable("Training");
+                    b.ToTable("Trainings");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Training");
 
@@ -1155,7 +1163,7 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.Entities.Application", b =>
                 {
-                    b.HasOne("Database.Entities.GroupTraining", "GroupTraining")
+                    b.HasOne("Database.Entities.Training", "GroupTraining")
                         .WithMany()
                         .HasForeignKey("GroupTrainingId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1267,8 +1275,7 @@ namespace Database.Migrations
                     b.HasOne("Database.AdditionalRelations.ClientRequest", "ClientRequest")
                         .WithOne("Request")
                         .HasForeignKey("Database.Entities.Request", "ClientRequestId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ClientRequest");
                 });
@@ -1360,14 +1367,12 @@ namespace Database.Migrations
                     b.HasOne("Database.AdditionalRelations.TrainerTrainingSignOut", "TrainerTrainingSignOut")
                         .WithOne("Training")
                         .HasForeignKey("Database.Entities.Training", "TrainerTrainingSignOutId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Database.AdditionalRelations.TrainerTrainingSignUp", "TrainerTrainingSignUp")
                         .WithOne("Training")
                         .HasForeignKey("Database.Entities.Training", "TrainerTrainingSignUpId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Trainer");
 

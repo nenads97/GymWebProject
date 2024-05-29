@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    [Migration("20240406175413_AddTokenData")]
-    partial class AddTokenData
+    [Migration("20240521184215_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -209,6 +209,50 @@ namespace Database.Migrations
                     b.HasIndex("TokenId");
 
                     b.ToTable("TokenPackages");
+
+                    b.HasData(
+                        new
+                        {
+                            TokenPackageId = 1,
+                            PackageId = 1,
+                            Quantity = 0,
+                            TokenId = 1
+                        },
+                        new
+                        {
+                            TokenPackageId = 2,
+                            PackageId = 1,
+                            Quantity = 0,
+                            TokenId = 1
+                        },
+                        new
+                        {
+                            TokenPackageId = 3,
+                            PackageId = 2,
+                            Quantity = 10,
+                            TokenId = 2
+                        },
+                        new
+                        {
+                            TokenPackageId = 4,
+                            PackageId = 2,
+                            Quantity = 0,
+                            TokenId = 1
+                        },
+                        new
+                        {
+                            TokenPackageId = 5,
+                            PackageId = 3,
+                            Quantity = 10,
+                            TokenId = 1
+                        },
+                        new
+                        {
+                            TokenPackageId = 6,
+                            PackageId = 3,
+                            Quantity = 10,
+                            TokenId = 2
+                        });
                 });
 
             modelBuilder.Entity("Database.AdditionalRelations.TokenPurchase", b =>
@@ -365,6 +409,26 @@ namespace Database.Migrations
                     b.HasIndex("AdministratorId");
 
                     b.ToTable("Packages");
+
+                    b.HasData(
+                        new
+                        {
+                            PackageId = 1,
+                            AdministratorId = 1,
+                            PackageName = "Silver"
+                        },
+                        new
+                        {
+                            PackageId = 2,
+                            AdministratorId = 1,
+                            PackageName = "Gold"
+                        },
+                        new
+                        {
+                            PackageId = 3,
+                            AdministratorId = 1,
+                            PackageName = "Premium"
+                        });
                 });
 
             modelBuilder.Entity("Database.Entities.PackageDiscount", b =>
@@ -421,6 +485,32 @@ namespace Database.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("PackagePrices");
+
+                    b.HasData(
+                        new
+                        {
+                            PackagePriceId = 1,
+                            AdministratorId = 1,
+                            Date = new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5550),
+                            PackageId = 1,
+                            Value = 3000.0
+                        },
+                        new
+                        {
+                            PackagePriceId = 2,
+                            AdministratorId = 1,
+                            Date = new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5595),
+                            PackageId = 2,
+                            Value = 4500.0
+                        },
+                        new
+                        {
+                            PackagePriceId = 3,
+                            AdministratorId = 1,
+                            Date = new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5599),
+                            PackageId = 3,
+                            Value = 8000.0
+                        });
                 });
 
             modelBuilder.Entity("Database.Entities.Payment", b =>
@@ -702,15 +792,30 @@ namespace Database.Migrations
                     b.HasIndex("TokenId");
 
                     b.ToTable("TokenPrices");
+
+                    b.HasData(
+                        new
+                        {
+                            TokenPriceId = 1,
+                            AdministratorId = 1,
+                            Date = new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5634),
+                            TokenId = 1,
+                            Value = 1000.0
+                        },
+                        new
+                        {
+                            TokenPriceId = 2,
+                            AdministratorId = 1,
+                            Date = new DateTime(2024, 5, 21, 20, 42, 14, 236, DateTimeKind.Local).AddTicks(5643),
+                            TokenId = 2,
+                            Value = 500.0
+                        });
                 });
 
             modelBuilder.Entity("Database.Entities.Training", b =>
                 {
                     b.Property<int>("TrainingId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainingId"));
 
                     b.Property<DateTime>("DateAndTime")
                         .HasColumnType("datetime2");
@@ -728,10 +833,12 @@ namespace Database.Migrations
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainerTrainingSignOutId")
+                    b.Property<int?>("TrainerTrainingSignOutId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("TrainerTrainingSignUpId")
+                    b.Property<int?>("TrainerTrainingSignUpId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<int>("TrainingType")
@@ -742,12 +849,14 @@ namespace Database.Migrations
                     b.HasIndex("TrainerId");
 
                     b.HasIndex("TrainerTrainingSignOutId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[TrainerTrainingSignOutId] IS NOT NULL");
 
                     b.HasIndex("TrainerTrainingSignUpId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[TrainerTrainingSignUpId] IS NOT NULL");
 
-                    b.ToTable("Training");
+                    b.ToTable("Trainings");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Training");
 
@@ -1050,7 +1159,7 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.Entities.Application", b =>
                 {
-                    b.HasOne("Database.Entities.GroupTraining", "GroupTraining")
+                    b.HasOne("Database.Entities.Training", "GroupTraining")
                         .WithMany()
                         .HasForeignKey("GroupTrainingId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1255,14 +1364,12 @@ namespace Database.Migrations
                     b.HasOne("Database.AdditionalRelations.TrainerTrainingSignOut", "TrainerTrainingSignOut")
                         .WithOne("Training")
                         .HasForeignKey("Database.Entities.Training", "TrainerTrainingSignOutId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Database.AdditionalRelations.TrainerTrainingSignUp", "TrainerTrainingSignUp")
                         .WithOne("Training")
                         .HasForeignKey("Database.Entities.Training", "TrainerTrainingSignUpId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Trainer");
 

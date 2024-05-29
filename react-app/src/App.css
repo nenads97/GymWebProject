@@ -312,7 +312,6 @@ h2 {
   background-size: cover;
   height: 100%;
   width: 100%;
-  position: fixed;
 }
 
 .trainer-page {
@@ -452,4 +451,25 @@ h2 {
 
   .card-footer {
     margin-bottom: 31px;
+  }
+
+  .custom-alert {
+    position: fixed !important;
+    top: 78px !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    background-color: #212529 !important;
+    border: 2px solid !important;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .custom-alert-success {
+    color: rgb(36, 255, 36) !important;
+    border-color: rgb(36, 255, 36) !important;
+  }
+
+  .custom-alert-error {
+    color: rgb(255, 36, 36) !important;
+    border-color: rgb(255, 36, 36) !important;
   }

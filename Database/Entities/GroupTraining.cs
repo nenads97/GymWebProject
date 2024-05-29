@@ -6,7 +6,7 @@ namespace Database.Entities
 {
     public class GroupTraining : Training
     {
-        public GroupTraining(int trainingId, Category trainingType, int duration, DateTime dateAndTime, string description) : base(trainingId, trainingType, duration, dateAndTime, description)
+        public GroupTraining(Category trainingType, int duration, DateTime dateAndTime, string description, int trainerId) : base(trainingType, duration, dateAndTime, description, trainerId)
         {
         }
 

@@ -124,6 +124,8 @@ namespace Database.AutoMapperConfig
             CreateMap<TokenPackageCreateDto, TokenPackage>();
             CreateMap<ClientPersonalTokenCreateDto, ClientPersonalToken>();
             CreateMap<ClientGroupTokenCreateDto, ClientGroupToken>();
+            CreateMap<ClientRequest, ClientRequestDto>();
+            CreateMap<ClientRequestDto, ClientRequest>();
 
             //Client Get Dtos
             CreateMap<Client, ClientGetDto>();
@@ -157,6 +159,11 @@ namespace Database.AutoMapperConfig
             CreateMap<SignUpForTraining, SignUpForTrainingDto>(); 
             CreateMap<SignUpForTrainingDto, SignUpForTraining>();
 
+            CreateMap<Training,TrainingDto>();
+            CreateMap<TrainingDto, Training>();
+
+            CreateMap<AllApplicationsDto, Training>();
+            CreateMap<Training, AllApplicationsDto>();
         }
 
     }

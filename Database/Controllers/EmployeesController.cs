@@ -55,7 +55,7 @@ namespace Database.Controllers
 
             _context.SaveChanges();
 
-            return Ok(client);
+            return Ok();
         }
 
         [HttpPost]

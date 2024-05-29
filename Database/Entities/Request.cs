@@ -12,7 +12,7 @@ namespace Database.Entities
         public DateTime DateAndTimeOfRequestOpening { get; set; }
 
         [ForeignKey("ClientRequest")]
-        public int ClientRequestId { get; set; }
+        public int? ClientRequestId { get; set; }
         public virtual ClientRequest ClientRequest { get; set; }
 
 
