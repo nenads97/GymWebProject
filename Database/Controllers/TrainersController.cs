@@ -85,6 +85,7 @@ namespace Database.Controllers
 
             if (response.Content)
             {
+                request.Status = RequestStatus.Accepted; 
                 var personalTraining = new PersonalTraining(Category.Personal, 60, request.DateAndTimeOfRequestOpening, dto.Description, response.TrainerId);
                 personalTraining.RequestId = dto.RequestId;
                 Random random = new Random();
@@ -94,12 +95,15 @@ namespace Database.Controllers
                 _context.PersonalTrainings.Add(personalTraining);
                 request.PersonalTrainingId = personalTraining.TrainingId;
 
-                _context.ClientPersonalTokens.Add(new ClientPersonalToken { ClientId = clientRequest.ClientId, PersonalTokenId = 0, NumberOfPersonalTokens = -1 });
+                _context.ClientPersonalTokens.Add(new ClientPersonalToken { ClientId = clientRequest.ClientId, PersonalTokenId = 1, NumberOfPersonalTokens = -1 });
+            }
+
+            else
+            {
+                request.Status = RequestStatus.Rejected;
             }
 
             _context.Requests.Update(request);
-
-            //_context.Requests.Update()
 
             _context.SaveChanges();
 
@@ -138,6 +142,25 @@ namespace Database.Controllers
         }
 
         [HttpGet]
+        [Route("GetAllRequestsForSpecificTrainer/{id:int}")]
+        public IActionResult GetAllRequestsForSpecificTrainer([FromRoute] int id)
+        {
+            var requests = _context.ClientRequests.Include(a => a.Client).Include(a => a.Request).Where(a => a.TrId == id).ToList();
+
+            var requestsDtos = requests.Select(request => new ClientRequestsDto
+            {
+                FullName = request.Client.Firstname + " " + request.Client.Surname,
+                Gender = request.Client.Gender,
+                Email = request.Client.Email,
+                PhoneNumber = request.Client.PhoneNumber,
+                DateAndTimeOfMaintenance = request.Request.DateAndTimeOfRequestOpening,
+                RequestStatus = request.Request.Status
+            });
+
+            return Ok(requestsDtos);
+        }
+
+            [HttpGet]
         [Route("GetAllPersonalTrainings/{id:int}")]
         public IActionResult GetAllPersonalTrainings([FromRoute] int id)
         {

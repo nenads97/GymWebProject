@@ -10,7 +10,15 @@ const ClientInfo = ({ id, client, personalTokens, groupTokens }) => {
         </a>
         <Navbar.Toggle />
         <Nav className="me-auto">
-          <Nav.Link href={`/employee/${id}/trainings`}>Trainings</Nav.Link>
+          <NavDropdown title="PersonalTrainings" id="basic-nav-dropdown">
+            <NavDropdown.Item href={`/client/${id}/personal-trainings`}>
+              Submit requests
+            </NavDropdown.Item>
+            <NavDropdown.Item href={`/client/${id}/personal-training-requests`}>
+              Your Requests
+            </NavDropdown.Item>
+          </NavDropdown>
+
           <Nav.Link href={`/employee/${id}/memberships`}>
             Membership History
           </Nav.Link>

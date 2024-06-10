@@ -16,6 +16,7 @@ using System.Text.Json;
 using Database.Dtos.Employee;
 using Database.Dtos.Client.Update;
 using Database.Dtos.Trainer;
+using Database.Enums;
 
 namespace Database.Controllers
 {
@@ -235,6 +236,7 @@ namespace Database.Controllers
                     var request = new Request
                     {
                         DateAndTimeOfRequestOpening = dto.DateAndTimeOfRequestOpening,
+                        Status = 0,
                         //ResponseId = dto.ResponseId,
                         //PersonalTrainingId = dto.PersonalTrainingId,
                         //ClientRequestId = dto.ClientRequestId
@@ -247,6 +249,7 @@ namespace Database.Controllers
                     var clientRequest = new ClientRequest
                     {
                         ClientId = dto.ClientId,
+                        TrId = dto.TrainerId,
                         RequestId = request.RequestId
                     };
 
@@ -299,6 +302,29 @@ namespace Database.Controllers
             var signUps = _context.SignUpsForTraining.ToList().Where(a => a.ClientId == id);
 
             return Ok(signUps);
+        }
+
+        [HttpGet]
+        [Route("GetClientPersonalTrainingRequests/{id:int}")]
+        public IActionResult GetClientPersonalTrainingRequests([FromRoute] int id)
+        {
+            var requests = _context.ClientRequests.Include(a => a.Trainer).Include(a => a.Request).ToList().Where(a => a.ClientId == id);
+            var trainers = _context.Trainers.ToList();
+
+            foreach (var request in requests)
+            {
+                request.Trainer = trainers.First(t => t.Id == request.TrId);
+            }
+
+            var jsonOptions = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                PropertyNamingPolicy = null
+            };
+
+            var json = JsonSerializer.Serialize(requests, jsonOptions);
+
+            return Ok(json);
         }
 
         [HttpGet]
@@ -396,6 +422,21 @@ namespace Database.Controllers
             return Ok(client);
         }
 
+        [HttpPut]
+        [Route("UpdateClientRequestStatus")]
+        public IActionResult UpdateClientRequestStatus(int id, RequestStatus status)
+        {
+            var request = _context.Requests.FirstOrDefault(q => q.RequestId == id);
+            if (request == null)
+            {
+                return NotFound("Request not found");
+            }
+
+            request.Status = status;
+            _context.SaveChanges();
+
+            return Ok(request);
+        }
         //DELETE
 
         [HttpDelete]

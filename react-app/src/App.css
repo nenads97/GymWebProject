@@ -473,3 +473,20 @@ h2 {
     color: rgb(255, 36, 36) !important;
     border-color: rgb(255, 36, 36) !important;
   }
+
+  .status-pending {
+    color: orange !important;
+  }
+  
+  .status-accepted {
+    color: green !important;
+  }
+  
+  .status-rejected {
+    color: red !important;
+  }
+
+  .strike-through {
+    text-decoration: line-through;
+    transition: text-decoration 1s ease-in-out;
+  }

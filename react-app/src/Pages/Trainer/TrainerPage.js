@@ -102,6 +102,13 @@ export const TrainerPage = () => {
                     Create
                   </NavDropdown.Item>
                 </NavDropdown>
+
+                <NavDropdown title="Personal Training">
+                  <NavDropdown.Item href={`/trainer/${id}/preview-requests`}>
+                    Preview requests
+                  </NavDropdown.Item>
+                </NavDropdown>
+
                 <Nav.Link href={`/trainer/${id}/memberships`}>
                   Membership History
                 </Nav.Link>

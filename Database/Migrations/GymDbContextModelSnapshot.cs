@@ -91,9 +91,17 @@ namespace Database.Migrations
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TrId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TrainerId")
+                        .HasColumnType("int");
+
                     b.HasKey("ClientRequestId");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("TrainerId");
 
                     b.ToTable("ClientRequests");
                 });
@@ -491,7 +499,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 1,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4526),
+                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3357),
                             PackageId = 1,
                             Value = 3000.0
                         },
@@ -499,7 +507,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 2,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4568),
+                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3394),
                             PackageId = 2,
                             Value = 4500.0
                         },
@@ -507,7 +515,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 3,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4572),
+                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3398),
                             PackageId = 3,
                             Value = 8000.0
                         });
@@ -637,6 +645,9 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("ResponseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("RequestId");
@@ -799,7 +810,7 @@ namespace Database.Migrations
                         {
                             TokenPriceId = 1,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4653),
+                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3442),
                             TokenId = 1,
                             Value = 1000.0
                         },
@@ -807,7 +818,7 @@ namespace Database.Migrations
                         {
                             TokenPriceId = 2,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 5, 29, 20, 8, 56, 977, DateTimeKind.Local).AddTicks(4658),
+                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3447),
                             TokenId = 2,
                             Value = 500.0
                         });
@@ -1041,7 +1052,14 @@ namespace Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Database.Entities.Trainer", "Trainer")
+                        .WithMany("ClientRequests")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Client");
+
+                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("Database.AdditionalRelations.GTokenGTraining", b =>
@@ -1535,6 +1553,8 @@ namespace Database.Migrations
             modelBuilder.Entity("Database.Entities.Trainer", b =>
                 {
                     b.Navigation("Applications");
+
+                    b.Navigation("ClientRequests");
 
                     b.Navigation("Responses");
 

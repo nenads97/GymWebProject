@@ -18,5 +18,9 @@ namespace Database.AdditionalRelations
         [ForeignKey("Request")]
         public int RequestId { get; set; }
         public Request Request { get; set; }
+
+        [ForeignKey("TrainerFK")]
+        public int TrId { get; set; }
+        public Trainer Trainer { get; set;}
     }
 }

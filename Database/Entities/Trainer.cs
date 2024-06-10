@@ -19,5 +19,6 @@ namespace Database.Entities
         public ICollection<Training> Trainings { get; set; }
         public ICollection<TrainerTrainingSignOut> TrainerTrainingSignOuts { get; set; }
         public ICollection<TrainerTrainingSignUp> TrainerTrainingSignUps { get; set; }
+        public ICollection<ClientRequest> ClientRequests { get; set; }
     }
 }

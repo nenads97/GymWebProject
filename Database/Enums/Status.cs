@@ -9,4 +9,9 @@
     {
         Unavailable, Available, Canceled, Held
     }
+
+    public enum RequestStatus
+    {
+        Pending, Accepted, Rejected, Canceled
+    }
 }

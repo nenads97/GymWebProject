@@ -244,6 +244,11 @@ namespace Database.Data
                 .HasOne(a => a.TrainerTrainingSignUp)
                 .WithOne(a => a.Training)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Trainer>()
+                .HasMany(a => a.ClientRequests)
+                .WithOne(a => a.Trainer)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

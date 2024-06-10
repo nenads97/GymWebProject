@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using Database.AdditionalRelations;
+using Database.Enums;
 
 namespace Database.Entities
 {
@@ -10,6 +11,7 @@ namespace Database.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RequestId { get; set; }
         public DateTime DateAndTimeOfRequestOpening { get; set; }
+        public RequestStatus Status { get; set; }
 
         [ForeignKey("ClientRequest")]
         public int? ClientRequestId { get; set; }

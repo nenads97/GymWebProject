@@ -35,6 +35,10 @@ import { UpdateInfo } from "./Pages/Client/UpdateInfo";
 import { PurchaseTokens } from "./Pages/Client/PurchaseTokens";
 import { SetPackageTokens } from "./Pages/Admin/SetPackageTokens";
 import { CreateGroupTraining } from "./Pages/Trainer/CreateGroupTraining";
+import { ClientPersonalTrainings } from "./Pages/Client/ClientPersonalTrainings";
+import { ClientPersonalTrainingRequests } from "./Pages/Client/ClientPersonalTrainingRequests";
+import { PreviewRequests } from "./Pages/Trainer/PreviewRequests";
+
 // import Layout from "./Components/Layout";
 
 function App() {
@@ -135,8 +139,23 @@ function App() {
       <Route path="/client/:id/update-info" element={<UpdateInfo />}></Route>
 
       <Route
+        path="/client/:id/personal-trainings"
+        element={<ClientPersonalTrainings />}
+      ></Route>
+
+      <Route
+        path="/client/:id/personal-training-requests"
+        element={<ClientPersonalTrainingRequests />}
+      ></Route>
+
+      <Route
         path="/trainer/:id/create-group-training"
         element={<CreateGroupTraining />}
+      ></Route>
+
+      <Route
+        path="/trainer/:id/preview-requests"
+        element={<PreviewRequests />}
       ></Route>
     </Routes>
   );
