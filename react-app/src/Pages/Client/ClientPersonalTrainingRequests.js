@@ -134,6 +134,8 @@ export const ClientPersonalTrainingRequests = () => {
             <th>Email</th>
             <th>Phone Number</th>
             <th>Date And Time Of Maintenance</th>
+            <th>Duration</th>
+            <th>Trainer's Response Message</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
@@ -149,10 +151,16 @@ export const ClientPersonalTrainingRequests = () => {
               <td>{request.Trainer.Email}</td>
               <td>{request.Trainer.PhoneNumber}</td>
               <td
-                className={request.Request.Status === 3 ? "strike-through" : ""}
+                className={
+                  request.Request.Status === 3 || request.Request.Status === 2
+                    ? "strike-through"
+                    : ""
+                }
               >
                 {formatDate(request.Request.DateAndTimeOfRequestOpening)}
               </td>
+              <td>{request.Request.Duration}</td>
+              <td>{request.Request.PersonalTraining?.Description}</td>
               <td className={getStatusClassName(request.Request.Status)}>
                 {request.Request.Status === 0
                   ? "Pending"

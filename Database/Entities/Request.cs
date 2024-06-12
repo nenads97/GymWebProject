@@ -11,6 +11,7 @@ namespace Database.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RequestId { get; set; }
         public DateTime DateAndTimeOfRequestOpening { get; set; }
+        public int Duration { get; set; }
         public RequestStatus Status { get; set; }
 
         [ForeignKey("ClientRequest")]

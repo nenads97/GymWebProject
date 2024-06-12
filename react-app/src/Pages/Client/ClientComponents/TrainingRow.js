@@ -51,6 +51,7 @@ const TrainingRow = ({
           <Button
             variant="danger"
             onClick={() => handleCancel(training.applicationId)}
+            disabled={training.trainingStatus === 2}
           >
             Cancel
           </Button>

@@ -14,6 +14,7 @@ export const ClientPersonalTrainings = () => {
   const [selectedTrainer, setSelectedTrainer] = useState(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [duration, setDuration] = useState("");
 
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("");
@@ -55,10 +56,30 @@ export const ClientPersonalTrainings = () => {
   };
 
   const handleSubmitRequest = () => {
+    const now = new Date();
+    const requestDateTime = new Date(`${selectedDate}T${selectedTime}`);
+
+    if (requestDateTime < now) {
+      setAlertMessage("The selected date and time cannot be in the past.");
+      setAlertType("error");
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 3000);
+      return;
+    }
+
+    if (duration < 30 || duration > 120) {
+      setAlertMessage("Duration must be between 30 and 120 minutes.");
+      setAlertType("error");
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 3000);
+      return;
+    }
+
     const payload = {
       clientId: parseInt(id),
       trainerId: selectedTrainer.id,
       dateAndTimeOfRequestOpening: `${selectedDate}T${selectedTime}`,
+      duration: parseInt(duration),
     };
 
     const refreshData = async () => {
@@ -159,7 +180,7 @@ export const ClientPersonalTrainings = () => {
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Set Date and Time</Modal.Title>
+          <Modal.Title>Set Date, Time, and Duration</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -177,6 +198,16 @@ export const ClientPersonalTrainings = () => {
                 type="time"
                 value={selectedTime}
                 onChange={(e) => setSelectedTime(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formDuration">
+              <Form.Label>Duration (min)</Form.Label>
+              <Form.Control
+                type="number"
+                min="30"
+                max="120"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
               />
             </Form.Group>
           </Form>

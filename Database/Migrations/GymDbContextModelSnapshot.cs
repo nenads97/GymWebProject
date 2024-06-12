@@ -499,7 +499,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 1,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3357),
+                            Date = new DateTime(2024, 6, 12, 19, 35, 7, 571, DateTimeKind.Local).AddTicks(6176),
                             PackageId = 1,
                             Value = 3000.0
                         },
@@ -507,7 +507,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 2,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3394),
+                            Date = new DateTime(2024, 6, 12, 19, 35, 7, 571, DateTimeKind.Local).AddTicks(6217),
                             PackageId = 2,
                             Value = 4500.0
                         },
@@ -515,7 +515,7 @@ namespace Database.Migrations
                         {
                             PackagePriceId = 3,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3398),
+                            Date = new DateTime(2024, 6, 12, 19, 35, 7, 571, DateTimeKind.Local).AddTicks(6221),
                             PackageId = 3,
                             Value = 8000.0
                         });
@@ -640,6 +640,9 @@ namespace Database.Migrations
 
                     b.Property<DateTime>("DateAndTimeOfRequestOpening")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
 
                     b.Property<int?>("PersonalTrainingId")
                         .HasColumnType("int");
@@ -810,7 +813,7 @@ namespace Database.Migrations
                         {
                             TokenPriceId = 1,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3442),
+                            Date = new DateTime(2024, 6, 12, 19, 35, 7, 571, DateTimeKind.Local).AddTicks(6264),
                             TokenId = 1,
                             Value = 1000.0
                         },
@@ -818,7 +821,7 @@ namespace Database.Migrations
                         {
                             TokenPriceId = 2,
                             AdministratorId = 1,
-                            Date = new DateTime(2024, 6, 5, 20, 53, 10, 675, DateTimeKind.Local).AddTicks(3447),
+                            Date = new DateTime(2024, 6, 12, 19, 35, 7, 571, DateTimeKind.Local).AddTicks(6268),
                             TokenId = 2,
                             Value = 500.0
                         });

@@ -237,6 +237,7 @@ namespace Database.Controllers
                     {
                         DateAndTimeOfRequestOpening = dto.DateAndTimeOfRequestOpening,
                         Status = 0,
+                        Duration = dto.Duration,
                         //ResponseId = dto.ResponseId,
                         //PersonalTrainingId = dto.PersonalTrainingId,
                         //ClientRequestId = dto.ClientRequestId
@@ -308,7 +309,7 @@ namespace Database.Controllers
         [Route("GetClientPersonalTrainingRequests/{id:int}")]
         public IActionResult GetClientPersonalTrainingRequests([FromRoute] int id)
         {
-            var requests = _context.ClientRequests.Include(a => a.Trainer).Include(a => a.Request).ToList().Where(a => a.ClientId == id);
+            var requests = _context.ClientRequests.Include(a => a.Trainer).Include(a => a.Request).ThenInclude(a => a.PersonalTraining).ToList().Where(a => a.ClientId == id);
             var trainers = _context.Trainers.ToList();
 
             foreach (var request in requests)
@@ -426,13 +427,19 @@ namespace Database.Controllers
         [Route("UpdateClientRequestStatus")]
         public IActionResult UpdateClientRequestStatus(int id, RequestStatus status)
         {
-            var request = _context.Requests.FirstOrDefault(q => q.RequestId == id);
+            var request = _context.Requests.Include(a => a.ClientRequest).FirstOrDefault(q => q.RequestId == id);
             if (request == null)
             {
                 return NotFound("Request not found");
             }
 
+            if (request.Status == RequestStatus.Accepted && status == RequestStatus.Canceled)
+            {
+                _context.ClientPersonalTokens.Add(new ClientPersonalToken { ClientId = request.ClientRequest.ClientId, PersonalTokenId = 1, NumberOfPersonalTokens = 1 });
+            }
+
             request.Status = status;
+
             _context.SaveChanges();
 
             return Ok(request);

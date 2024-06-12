@@ -86,7 +86,7 @@ namespace Database.Controllers
             if (response.Content)
             {
                 request.Status = RequestStatus.Accepted; 
-                var personalTraining = new PersonalTraining(Category.Personal, 60, request.DateAndTimeOfRequestOpening, dto.Description, response.TrainerId);
+                var personalTraining = new PersonalTraining(Category.Personal, request.Duration, request.DateAndTimeOfRequestOpening, dto.Description, response.TrainerId);
                 personalTraining.RequestId = dto.RequestId;
                 Random random = new Random();
                 int randomNumber = random.Next(10000, 100000);
@@ -149,13 +149,15 @@ namespace Database.Controllers
 
             var requestsDtos = requests.Select(request => new ClientRequestsDto
             {
+                RequestId = request.Request.RequestId,
+                Duration = request.Request.Duration,
                 FullName = request.Client.Firstname + " " + request.Client.Surname,
                 Gender = request.Client.Gender,
                 Email = request.Client.Email,
                 PhoneNumber = request.Client.PhoneNumber,
                 DateAndTimeOfMaintenance = request.Request.DateAndTimeOfRequestOpening,
                 RequestStatus = request.Request.Status
-            });
+            }) ;
 
             return Ok(requestsDtos);
         }
