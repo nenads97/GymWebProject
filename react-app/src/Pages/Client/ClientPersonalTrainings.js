@@ -123,104 +123,108 @@ export const ClientPersonalTrainings = () => {
 
   return (
     <>
-      {showAlert && (
-        <Alert
-          className={`custom-alert ${
-            alertType === "success"
-              ? "custom-alert-success"
-              : "custom-alert-error"
-          }`}
-        >
-          {alertMessage}
-        </Alert>
-      )}
-      <ClientInfo
-        id={id}
-        client={client}
-        personalTokens={personalTokens}
-        groupTokens={groupTokens}
-      />
+      <div className="client-page">
+        <div className="dark-opacity">
+          {showAlert && (
+            <Alert
+              className={`custom-alert ${
+                alertType === "success"
+                  ? "custom-alert-success"
+                  : "custom-alert-error"
+              }`}
+            >
+              {alertMessage}
+            </Alert>
+          )}
+          <ClientInfo
+            id={id}
+            client={client}
+            personalTokens={personalTokens}
+            groupTokens={groupTokens}
+          />
 
-      <div className="header-container">
-        <h2 className="clients-header headers">Trainers</h2>
+          <div className="header-container">
+            <h2 className="clients-header headers">Trainers</h2>
+          </div>
+          <Table striped bordered hover variant="dark" className="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {trainers.map((trainer, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{trainer.firstname}</td>
+                  <td>{trainer.surname}</td>
+                  <td>{trainer.gender === 0 ? "Male" : "Female"}</td>
+                  <td>{trainer.email}</td>
+                  <td>0{trainer.phoneNumber}</td>
+                  <td>
+                    <Button
+                      variant="success"
+                      onClick={() => handleRequest(trainer)}
+                    >
+                      Submit request
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+          <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Set Date, Time, and Duration</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="formDate">
+                  <Form.Label>Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formTime">
+                  <Form.Label>Time</Form.Label>
+                  <Form.Control
+                    type="time"
+                    value={selectedTime}
+                    onChange={(e) => setSelectedTime(e.target.value)}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formDuration">
+                  <Form.Label>Duration (min)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    min="30"
+                    max="120"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowModal(false)}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleSubmitRequest}>
+                Submit
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
       </div>
-      <Table striped bordered hover variant="dark" className="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Gender</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {trainers.map((trainer, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{trainer.firstname}</td>
-              <td>{trainer.surname}</td>
-              <td>{trainer.gender === 0 ? "Male" : "Female"}</td>
-              <td>{trainer.email}</td>
-              <td>0{trainer.phoneNumber}</td>
-              <td>
-                <Button
-                  variant="success"
-                  onClick={() => handleRequest(trainer)}
-                >
-                  Submit request
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Set Date, Time, and Duration</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formDate">
-              <Form.Label>Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="formTime">
-              <Form.Label>Time</Form.Label>
-              <Form.Control
-                type="time"
-                value={selectedTime}
-                onChange={(e) => setSelectedTime(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group controlId="formDuration">
-              <Form.Label>Duration (min)</Form.Label>
-              <Form.Control
-                type="number"
-                min="30"
-                max="120"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmitRequest}>
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 };

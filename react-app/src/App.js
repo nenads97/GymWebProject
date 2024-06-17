@@ -38,6 +38,9 @@ import { CreateGroupTraining } from "./Pages/Trainer/CreateGroupTraining";
 import { ClientPersonalTrainings } from "./Pages/Client/ClientPersonalTrainings";
 import { ClientPersonalTrainingRequests } from "./Pages/Client/ClientPersonalTrainingRequests";
 import { PreviewRequests } from "./Pages/Trainer/PreviewRequests";
+import { GroupTrainingsPreview } from "./Pages/Employee/GroupTrainingsPreview";
+import { PersonalTrainingsPreview } from "./Pages/Employee/PersonalTrainingsPreview";
+import { TrainerInfo } from "./Pages/Trainer/TrainerInfo";
 
 // import Layout from "./Components/Layout";
 
@@ -128,6 +131,20 @@ function App() {
         path="/employee/:id/purchase-tokens"
         element={<PurchaseTokens />}
       ></Route>
+      <Route
+        path="/employee/:id/all-group-trainings"
+        element={<GroupTrainingsPreview />}
+      ></Route>
+
+      <Route
+        path="/employee/:id/all-personal-trainings"
+        element={<PersonalTrainingsPreview />}
+      ></Route>
+
+      <Route
+        path="/employee/:id/payment-history"
+        element={<PaymentHistory />}
+      />
 
       <Route path="/client/:id/client-info" element={<ClientInfo />}></Route>
 
@@ -154,9 +171,16 @@ function App() {
       ></Route>
 
       <Route
+        path="/trainer/:id/create-group-training"
+        element={<CreateGroupTraining />}
+      ></Route>
+
+      <Route
         path="/trainer/:id/preview-requests"
         element={<PreviewRequests />}
       ></Route>
+
+      <Route path="/trainer/:id/trainer-info" element={<TrainerInfo />}></Route>
     </Routes>
   );
 }

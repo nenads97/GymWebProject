@@ -433,13 +433,13 @@ namespace Database.Controllers
                 return NotFound("Request not found");
             }
 
-            if (request.Status == RequestStatus.Accepted && status == RequestStatus.Canceled)
+            if (request.Status == RequestStatus.Accepted || request.Status == RequestStatus.Pending && status == RequestStatus.Canceled)
             {
                 _context.ClientPersonalTokens.Add(new ClientPersonalToken { ClientId = request.ClientRequest.ClientId, PersonalTokenId = 1, NumberOfPersonalTokens = 1 });
             }
 
             request.Status = status;
-
+            _context.Requests.Update(request);
             _context.SaveChanges();
 
             return Ok(request);

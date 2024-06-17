@@ -18,6 +18,7 @@ using Database.Dtos.Client.Update;
 using Database.Dtos.Trainer;
 using Database.Enums;
 using Database.Dtos.Admin.Create;
+using Database.Dtos.Employee.Get;
 
 namespace Database.Controllers
 {
@@ -162,13 +163,38 @@ namespace Database.Controllers
             return Ok(requestsDtos);
         }
 
-            [HttpGet]
+        [HttpGet]
         [Route("GetAllPersonalTrainings/{id:int}")]
         public IActionResult GetAllPersonalTrainings([FromRoute] int id)
         {
             var applications = _context.Trainings.Where(a => a.TrainerId == id && a.TrainingType == Category.Personal).ToList();
 
             return Ok(applications);
+        }
+
+        [HttpGet]
+        [Route("GetAllPersonalTrainings")]
+        public IActionResult GetPersonalTrainings()
+        {
+
+        //    public string TrainerName { get; set; }
+        //public string ClientName { get; set; }
+        //public DateTime DateAndTimeOfMaitenance { get; set; }
+        //public int Duration { get; set; }
+        //public string TrainersResponseMessage { get; set; }
+        //public Enums.TrainingStatus TrainingStatus { get; set; }
+        var applications = _context.PersonalTrainings.Include(a => a.Trainer).Include(a => a.Request).ThenInclude(a => a.ClientRequest).ThenInclude(a => a.Client).Where(a => a.TrainingType == Category.Personal).Select( apl => 
+            new PersonalTrainingDto
+            {
+                TrainerName = apl.Trainer.Firstname + " " + apl.Trainer.Surname,
+                ClientName = apl.Request.ClientRequest.Client.Firstname + " " + apl.Request.ClientRequest.Client.Surname,
+                DateAndTimeOfMaitenance = apl.Request.DateAndTimeOfRequestOpening,
+                Duration = apl.Duration,
+                TrainingStatus = apl.Status
+            });
+
+            return Ok(applications);
+
         }
 
 

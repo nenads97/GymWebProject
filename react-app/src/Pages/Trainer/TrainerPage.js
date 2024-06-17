@@ -8,6 +8,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Table from "react-bootstrap/Table";
 import { Button, Alert } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
+import TrainerNavbar from "./Components/TrainerNavbar";
 
 export const TrainerPage = () => {
   const [trainer, setTrainer] = useState([]);
@@ -88,78 +89,13 @@ export const TrainerPage = () => {
               Training successfully canceled!
             </Alert>
           )}
-          <Navbar bg="dark" data-bs-theme="dark" className="bg-body-tertiary">
-            <Container>
-              <a href={`/trainer/${id}`} className="admin-link">
-                <Navbar.Brand>MainPage</Navbar.Brand>
-              </a>
-              <Navbar.Toggle />
-              <Nav className="me-auto">
-                <NavDropdown title="Group Training">
-                  <NavDropdown.Item
-                    href={`/trainer/${id}/create-group-training`}
-                  >
-                    Create
-                  </NavDropdown.Item>
-                </NavDropdown>
-
-                <NavDropdown title="Personal Training">
-                  <NavDropdown.Item href={`/trainer/${id}/preview-requests`}>
-                    Preview requests
-                  </NavDropdown.Item>
-                </NavDropdown>
-
-                <Nav.Link href={`/trainer/${id}/memberships`}>
-                  Membership History
-                </Nav.Link>
-                <Nav.Link href={`/trainer/${id}/payment-history`}>
-                  Payment History
-                </Nav.Link>
-              </Nav>
-              <Navbar.Collapse className="justify-content-end">
-                <Navbar.Text>
-                  Signed in as:{" "}
-                  <span className="admin_name headers">
-                    {trainer.firstname} {trainer.surname}
-                  </span>{" "}
-                  Role:{" "}
-                  <span className="admin_name headers trainer-role">
-                    Trainer
-                  </span>
-                </Navbar.Text>
-                <NavDropdown
-                  title={
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="white"
-                      className="user-icon employee-icon"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
-                      />
-                    </svg>
-                  }
-                >
-                  <NavDropdown.Item href={`/employee/${id}/employee-info`}>
-                    My Info
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item href={`/`}>Log Out</NavDropdown.Item>
-                </NavDropdown>
-              </Navbar.Collapse>
-            </Container>
-          </Navbar>
+          <TrainerNavbar trainer={trainer} />{" "}
+          {/* Use the new Navbar component */}
           <div className="header-container">
             <h2 className="clients-header headers">
               Your Applications For Trainings
             </h2>
           </div>
-
           <Table striped bordered hover variant="dark" className="table">
             <thead>
               <tr>
@@ -203,6 +139,7 @@ export const TrainerPage = () => {
                       onClick={() =>
                         handleCancelation(training.groupTrainingId)
                       }
+                      disabled={training.groupTraining.status === 2}
                     >
                       Cancel
                     </Button>
@@ -211,11 +148,9 @@ export const TrainerPage = () => {
               ))}
             </tbody>
           </Table>
-
           <div className="header-container">
             <h2 className="clients-header headers">Clients</h2>
           </div>
-
           <Table striped bordered hover variant="dark" className="table">
             <thead>
               <tr>

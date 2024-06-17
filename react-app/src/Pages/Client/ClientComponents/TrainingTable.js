@@ -10,7 +10,7 @@ const TrainingTable = ({
 }) => {
   return (
     <>
-      <h2 className="client-header">Available Trainings</h2>
+      <h2 className="client-header">Available Group Trainings</h2>
       <Table striped bordered hover variant="dark" className="table">
         <thead>
           <tr>

@@ -72,11 +72,7 @@ export const ClientPersonalTrainingRequests = () => {
         setTimeout(() => setShowAlert(false), 3000); // Clear message after 3 seconds
       })
       .catch((error) => {
-        setAlertMessage("There was an error updating the request status!");
-        setAlertType("error");
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 3000);
-        console.error("There was an error updating the request status!", error);
+        window.location.reload(); // Reload the page after a successful purchase
       });
   };
 
@@ -115,74 +111,81 @@ export const ClientPersonalTrainingRequests = () => {
           {alertMessage}
         </Alert>
       )}
-      <ClientInfo
-        id={id}
-        client={client}
-        personalTokens={personalTokens}
-        groupTokens={groupTokens}
-      />
+      <div className="client-page">
+        <div className="dark-opacity">
+          <ClientInfo
+            id={id}
+            client={client}
+            personalTokens={personalTokens}
+            groupTokens={groupTokens}
+          />
 
-      <div className="header-container">
-        <h2 className="clients-header headers">Personal Training Requests</h2>
+          <div className="header-container">
+            <h2 className="clients-header headers">
+              Personal Training Requests
+            </h2>
+          </div>
+          <Table striped bordered hover variant="dark" className="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Trainer Full Name</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Date And Time Of Maintenance</th>
+                <th>Duration</th>
+                <th>Trainer's Response Message</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {requests.map((request, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>
+                    {request.Trainer.Firstname + " " + request.Trainer.Surname}
+                  </td>
+                  <td>{request.Trainer.Gender === 0 ? "Male" : "Female"}</td>
+                  <td>{request.Trainer.Email}</td>
+                  <td>{request.Trainer.PhoneNumber}</td>
+                  <td
+                    className={
+                      request.Request.Status === 3 ||
+                      request.Request.Status === 2
+                        ? "strike-through"
+                        : ""
+                    }
+                  >
+                    {formatDate(request.Request.DateAndTimeOfRequestOpening)}
+                  </td>
+                  <td>{request.Request.Duration}</td>
+                  <td>{request.Request.PersonalTraining?.Description}</td>
+                  <td className={getStatusClassName(request.Request.Status)}>
+                    {request.Request.Status === 0
+                      ? "Pending"
+                      : request.Request.Status === 1
+                      ? "Accepted"
+                      : request.Request.Status === 2
+                      ? "Rejected"
+                      : "Canceled"}
+                  </td>
+                  <td>
+                    <Button
+                      variant="danger"
+                      onClick={() => handleRequest(request)}
+                      disabled={request.Request.Status === 3}
+                    >
+                      Cancel
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       </div>
-      <Table striped bordered hover variant="dark" className="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Trainer Full Name</th>
-            <th>Gender</th>
-            <th>Email</th>
-            <th>Phone Number</th>
-            <th>Date And Time Of Maintenance</th>
-            <th>Duration</th>
-            <th>Trainer's Response Message</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {requests.map((request, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>
-                {request.Trainer.Firstname + " " + request.Trainer.Surname}
-              </td>
-              <td>{request.Trainer.Gender === 0 ? "Male" : "Female"}</td>
-              <td>{request.Trainer.Email}</td>
-              <td>{request.Trainer.PhoneNumber}</td>
-              <td
-                className={
-                  request.Request.Status === 3 || request.Request.Status === 2
-                    ? "strike-through"
-                    : ""
-                }
-              >
-                {formatDate(request.Request.DateAndTimeOfRequestOpening)}
-              </td>
-              <td>{request.Request.Duration}</td>
-              <td>{request.Request.PersonalTraining?.Description}</td>
-              <td className={getStatusClassName(request.Request.Status)}>
-                {request.Request.Status === 0
-                  ? "Pending"
-                  : request.Request.Status === 1
-                  ? "Accepted"
-                  : request.Request.Status === 2
-                  ? "Rejected"
-                  : "Canceled"}
-              </td>
-              <td>
-                <Button
-                  variant="danger"
-                  onClick={() => handleRequest(request)}
-                  disabled={request.Request.Status === 3}
-                >
-                  Cancel
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
     </>
   );
 };

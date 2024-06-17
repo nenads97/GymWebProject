@@ -31,7 +31,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 851px;
+  min-height: 873px;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -189,7 +189,7 @@
   background-size: cover;
   height: 100%;
   width: 100%;
-  position: fixed;
+  min-height: 953px;
 }
 
 .admin-link {
@@ -203,7 +203,7 @@
   width: 90% !important;
   text-align: center;
   margin: 0 auto;
-  margin-bottom: 3rem !important;
+  padding-bottom: 3rem !important;
 }
 
 .body-container {
@@ -312,6 +312,7 @@ h2 {
   background-size: cover;
   height: 100%;
   width: 100%;
+  min-height: 953px;
 }
 
 .trainer-page {
@@ -320,7 +321,8 @@ h2 {
     background-size: cover;
     height: 100%;
     width: 100%;
-    position: fixed;
+    min-height: 953px;
+    padding-bottom: 3rem;
     z-index: 2;
   }
 
@@ -328,7 +330,7 @@ h2 {
     background-color: rgba(0, 0, 0, 0.4);
     height: 100%;
     width: 100%;
-    position: fixed;
+    min-height: inherit;
     top: 0;
     left: 0;
     z-index: 3;
@@ -355,7 +357,7 @@ h2 {
 }
 
 .without-navbar {
-  min-height: 931px;
+  min-height: 953px;
   position: relative;
 }
 
@@ -489,4 +491,13 @@ h2 {
   .strike-through {
     text-decoration: line-through;
     transition: text-decoration 1s ease-in-out;
+  }
+
+  .client-page {
+    background-image: url("/src/Images/client-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    min-height: 953px;
   }
