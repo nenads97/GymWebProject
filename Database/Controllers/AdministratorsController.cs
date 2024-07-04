@@ -500,6 +500,7 @@ namespace Database.Controllers
             var adminPackage = _context.PackageAdministrators.FirstOrDefault(q => q.PackageId == id);
             var packageDiscounts = _context.PackagePackageDiscounts.ToList();
             var packagePrices = _context.PackagePrices.ToList();
+            var tokenPackages = _context.TokenPackages.ToList();
 
 
             if (package is null)
@@ -521,6 +522,14 @@ namespace Database.Controllers
                     _context.PackagePrices.Remove(price);
                 }
             }
+            foreach (var token in tokenPackages)
+            {
+                if (token.PackageId == id)
+                {
+                    _context.TokenPackages.Remove(token);
+                }
+            }
+
             _context.PackageAdministrators.Remove(adminPackage);
             _context.Packages.Remove(package);
             

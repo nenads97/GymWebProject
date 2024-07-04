@@ -5,6 +5,7 @@ namespace Database.Entities
 {
     public class PackagePrice
     {
+        public PackagePrice() { }
         public PackagePrice(int packagePriceId, double value, DateTime date, int administratorId, int packageId)
         {
             PackagePriceId = packagePriceId;

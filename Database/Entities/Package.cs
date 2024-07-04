@@ -8,6 +8,10 @@ namespace Database.Entities
 {
     public class Package
     {
+        public Package()
+        {
+
+        }
         public Package(int packageId, string packageName, int administratorId )
         {
             PackageId = packageId;

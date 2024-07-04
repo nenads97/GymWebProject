@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Container, Alert, Modal, Button } from "react-bootstrap";
+import {
+  Container,
+  Alert,
+  Modal,
+  Button,
+  Card,
+  CardGroup,
+} from "react-bootstrap";
 import ClientInfo from "./ClientComponents/ClientInfo";
 import TrainingTable from "./ClientComponents/TrainingTable";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import Card from "react-bootstrap/Card";
-import CardGroup from "react-bootstrap/CardGroup";
 import { ReactComponent as Silver } from "../../Icons/silver-icon.svg";
 import { ReactComponent as Gold } from "../../Icons/gold-icon.svg";
 import { ReactComponent as Premium } from "../../Icons/platinum-icon.svg";
+
+const packageIcons = {
+  Silver: Silver,
+  Gold: Gold,
+  Premium: Premium,
+};
 
 export const ClientPage = () => {
   const [client, setClient] = useState({});
@@ -24,7 +35,7 @@ export const ClientPage = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("");
-  const [showModal, setShowModal] = useState(false); // State for showing modal
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const statusPayload = { status: 1 };
@@ -194,9 +205,9 @@ export const ClientPage = () => {
             ...prevClient,
             balance: prevClient.balance - element.packagePriceValue,
           }));
-          window.location.reload(); // Reload the page after a successful purchase
+          window.location.reload();
         } else {
-          setShowModal(true); // Show modal if funds are insufficient
+          setShowModal(true);
         }
       }
     } catch (error) {
@@ -251,133 +262,37 @@ export const ClientPage = () => {
               <h1 className="client-header">Purchase one of our packages</h1>
               <div className="package-cards">
                 <CardGroup>
-                  {(hoveredCard === "Silver" || clickedCard === "Silver") && (
-                    <Card
-                      className="card-purchase"
-                      onMouseLeave={() => {
-                        setHoveredCard(null);
-                        setClickedCard(null);
-                      }}
-                      onClick={() => {
-                        setClickedCard("Silver");
-                        handleCardClick("Silver");
-                      }}
-                    >
-                      <Card.Body>
-                        <p className="card-purchase-p">Click to Purchase</p>
-                      </Card.Body>
-                    </Card>
-                  )}
-                  {hoveredCard !== "Silver" && clickedCard !== "Silver" && (
-                    <Card
-                      onMouseEnter={() => setHoveredCard("Silver")}
-                      onMouseLeave={() => {
-                        setHoveredCard(null);
-                        setClickedCard(null);
-                      }}
-                    >
-                      <Silver />
-                      <Card.Body>
-                        <Card.Title>Silver</Card.Title>
-                        <Card.Text>
-                          Unlock the door to fitness with our Silver package,
-                          providing essential gym membership for access to.
-                          Ideal for independent workouts, this package offers
-                          the foundation for your fitness journey, with the
-                          option to purchase personal and group training
-                          sessions separately.
-                        </Card.Text>
-                      </Card.Body>
-                      <Card.Footer>
-                        <small className="text-muted">3000 RSD</small>
-                      </Card.Footer>
-                    </Card>
-                  )}
-                  {(hoveredCard === "Gold" || clickedCard === "Gold") && (
-                    <Card
-                      className="card-purchase"
-                      onMouseLeave={() => {
-                        setHoveredCard(null);
-                        setClickedCard(null);
-                      }}
-                      onClick={() => {
-                        setClickedCard("Gold");
-                        handleCardClick("Gold");
-                      }}
-                    >
-                      <Card.Body>
-                        <p className="card-purchase-p">Click to Purchase</p>
-                      </Card.Body>
-                    </Card>
-                  )}
-                  {hoveredCard !== "Gold" && clickedCard !== "Gold" && (
-                    <Card
-                      onMouseEnter={() => setHoveredCard("Gold")}
-                      onMouseLeave={() => {
-                        setHoveredCard(null);
-                        setClickedCard(null);
-                      }}
-                      onClick={() => setClickedCard("Gold")}
-                    >
-                      <Gold />
-                      <Card.Body>
-                        <Card.Title>Gold</Card.Title>
-                        <Card.Text>
-                          Take your fitness to the next level with our Gold
-                          package, which includes full gym access along with 10
-                          group training tokens. Enjoy the flexibility of
-                          personalized workout plans and expert-led group
-                          sessions, giving you a well-rounded fitness experience
-                          tailored to your goals.
-                        </Card.Text>
-                      </Card.Body>
-                      <Card.Footer>
-                        <small className="text-muted">4500 RSD</small>
-                      </Card.Footer>
-                    </Card>
-                  )}
-                  {(hoveredCard === "Premium" || clickedCard === "Premium") && (
-                    <Card
-                      className="card-purchase"
-                      onMouseLeave={() => {
-                        setHoveredCard(null);
-                        setClickedCard(null);
-                      }}
-                      onClick={() => {
-                        setClickedCard("Premium");
-                        handleCardClick("Premium");
-                      }}
-                    >
-                      <Card.Body>
-                        <p className="card-purchase-p">Click to Purchase</p>
-                      </Card.Body>
-                    </Card>
-                  )}
-                  {hoveredCard !== "Premium" && clickedCard !== "Premium" && (
-                    <Card
-                      onMouseEnter={() => setHoveredCard("Premium")}
-                      onMouseLeave={() => {
-                        setHoveredCard(null);
-                        setClickedCard(null);
-                      }}
-                      onClick={() => setClickedCard("Premium")}
-                    >
-                      <Premium />
-                      <Card.Body>
-                        <Card.Title>Premium</Card.Title>
-                        <Card.Text>
-                          Experience the epitome of fitness luxury with our
-                          Premium package, granting unlimited gym access and 10
-                          personal and 10 group training tokens. Elevate your
-                          workouts with personalized attention from our expert
-                          trainers and indulge in the variety of group sessions.
-                        </Card.Text>
-                      </Card.Body>
-                      <Card.Footer>
-                        <small className="text-muted">8000 RSD</small>
-                      </Card.Footer>
-                    </Card>
-                  )}
+                  {packages.map((pkg) => {
+                    const IconComponent = packageIcons[pkg.packageName];
+                    return (
+                      <Card
+                        key={pkg.packageId}
+                        className={
+                          hoveredCard === pkg.packageName ||
+                          clickedCard === pkg.packageName
+                            ? "card-purchase"
+                            : ""
+                        }
+                        onMouseEnter={() => setHoveredCard(pkg.packageName)}
+                        onMouseLeave={() => setHoveredCard(null)}
+                        onClick={() => {
+                          setClickedCard(pkg.packageName);
+                          handleCardClick(pkg.packageName);
+                        }}
+                      >
+                        {IconComponent && <IconComponent />}
+                        <Card.Body>
+                          <Card.Title>{pkg.packageName}</Card.Title>
+                          <Card.Text>{pkg.packageDescription}</Card.Text>
+                        </Card.Body>
+                        <Card.Footer>
+                          <small className="text-muted">
+                            {pkg.packagePriceValue} RSD
+                          </small>
+                        </Card.Footer>
+                      </Card>
+                    );
+                  })}
                 </CardGroup>
               </div>
             </>

@@ -6,6 +6,7 @@ namespace Database.AdditionalRelations
 {
     public class TokenPackage
     {
+        public TokenPackage() { }
         public TokenPackage(int tokenPackageId, int quantity, int tokenId, int packageId)
         {
             TokenPackageId = tokenPackageId;

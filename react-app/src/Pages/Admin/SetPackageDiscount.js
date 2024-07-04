@@ -228,16 +228,14 @@ export const SetPackageDiscount = () => {
                 <option key="default" value="none">
                   -Select Discount-
                 </option>
-                {packageDiscounts
-                  .filter((discount) => new Date(discount.endDate) < new Date())
-                  .map((discount) => (
-                    <option
-                      key={discount.packageDiscountId}
-                      value={discount.packageDiscountId}
-                    >
-                      {discount.value}
-                    </option>
-                  ))}
+                {packageDiscounts.map((discount) => (
+                  <option
+                    key={discount.packageDiscountId}
+                    value={discount.packageDiscountId}
+                  >
+                    {discount.value}
+                  </option>
+                ))}
               </Form.Select>
               <Form.Control.Feedback type="invalid">
                 {errors.selectedDiscountId}

@@ -5,6 +5,7 @@ namespace Database.Entities
 {
     public class TokenPrice
     {
+        public TokenPrice() { }
         public TokenPrice(int tokenPriceId, double value, DateTime date, int administratorId, int tokenId)
         {
             TokenPriceId = tokenPriceId;
